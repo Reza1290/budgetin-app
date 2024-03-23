@@ -21,13 +21,10 @@ class BudgetinHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // The AppBar uses the app-default Raleway font.
-      appBar: AppBar(title: const Text('WU')),
-      body: const Center(
-          // This Text widget uses the RobotoMono font.
-
-          ),
+    return const Scaffold(
+      body: Center(
+        child: Text('a'),
+      ),
     );
   }
 }
