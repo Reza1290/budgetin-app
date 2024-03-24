@@ -1,3 +1,4 @@
+import 'package:budgetin/screens/mainscreen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -21,10 +22,6 @@ class BudgetinHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('a'),
-      ),
-    );
+    return MainScreen();
   }
 }
