@@ -33,6 +33,9 @@ class _SearchInputState extends State<SearchInput> {
               child: SizedBox(
                 height: 40, // Tinggi TextField
                 child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   cursorColor: Colors.grey,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
