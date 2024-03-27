@@ -1,33 +1,17 @@
+import 'package:budgetin/screens/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Budgetin',
-      // Set Raleway as the default app font.
-      theme: ThemeData(fontFamily: 'Nunito'),
-      home: const BudgetinHomePage(),
-    );
-  }
-}
-
-class BudgetinHomePage extends StatelessWidget {
-  const BudgetinHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // The AppBar uses the app-default Raleway font.
-      appBar: AppBar(title: const Text('WU')),
-      body: const Center(
-          // This Text widget uses the RobotoMono font.
-
-          ),
-    );
+        home: HomePage(), theme: ThemeData(primarySwatch: Colors.blue));
   }
 }
