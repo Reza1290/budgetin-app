@@ -1,10 +1,10 @@
 name: budgetin
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -13,6 +13,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.0.0
   path: ^1.9.0
+  flutter_slidable: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -20,12 +21,13 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   drift_dev: ^2.16.0
   build_runner: ^2.4.8
+  percent_indicator: ^4.0.1
 
 flutter:
   uses-material-design: true
   assets:
     - assets/logo/
-    - assets/images/
+    - assets/icons/
     - assets/videos/
     - assets/fonts/
 
