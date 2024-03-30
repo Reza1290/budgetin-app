@@ -1,4 +1,3 @@
-
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/mainscreen.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: HomePage(), theme: ThemeData(primarySwatch: Colors.blue));
+        home: HomePage(),
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Nunito'));
   }
-
 }
 
 class BudgetinHomePage extends StatelessWidget {
@@ -27,4 +26,3 @@ class BudgetinHomePage extends StatelessWidget {
     return MainScreen();
   }
 }
-

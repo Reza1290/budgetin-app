@@ -7,6 +7,7 @@ import 'package:budgetin/widgets/category_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class AllCategory extends StatefulWidget {
   const AllCategory({super.key});
@@ -130,253 +131,75 @@ class _AllCategoryState extends State<AllCategory> {
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
               child: Row(
                 children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
-                    width: 29.0,
-                    height: 29.0,
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.blue.shade100,
+                        border: Border.all(color: Colors.grey.shade200)),
+                    width: 54,
+                    height: 54,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Image.network(
+                        'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
+                      ),
+                    ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Makanan",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Makanan",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 14),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        SafeArea(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Stack(
+                              Expanded(
+                                  child: Stack(
                                 children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        widthBar /
-                                        100,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[400],
-                                        borderRadius: BorderRadius.circular(5)),
+                                  LinearProgressIndicator(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.amber,
+                                    minHeight: 16,
+                                    value: prsentase1 / 100,
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        widthBar /
-                                        100 *
-                                        prsentase1 /
-                                        100,
-                                    height: 15,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    child: Text(
-                                      "${prsentase1.toString()}%",
+                                    alignment: Alignment.bottomLeft,
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    child: const Text(
+                                      'Rp. 120000',
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 12,
-                                          color: Colors.white),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600),
                                     ),
-                                    decoration: BoxDecoration(
-                                        color: prsentase1 <= 40
-                                            ? Colors.green[400]
-                                            : (prsentase1 > 40 &&
-                                                    prsentase1 <= 70)
-                                                ? Colors.yellow[400]
-                                                : Colors.red[400],
-                                        borderRadius: BorderRadius.circular(5)),
                                   )
                                 ],
+                              )),
+                              const SizedBox(
+                                width: 15,
                               ),
-                              prsentase1 >= 70 ? Text("Warning", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w400),) : Container()
+                              Text(
+                                "${prsentase1.toString()}%",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w300, fontSize: 12),
+                              ),
                             ],
                           ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "${prsentase1.toString()}%",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 12),
-                          )
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-              child: Row(
-                children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
-                    width: 29.0,
-                    height: 29.0,
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Makanan",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        widthBar /
-                                        100,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[400],
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        widthBar /
-                                        100 *
-                                        prsentase2 /
-                                        100,
-                                    height: 15,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    child: Text(
-                                      "${prsentase2.toString()}%",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 12,
-                                          color: Colors.white),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: prsentase2 <= 40
-                                            ? Colors.green[400]
-                                            : (prsentase2 > 40 &&
-                                                    prsentase2 <= 70)
-                                                ? Colors.yellow[400]
-                                                : Colors.red[400],
-                                        borderRadius: BorderRadius.circular(5)),
-                                  )
-                                ],
-                              ),
-                              prsentase2 >= 70 ? Text("Warningggg", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w400),) : Container()
-                            ],
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "${prsentase1.toString()}%",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 12),
-                          )
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-              child: Row(
-                children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
-                    width: 29.0,
-                    height: 29.0,
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Makanan",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        widthBar /
-                                        100,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[400],
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        widthBar /
-                                        100 *
-                                        prsentase3 /
-                                        100,
-                                    height: 15,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    child: Text(
-                                      "${prsentase3.toString()}%",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 12,
-                                          color: Colors.white),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: prsentase3 <= 40
-                                            ? Colors.green[400]
-                                            : (prsentase3 > 40 &&
-                                                    prsentase3 <= 70)
-                                                ? Colors.yellow[400]
-                                                : Colors.red[400],
-                                        borderRadius: BorderRadius.circular(5)),
-                                  )
-                                ],
-                              ),
-                              prsentase3 >= 70 ? Text("Warning", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w400),) : Container()
-                            ],
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "${prsentase1.toString()}%",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 12),
-                          )
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
@@ -386,7 +209,6 @@ class _AllCategoryState extends State<AllCategory> {
   }
 }
 
- 
 //  showCupertinoModalPopup(
 //                       context: context,
 //                       builder: (BuildContext context) {

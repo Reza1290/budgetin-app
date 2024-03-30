@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-return Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
@@ -23,25 +23,33 @@ return Scaffold(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Selamat Datang!",
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      color: Color.fromARGB(255, 29, 119, 255)),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Selamat Datang!",
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: Color.fromARGB(255, 29, 119, 255)),
+                      ),
+                      Text("Waktunya Catat Keuangan Kamu Hari Ini."),
+                    ],
+                  ),
                 ),
-                Text("Waktunya Catat Keuangan Kamu Hari Ini."),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Saldo(),
-                SizedBox(
-                  height: 15,
+                const SizedBox(
+                  height: 30,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Kategori Transaksi",
                       style:
                           TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
@@ -53,8 +61,8 @@ return Scaffold(
                               MaterialPageRoute(
                                   builder: (context) => AllCategory()));
                         },
-                        child: Text(
-                          "lainnnya",
+                        child: const Text(
+                          "Lainnnya",
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
