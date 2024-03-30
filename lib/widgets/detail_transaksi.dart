@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DetailTransaksi extends StatelessWidget {
-  const DetailTransaksi({Key? key}) : super(key: key);
+  const DetailTransaksi({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +28,7 @@ class DetailTransaksi extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             width: 325,
-            padding: const EdgeInsets.only(
-              left: 30,
-              right: 30,
-              top: 30,
-              bottom: 30,
-            ),
+            padding: const EdgeInsets.all(30),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
