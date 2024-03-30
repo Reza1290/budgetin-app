@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/category_home.dart';
+import 'package:budgetin/widgets/modal_tambah_kategori.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,76 +39,23 @@ class _AllCategoryState extends State<AllCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          titleTextStyle: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontFamily: 'Nunito'),
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios),
+          ),
           title: Text("Kategori Transaksi"),
         ),
         body: Column(
           children: [
             TextButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Center(child: Text('Tambah Kategori')),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Nama Kategori"),
-                            TextField(
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                hintText: "ex makanan",
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text("Jumlah"),
-                            TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter
-                                    .digitsOnly // Hanya mengizinkan input angka
-                              ],
-                              decoration: InputDecoration(
-                                hintText: "100000",
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        actions: <Widget>[
-                          FractionallySizedBox(
-                            widthFactor:
-                                1.0, // Menetapkan lebar Container sebesar setengah layar
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.blue,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Center(
-                                  child: Text(
-                                    "Simpan",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  showModalTambahKategori(context);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),

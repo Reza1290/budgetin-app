@@ -1,4 +1,5 @@
 import 'package:budgetin/models/nav.dart';
+import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     items = [
-      Nav(page: const TabPage(tab: 1), navKey: homeNavKey),
+      Nav(page: const HomePage(), navKey: homeNavKey),
       Nav(page: const TabPage(tab: 2), navKey: historyNavKey),
       Nav(page: const TabPage(tab: 3), navKey: reportNavKey),
       Nav(page: const TabPage(tab: 4), navKey: faqNavKey),
@@ -194,41 +195,7 @@ class TabPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Tab $tab')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Tab $tab'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Page(tab: tab),
-                  ),
-                );
-              },
-              child: const Text('Go to page'),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Page extends StatelessWidget {
-  final int tab;
-
-  const Page({super.key, required this.tab});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Page Tab $tab')),
-      body: Center(child: Text('Tab $tab')),
-    );
+    return Scaffold(body: Text('Kosong:D'));
   }
 }
 

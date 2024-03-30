@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: HomePage(),
+        home: BudgetinHomePage(),
         theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Nunito'));
   }
 }
