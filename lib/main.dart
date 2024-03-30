@@ -1,3 +1,4 @@
+import 'package:budgetin/widgets/modal_tambah_kategori.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -21,10 +22,11 @@ class BudgetinHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text('a'),
-      ),
+          child: TextButton(
+              onPressed: () async => await showModalTambahKategori(context),
+              child: Text('Test'))),
     );
   }
 }
