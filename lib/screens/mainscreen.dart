@@ -1,8 +1,11 @@
 import 'package:budgetin/models/nav.dart';
+import 'package:budgetin/screens/add_transaksi.dart';
 import 'package:budgetin/screens/homepage.dart';
+import 'package:budgetin/screens/riwayat_transaksi_page.dart';
 import 'package:budgetin/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     items = [
       Nav(page: const HomePage(), navKey: homeNavKey),
-      Nav(page: const TabPage(tab: 2), navKey: historyNavKey),
+      Nav(page: const RiwayatTransaksiPage(), navKey: historyNavKey),
       Nav(page: const TabPage(tab: 3), navKey: reportNavKey),
       Nav(page: const TabPage(tab: 4), navKey: faqNavKey),
     ];
@@ -128,22 +131,41 @@ class _MainScreenState extends State<MainScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(
-                                      10,
-                                      (index) => Container(
-                                        height: 40,
-                                        margin: EdgeInsetsDirectional.only(
-                                            bottom: 10),
-                                        width: double.infinity,
-                                        color: Colors.yellow,
-                                        child: Center(
-                                          child: Text(
-                                            'Widgets $index',
-                                            style: TextStyle(fontSize: 20),
-                                          ),
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddTransaksi())),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 44,
+                                              height: 44,
+                                              padding: EdgeInsets.all(12.0),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                color: Colors.blue.shade200,
+                                              ),
+                                              child: Image.asset(
+                                                'assets/icons/lainnya.png',
+                                                fit: BoxFit.fitWidth,
+                                              ),
+                                            ),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 12.0),
+                                              child: Text(
+                                                "Makanan",
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                    ),
+                                      )
+                                    ],
                                   ),
                                 ),
                               )),
