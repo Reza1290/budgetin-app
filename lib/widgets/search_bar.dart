@@ -10,18 +10,39 @@ class SearchInput extends StatefulWidget {
 
 class _SearchInputState extends State<SearchInput> {
   DateTime selectedDate = DateTime.now();
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
+
+Future<void> _selectDate(BuildContext context) async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(DateTime.now().year),
+    lastDate: DateTime.now(),
+    initialDatePickerMode: DatePickerMode.day,
+    errorFormatText: 'Enter valid date',
+  errorInvalidText: 'Enter date in valid range',
+    
+    builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Colors.blue, // Ganti warna utama sesuai keinginan
+          ),
+          dialogBackgroundColor: Colors.white, // Ganti warna latar belakang dialog sesuai keinginan
+          // atur kelengkungan dialog sesuai keinginan
+          
+        ),
+        child: child!,
+      );
+    },
+  );
+
+  if (picked != null && picked != selectedDate) {
+    setState(() {
+      selectedDate = picked;
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +54,9 @@ class _SearchInputState extends State<SearchInput> {
               child: SizedBox(
                 height: 40, // Tinggi TextField
                 child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   cursorColor: Colors.grey,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -60,9 +84,7 @@ class _SearchInputState extends State<SearchInput> {
                 ),
               ),
             )),
-        const SizedBox(
-          width: 10.0,
-        ),
+       
         Expanded(
           flex: 0,
           child: IconButton(
@@ -72,7 +94,7 @@ class _SearchInputState extends State<SearchInput> {
             icon: const Icon(
               Icons
                   .calendar_month_rounded, // Mengubah dari 'Icons.calendar_month_rounded' menjadi 'Icons.calendar_today_rounded'
-              size: 35,
+              size: 30,
               color: Color.fromRGBO(61, 61, 61, 1),
             ),
             highlightColor: Colors
