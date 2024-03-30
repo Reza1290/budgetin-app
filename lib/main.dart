@@ -1,19 +1,22 @@
-import 'package:budgetin/screens/riwayat_transaksi_page.dart';
+import 'package:budgetin/screens/homepage.dart';
+import 'package:budgetin/screens/mainscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-void main() => runApp(const RiwayatTransaksiPage());
+
+void main() {
+  runApp(MyApp());
+}
+
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Budgetin',
-      // Set Raleway as the default app font.
-      theme: ThemeData(fontFamily: 'Nunito'),
-      home: const BudgetinHomePage(),
-    );
+        home: BudgetinHomePage(),
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Nunito'));
   }
 }
 
@@ -22,13 +25,6 @@ class BudgetinHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // The AppBar uses the app-default Raleway font.
-      appBar: AppBar(title: const Text('WU')),
-      body: const Center(
-          // This Text widget uses the RobotoMono font.
-
-          ),
-    );
+    return MainScreen();
   }
 }
