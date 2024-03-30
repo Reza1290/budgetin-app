@@ -133,21 +133,21 @@ void _confirmDelete(BuildContext context, int index) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Konfirmasi'),
-        content: Text('Apakah Anda yakin ingin menghapus riwayat ini?'),
+        title: const Text('Konfirmasi'),
+        content: const Text('Apakah Anda yakin ingin menghapus riwayat ini?'),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(); // Tutup dialog
             },
-            child: Text('Batal'),
+            child: const Text('Batal'),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(); // Tutup dialog
               _onDismissed(context, index, true); // Hapus riwayat
             },
-            child: Text('Ya'),
+            child: const Text('Ya'),
           ),
           
         ],
