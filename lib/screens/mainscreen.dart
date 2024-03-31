@@ -120,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
                           Container(
                               margin: EdgeInsetsDirectional.only(bottom: 10),
                               // height: double.infinity,
-                              height: MediaQuery.of(context).size.height / 2.32,
+                              // height: MediaQuery.of(context).size.height / 2.32,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 40, vertical: 16),
