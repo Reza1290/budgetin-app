@@ -144,6 +144,7 @@ class _SaldoState extends State<Saldo> {
               ],
             ),
           ),
+          surfaceTintColor: Colors.white,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
           content: SizedBox(
