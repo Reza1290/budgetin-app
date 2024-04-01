@@ -21,7 +21,7 @@ Future<void> showModalTambahKategori(BuildContext context) {
                     'Tambah Kategori',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w800,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -77,13 +77,13 @@ Future<void> showModalTambahKategori(BuildContext context) {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 25.0),
                 const Text(
                   'Nama Kategori',
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 6.0),
                 TextField(
@@ -101,7 +101,7 @@ Future<void> showModalTambahKategori(BuildContext context) {
                       borderSide: BorderSide(color: Colors.blue),
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
                     ),
-                    hintText: 'Nama Kategori',
+                    hintText: 'Masukkan nama kategori',
                     hintStyle: const TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -112,7 +112,7 @@ Future<void> showModalTambahKategori(BuildContext context) {
               SizedBox(height: 15.0),
               Text(
                 'Alokasi Dana',
-                style: TextStyle(fontSize: 13),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 6.0),
               TextFormField(
@@ -147,19 +147,19 @@ Future<void> showModalTambahKategori(BuildContext context) {
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                     ),
                   ),
                   child: const Text(
                     'Simpan',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
                   ),
                 ),
               ),
             ],
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(6),
             ),
           );
         },
