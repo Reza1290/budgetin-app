@@ -6,7 +6,7 @@ Future<String?> showModalIconKategori(BuildContext context) {
     builder: (BuildContext context) {
       return Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
