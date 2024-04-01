@@ -23,7 +23,7 @@ Future<String?> showModalIconKategori(BuildContext context) {
                     const Text(
                       'Icon Kategori',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                       textAlign: TextAlign.center,
                     ),
                     GestureDetector(
@@ -81,6 +81,8 @@ GestureDetector iconComponent(String path, BuildContext context) {
         child: ClipRRect(
           child: Image.asset(
             path,
+            height: 30,
+            width: 30,
             fit: BoxFit.fitWidth,
           ),
         ),
