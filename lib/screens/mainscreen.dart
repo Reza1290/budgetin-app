@@ -44,6 +44,8 @@ class _MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        extendBody: true,
         body: IndexedStack(
           index: selectedTab,
           children: items
@@ -66,16 +68,17 @@ class _MainScreenState extends State<MainScreen> {
           height: 66,
           width: 66,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  // spreadRadius: 5,
-                  blurRadius: 5,
-                  offset: const Offset(0, -4),
-                )
-              ]),
-          margin: const EdgeInsets.only(top: 10),
+            borderRadius: BorderRadius.circular(100),
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: Colors.grey.withOpacity(0.5),
+            //     // spreadRadius: 5,
+            //     blurRadius: 5,
+            //     offset: const Offset(0, -4),
+            //   )
+            // ],
+          ),
+          margin: const EdgeInsets.only(top: 24),
           child: FloatingActionButton(
             onPressed: () {
               showModalBottomSheet<void>(
@@ -177,17 +180,17 @@ class _MainScreenState extends State<MainScreen> {
               );
             },
             elevation: 0,
-            backgroundColor: const Color.fromRGBO(29, 119, 255, 1),
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               side: const BorderSide(
                 width: 6,
-                color: Colors.white,
+                color: Colors.blueAccent,
               ),
               borderRadius: BorderRadius.circular(100),
             ),
             child: const Icon(
               Icons.add,
-              color: Colors.white,
+              color: Colors.blueAccent,
             ),
           ),
         ),

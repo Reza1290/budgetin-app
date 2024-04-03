@@ -1,9 +1,14 @@
+import 'package:budgetin/models/database.dart';
+import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetin/widgets/modal_icon_kategori.dart';
+import 'package:drift/drift.dart' as drift;
 
-Future<void> showModalTambahKategori(BuildContext context) {
+Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
   bool _isButtonEnabled = false;
   String _iconKategori = '';
+  final TextEditingController _moneyController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   return showDialog<void>(
     context: context,
@@ -54,7 +59,6 @@ Future<void> showModalTambahKategori(BuildContext context) {
 
                       final result = await showModalIconKategori(context);
 
-                      // Update status tombol berdasarkan icon yang dipilih
                       setState(() {
                         _iconKategori = result ?? "assets/icons/lainnya.png";
                         _isButtonEnabled = true;
@@ -94,6 +98,7 @@ Future<void> showModalTambahKategori(BuildContext context) {
                   ),
                   const SizedBox(height: 6.0),
                   TextField(
+                    controller: _nameController,
                     onChanged: (value) {
                       // Update status tombol berdasarkan isi TextField
                       setState(() {
@@ -123,24 +128,10 @@ Future<void> showModalTambahKategori(BuildContext context) {
                     style: TextStyle(fontSize: 13),
                   ),
                   SizedBox(height: 6.0),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                      ),
-                      prefix: Text('Rp '),
-                      prefixStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    ),
-                  ),
+                  InputMoney(
+                    controller: _moneyController,
+                    fontSize: 12,
+                  )
                 ],
               ),
             ),
@@ -149,7 +140,18 @@ Future<void> showModalTambahKategori(BuildContext context) {
                 width: double.infinity,
                 height: 40,
                 child: ElevatedButton(
-                  onPressed: _isButtonEnabled ? () {} : null,
+                  onPressed: _isButtonEnabled
+                      ? () {
+                          final entry = CategoriesCompanion(
+                              icon: drift.Value(_iconKategori),
+                              name: drift.Value(_nameController.text),
+                              total: const drift.Value(123));
+
+                          _db
+                              .insertCategory(entry)
+                              .then((value) => Navigator.of(context).pop());
+                        }
+                      : null,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                       _isButtonEnabled ? Colors.blue : Colors.grey,

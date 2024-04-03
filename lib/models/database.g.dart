@@ -25,13 +25,20 @@ class $CategoriesTable extends Categories
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 128),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
+      'icon', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: Constant('assets/icons/lainnya.png'));
   static const VerificationMeta _totalMeta = const VerificationMeta('total');
   @override
   late final GeneratedColumn<int> total = GeneratedColumn<int>(
       'total', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, name, total];
+  List<GeneratedColumn> get $columns => [id, name, icon, total];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -50,6 +57,10 @@ class $CategoriesTable extends Categories
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('icon')) {
+      context.handle(
+          _iconMeta, icon.isAcceptableOrUnknown(data['icon']!, _iconMeta));
     }
     if (data.containsKey('total')) {
       context.handle(
@@ -70,6 +81,8 @@ class $CategoriesTable extends Categories
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      icon: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}icon'])!,
       total: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}total'])!,
     );
@@ -84,13 +97,19 @@ class $CategoriesTable extends Categories
 class Category extends DataClass implements Insertable<Category> {
   final int id;
   final String name;
+  final String icon;
   final int total;
-  const Category({required this.id, required this.name, required this.total});
+  const Category(
+      {required this.id,
+      required this.name,
+      required this.icon,
+      required this.total});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    map['icon'] = Variable<String>(icon);
     map['total'] = Variable<int>(total);
     return map;
   }
@@ -99,6 +118,7 @@ class Category extends DataClass implements Insertable<Category> {
     return CategoriesCompanion(
       id: Value(id),
       name: Value(name),
+      icon: Value(icon),
       total: Value(total),
     );
   }
@@ -109,6 +129,7 @@ class Category extends DataClass implements Insertable<Category> {
     return Category(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      icon: serializer.fromJson<String>(json['icon']),
       total: serializer.fromJson<int>(json['total']),
     );
   }
@@ -118,13 +139,16 @@ class Category extends DataClass implements Insertable<Category> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'icon': serializer.toJson<String>(icon),
       'total': serializer.toJson<int>(total),
     };
   }
 
-  Category copyWith({int? id, String? name, int? total}) => Category(
+  Category copyWith({int? id, String? name, String? icon, int? total}) =>
+      Category(
         id: id ?? this.id,
         name: name ?? this.name,
+        icon: icon ?? this.icon,
         total: total ?? this.total,
       );
   @override
@@ -132,54 +156,65 @@ class Category extends DataClass implements Insertable<Category> {
     return (StringBuffer('Category(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('icon: $icon, ')
           ..write('total: $total')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, total);
+  int get hashCode => Object.hash(id, name, icon, total);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Category &&
           other.id == this.id &&
           other.name == this.name &&
+          other.icon == this.icon &&
           other.total == this.total);
 }
 
 class CategoriesCompanion extends UpdateCompanion<Category> {
   final Value<int> id;
   final Value<String> name;
+  final Value<String> icon;
   final Value<int> total;
   const CategoriesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.icon = const Value.absent(),
     this.total = const Value.absent(),
   });
   CategoriesCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    this.icon = const Value.absent(),
     required int total,
   })  : name = Value(name),
         total = Value(total);
   static Insertable<Category> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<String>? icon,
     Expression<int>? total,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (icon != null) 'icon': icon,
       if (total != null) 'total': total,
     });
   }
 
   CategoriesCompanion copyWith(
-      {Value<int>? id, Value<String>? name, Value<int>? total}) {
+      {Value<int>? id,
+      Value<String>? name,
+      Value<String>? icon,
+      Value<int>? total}) {
     return CategoriesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      icon: icon ?? this.icon,
       total: total ?? this.total,
     );
   }
@@ -193,6 +228,9 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (icon.present) {
+      map['icon'] = Variable<String>(icon.value);
+    }
     if (total.present) {
       map['total'] = Variable<int>(total.value);
     }
@@ -204,6 +242,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     return (StringBuffer('CategoriesCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('icon: $icon, ')
           ..write('total: $total')
           ..write(')'))
         .toString();

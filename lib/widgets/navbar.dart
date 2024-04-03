@@ -15,20 +15,14 @@ class NavBarBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: Platform.isAndroid ? 16 : 0),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
-          // spreadRadius: 5,
-          blurRadius: 2,
-          offset: const Offset(0, -2),
-        )
-      ]),
       child: BottomAppBar(
-        elevation: 0,
+        color: Colors.transparent,
+        elevation: 0.0,
         child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
           child: Container(
             height: 60,
-            color: Colors.white,
+            color: Colors.blueAccent,
             child: Row(
               children: [
                 navItem(
@@ -66,10 +60,7 @@ class NavBarBottom extends StatelessWidget {
     return Expanded(
         child: InkWell(
       onTap: onTap,
-      child: Icon(icon,
-          color: selected
-              ? const Color.fromRGBO(29, 119, 255, 100)
-              : const Color.fromRGBO(204, 204, 204, 100)),
+      child: Icon(icon, color: selected ? Colors.white : Colors.blue.shade200),
     ));
   }
 }

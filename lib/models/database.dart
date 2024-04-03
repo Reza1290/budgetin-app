@@ -7,19 +7,83 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories,Transactions],
+  tables: [Categories, Transactions],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          // we added the dueDate property in the change from version 1 to
+          // version 2
+          await m.addColumn(categories, categories.icon);
+        }
+        // if (from < 3) {
+        //   // we added the priority property in the change from version 1 or 2
+        //   // to version 3
+        //   await m.addColumn(categories, categories.);
+        // }
+      },
+    );
+  }
+
+  Future<int> insertCategory(CategoriesCompanion entry) async {
+    return await into(categories).insert(entry);
+  }
+
+  Future<List<Category>> allCategories() async {
+    return await select(categories).get();
+  }
+
+  Future<Category> getCategory(int id) async {
+    return await (select(categories)..where((tbl) => tbl.id.equals(id)))
+        .getSingle();
+  }
+
+  Future<bool> updateCategory(CategoriesCompanion entry) async {
+    return await update(categories).replace(entry);
+  }
+
+  Future<int> deleteCategory(int id) async {
+    return await (delete(categories)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<int> insertTransaction(TransactionsCompanion entry) async {
+    return await into(transactions).insert(entry);
+  }
+
+  Future<List<Transaction>> allTransactions() async {
+    return await select(transactions).get();
+  }
+
+  Future<Transaction> getTransaction(int id) async {
+    return await (select(transactions)..where((tbl) => tbl.id.equals(id)))
+        .getSingle();
+  }
+
+  Future<bool> updateTransaction(TransactionsCompanion entry) async {
+    return await update(transactions).replace(entry);
+  }
+
+  Future<int> deleteTransaction(int id) async {
+    return await (delete(transactions)..where((tbl) => tbl.id.equals(id))).go();
+  }
 }
 
 LazyDatabase _openConnection() {
@@ -29,6 +93,10 @@ LazyDatabase _openConnection() {
     // for your app.
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'db.sqlite'));
+
+    if (Platform.isAndroid) {
+      await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
+    }
 
     return NativeDatabase.createInBackground(file);
   });

@@ -1,3 +1,6 @@
+import 'package:budgetin/models/database.dart';
+import 'package:budgetin/widgets/forms/input_money.dart';
+import 'package:budgetin/widgets/modal/show_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +13,26 @@ class Saldo extends StatefulWidget {
 }
 
 class _SaldoState extends State<Saldo> {
+  final TextEditingController _moneyController = TextEditingController();
+
+  // void insertData() {
+  //   insertCategory(CategoriesCompanion.insert(
+  //       name: "name",
+  //       total:
+  //           int.parse(_moneyController.value.toString().replaceAll(',', ''))));
+  // }
+
+  int uang = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // Category duit = await getCategory();
+    // uang = duit.total;
+    // print(uang);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -41,12 +64,44 @@ class _SaldoState extends State<Saldo> {
                 ),
                 const SizedBox(height: 7),
                 InkWell(
-                    onTap: () => _modalTambahSaldo(context),
+                    onTap: () => showModal(
+                        context,
+                        "Tambah Saldo",
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 12.0),
+                                      child: Text(
+                                        "Jumlah",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                    InputMoney(
+                                        controller: _moneyController,
+                                        fontSize: 12)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        () {}),
                     child: Row(
                       children: [
                         Expanded(
                           child: Text(
-                            "Rp 5.000.000.000.00",
+                            uang.toString(),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w800,
@@ -65,13 +120,13 @@ class _SaldoState extends State<Saldo> {
             ),
           ),
         ),
-        const SizedBox(width: 12), // Tambahkan jarak antara dua container
+        const SizedBox(width: 12),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
@@ -80,7 +135,7 @@ class _SaldoState extends State<Saldo> {
                 ],
               ),
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -103,132 +158,6 @@ class _SaldoState extends State<Saldo> {
           ),
         )
       ],
-    );
-  }
-
-  Future<void> _modalTambahSaldo(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8.0),
-            ),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                const Center(
-                  child: Text(
-                    'Tambah Saldo',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: -8,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.close,
-                      weight: 100,
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                    padding: EdgeInsets.zero,
-                  ),
-                )
-              ],
-            ),
-          ),
-          surfaceTintColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12.0),
-                        child: Text(
-                          "Jumlah",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter
-                              .digitsOnly // Hanya mengizinkan input angka
-                        ],
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 16.0,
-                            horizontal: 8.0,
-                          ),
-                          hintText: "100000",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            borderSide: BorderSide(
-                              color: Color.fromRGBO(131, 180, 255, 100),
-                              width: 2,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            borderSide: BorderSide(
-                              color: Color.fromRGBO(131, 180, 255, 100),
-                              width: 2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            borderSide: BorderSide(
-                              color: Color.fromRGBO(131, 180, 255, 1),
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(131, 180, 255, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                ),
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Simpan',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
-                ),
-              ),
-            )
-          ],
-        );
-      },
     );
   }
 }
