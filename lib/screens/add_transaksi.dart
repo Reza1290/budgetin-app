@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:budgetin/widgets/calendar.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddTransaksi extends StatefulWidget {
   const AddTransaksi({super.key});
@@ -71,6 +73,10 @@ class _AddTransaksiState extends State<AddTransaksi> {
             const SizedBox(height: 6.0),
             TextFormField(
               keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter
+                    .digitsOnly // Hanya mengizinkan input angka
+              ],
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6.0),
@@ -81,18 +87,15 @@ class _AddTransaksiState extends State<AddTransaksi> {
                 ),
                 prefix: const Text("Rp "),
                 prefixStyle: const TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                 errorText:
                     isFormSubmitted && (nominal == null || nominal!.isEmpty)
-                        ? 'Harap masukkan nominal transaksi'
-                        : (nominal != null &&
-                                !RegExp(r'^[0-9]+$').hasMatch(nominal!))
-                            ? 'Nominal harus berupa angka'
-                            : null,
+                        ? 'Nominal transaksi tidak boleh kosong'
+                        : null,
               ),
               onChanged: (value) {
                 setState(() {
@@ -183,7 +186,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
                     isFormSubmitted = true;
                   });
                   if (isInputValid()) {
-                    _submitForm();
+                    return showSuccessAlert(context, "Berhasil Menambahkan");
                   }
                 },
                 style: ButtonStyle(
@@ -216,14 +219,6 @@ class _AddTransaksiState extends State<AddTransaksi> {
               const AnimatedOpacity(
                 duration: Duration(milliseconds: 200),
                 opacity: 1,
-                child: Text(
-                  "",
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
               ),
             ],
           ],
@@ -232,18 +227,11 @@ class _AddTransaksiState extends State<AddTransaksi> {
     );
   }
 
-  void _submitForm() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Form submitted successfully')),
-    );
-  }
-
   bool isInputValid() {
     if (nama != null &&
         nama!.isNotEmpty &&
         nominal != null &&
         nominal!.isNotEmpty &&
-        RegExp(r'^[0-9]+$').hasMatch(nominal!) &&
         deskripsi != null &&
         deskripsi!.isNotEmpty) {
       return true;
@@ -251,4 +239,3 @@ class _AddTransaksiState extends State<AddTransaksi> {
     return false;
   }
 }
-

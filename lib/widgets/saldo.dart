@@ -146,7 +146,7 @@ class _SaldoState extends State<Saldo> {
           ),
           surfaceTintColor: Colors.white,
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(
@@ -159,10 +159,10 @@ class _SaldoState extends State<Saldo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                        padding: EdgeInsets.symmetric(vertical: 5.0),
                         child: Text(
                           "Jumlah",
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                       ),
                       TextField(
@@ -176,26 +176,31 @@ class _SaldoState extends State<Saldo> {
                             vertical: 16.0,
                             horizontal: 8.0,
                           ),
-                          hintText: "100000",
+                          prefix: Text("Rp "),
+                          prefixStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(6)),
                             borderSide: BorderSide(
-                              color: Color.fromRGBO(131, 180, 255, 100),
-                              width: 2,
+                              color: Colors.blue,
+                              width: 1,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(6)),
                             borderSide: BorderSide(
-                              color: Color.fromRGBO(131, 180, 255, 100),
-                              width: 2,
+                              color: Colors.blue,
+                              width: 1,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(6)),
                             borderSide: BorderSide(
-                              color: Color.fromRGBO(131, 180, 255, 1),
-                              width: 2,
+                              color: Colors.blue,
+                              width: 1,
                             ),
                           ),
                         ),
@@ -211,7 +216,7 @@ class _SaldoState extends State<Saldo> {
               width: MediaQuery.of(context).size.width,
               child: TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(131, 180, 255, 1),
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.0),
                   ),

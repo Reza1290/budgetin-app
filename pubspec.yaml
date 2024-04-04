@@ -30,6 +30,7 @@ flutter:
     - assets/icons/
     - assets/videos/
     - assets/fonts/
+    - assets/images/
 
   fonts:
     - family: Nunito

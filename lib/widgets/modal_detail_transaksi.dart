@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class ModalDetailTransaksi extends StatelessWidget {
   final Riwayat detailTransaksi;
-  const ModalDetailTransaksi({Key? key, required this.detailTransaksi})
-      : super(key: key);
+  const ModalDetailTransaksi({super.key, required this.detailTransaksi});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +16,10 @@ class ModalDetailTransaksi extends StatelessWidget {
         ),
         width: 325,
         padding: const EdgeInsets.only(
-          left: 30, // Jarak kiri
-          right: 30, // Jarak kanan
-          top: 30, // Jarak atas (opsional)
-          bottom: 30, // Jarak bawah (opsional)
+          left: 30,
+          right: 30,
+          top: 30,
+          bottom: 30,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -53,7 +52,7 @@ class ModalDetailTransaksi extends StatelessWidget {
                   Container(
                     width: 80,
                     height: 80,
-                    decoration:const BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color.fromRGBO(201, 218, 255, 1),
                     ),
@@ -67,12 +66,12 @@ class ModalDetailTransaksi extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 5.0), // Jarak antara gambar dan teks
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
+                  const SizedBox(height: 5.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Text(
-                      'Makanan',
-                      style: TextStyle(
+                      detailTransaksi.title,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -87,25 +86,28 @@ class ModalDetailTransaksi extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleText('Nama'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(detailTransaksi.title),
+                const SizedBox(height: 6.0),
+                _buildTextFormField('Nasi Goreng'),
                 const SizedBox(
-                    height: 10.0), // Jarak antara field dan judul berikutnya
+                  height: 10.0,
+                ),
                 _buildTitleText('Nominal'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
+                const SizedBox(height: 6.0),
                 _buildTextFormField(detailTransaksi.money),
                 const SizedBox(
-                    height: 10.0), // Jarak antara field dan judul berikutnya
+                  height: 10.0,
+                ),
                 _buildTitleText('Deskripsi'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
+                const SizedBox(height: 6.0),
                 _buildTextFormField('Beli nasi goreng di gebang'),
                 const SizedBox(
-                    height: 10.0), // Jarak antara field dan judul berikutnya
+                  height: 10.0,
+                ),
                 _buildTitleText('Tanggal'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
+                const SizedBox(height: 6.0),
                 _buildTextFormField(detailTransaksi.tanggal),
               ],
-            ), // Jarak antara gambar dan teks
+            ),
           ],
         ),
       ),
@@ -120,13 +122,13 @@ Widget _buildTitleText(String label) {
   return Text(
     label,
     style: const TextStyle(
-      fontSize: 13,
+      fontSize: 14,
       fontWeight: FontWeight.w600,
     ),
   );
 }
 
-Widget _buildTextFormField(String content, {double? height}) {
+Widget _buildTextFormField(String content) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -136,18 +138,33 @@ Widget _buildTextFormField(String content, {double? height}) {
           readOnly: true,
           initialValue: content,
           style: const TextStyle(
-            fontSize: 12,
+            fontSize: 14,
             color: Colors.black,
             fontWeight: FontWeight.w400,
           ),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6.0),
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              borderSide: BorderSide(
+                color: Colors.blue,
+                width: 1,
+              ),
             ),
-            focusedBorder:const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              borderSide: BorderSide(
+                color: Colors.blue,
+                width: 1,
+              ),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              borderSide: BorderSide(
+                color: Colors.blue,
+                width: 1,
+              ),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 15),
           ),
         ),
       ),
