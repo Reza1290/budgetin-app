@@ -1,15 +1,8 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:typed_data';
-
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/detail_kategori_page.dart';
-import 'package:budgetin/widgets/category_home.dart';
 import 'package:budgetin/widgets/modal_tambah_kategori.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class AllCategory extends StatefulWidget {
   const AllCategory({super.key});
@@ -25,10 +18,6 @@ class _AllCategoryState extends State<AllCategory> {
   int prsentase1 = 30;
   int prsentase2 = 50;
   int prsentase3 = 90;
-
-  // Future<List<Category>> getAllCategory() async {
-  //   // return await database.getAllCategoryRepo();
-  // }
 
   Future<void> insert(String name, int total) async {
     await database
