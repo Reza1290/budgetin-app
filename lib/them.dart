@@ -13,6 +13,7 @@ const Color putih30 = Color.fromRGBO(242, 242, 242, 1);
 const Color putih40 = Color.fromRGBO(209, 209, 209, 1);
 const Color hitam80 = Color.fromRGBO(102, 102, 102, 1);
 const Color hitam50 = Color.fromRGBO(163, 163, 163, 1);
+const Color hitam100 = Color(0xff3d3d3d);
 
 class PrimaryColor {
   static const Map<String, Color> _colors = {

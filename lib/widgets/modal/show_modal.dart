@@ -47,7 +47,7 @@ Future<void> showModal(
         ),
         surfaceTintColor: Colors.white,
         contentPadding: const EdgeInsets.only(
-            top: 30.0, left: 30.0, right: 30.0, bottom: 60.0),
+            top: 30.0, left: 30.0, right: 30.0, bottom: 30.0),
         content: Form(key: _formKey, child: content),
         actions: <Widget>[
           Container(

@@ -1,5 +1,7 @@
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/all_category.dart';
-import 'package:budgetin/widgets/category_home.dart';
+import 'package:budgetin/them.dart';
+import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/remainder.dart';
 import 'package:budgetin/widgets/saldo.dart';
 import 'package:flutter/material.dart';
@@ -18,65 +20,87 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Selamat Datang!",
-                        style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            color: Color.fromARGB(255, 29, 119, 255)),
-                      ),
-                      Text("Waktunya Catat Keuangan Kamu Hari Ini."),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Saldo(),
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Kategori Transaksi",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                    Text(
+                      "Selamat Datang!",
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Color.fromARGB(255, 29, 119, 255)),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllCategory()));
-                        },
-                        child: const Text(
-                          "Lainnnya",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.blue),
-                        )),
+                    Text(
+                      "Waktunya Catat Keuangan Kamu Hari Ini.",
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
-                CategoryHome(),
-                SizedBox(
-                  height: 30,
+              ),
+              Saldo(),
+              const SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Kategori Transaksi",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AllCategory()));
+                      },
+                      child: Text(
+                        "Lainnnya",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: PrimaryColor.shade400),
+                      )),
+                ],
+              ),
+              // CategoryHome(),
+              const CategoryCard(
+                category: Category(
+                  id: 2,
+                  name: 'Makanan',
+                  icon: 'assets/icons/lainnya.png',
+                  total: 123,
                 ),
-                Remainder()
-              ],
-            ),
+                isHome: true,
+              ),
+              const CategoryCard(
+                category: Category(
+                  id: 2,
+                  name: 'Makanan',
+                  icon: 'assets/icons/lainnya.png',
+                  total: 123,
+                ),
+                isHome: true,
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Remainder(),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 14.0),
+                child: const Text(
+                  "Riwayat Transaksi",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                ),
+              ),
+            ],
           ),
         ),
       ),

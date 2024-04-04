@@ -4,6 +4,7 @@ import 'package:budgetin/widgets/modal/show_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class Saldo extends StatefulWidget {
   const Saldo({super.key});
@@ -47,8 +48,10 @@ class _SaldoState extends State<Saldo> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color.fromARGB(255, 77, 148, 255),
-                  Color.fromARGB(255, 229, 225, 249)
+                  // Color.fromARGB(255, 77, 148, 255),
+                  // Color.fromARGB(255, 229, 225, 249)
+                  Color(0xff4979C2),
+                  Color(0xff4D9FFF)
                 ],
               ),
             ),
@@ -79,11 +82,10 @@ class _SaldoState extends State<Saldo> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 12.0),
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 12.0),
                                       child: Text(
-                                        "Jumlah",
+                                        DateTime.now().toLocal().toString(),
                                         style: TextStyle(fontSize: 14),
                                       ),
                                     ),
@@ -130,8 +132,9 @@ class _SaldoState extends State<Saldo> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
+                  // Color.fromARGB(255, 255, 218, 247)
+                  Color(0xffC2497C),
                   Color.fromARGB(255, 255, 77, 77),
-                  Color.fromARGB(255, 255, 218, 247)
                 ],
               ),
             ),

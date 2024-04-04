@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/detail_kategori_page.dart';
-import 'package:budgetin/widgets/category/category_view.dart';
+import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/modal_tambah_kategori.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +39,7 @@ class _AllCategoryState extends State<AllCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: const TextStyle(
           fontSize: 20,
@@ -46,150 +47,106 @@ class _AllCategoryState extends State<AllCategory> {
           color: Colors.black,
           fontFamily: 'Nunito',
         ),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios),
+        leadingWidth: 100,
+        leading: Container(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios),
+          ),
         ),
         title: Text("Kategori Transaksi"),
       ),
-      body: Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              showModalTambahKategori(context, _db);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                children: [
-                  Icon(Icons.add_circle, color: Colors.blue[400]),
-                  SizedBox(width: 20),
-                  Text(
-                    "Tambah Kategori",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.blue[400],
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () {
+                showModalTambahKategori(context, _db);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.add_circle, color: Colors.blue[400]),
+                    SizedBox(width: 20),
+                    Text(
+                      "Tambah Kategori",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.blue[400],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<Category>>(
-              future: _db.allCategories(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Category>> snapshot) {
-                debugPrint(snapshot.data.toString());
+            Expanded(
+              child: FutureBuilder<List<Category>>(
+                future: _db.allCategories(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Category>> snapshot) {
+                  debugPrint(snapshot.data.toString());
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Show a more explicit loading indicator
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 10),
-                        Text('Loading categories...'),
-                      ],
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  debugPrint(snapshot.error.toString());
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 60,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: snapshot.hasData
-                              ? Text('Muat Ulang..')
-                              : Text('Buat Kategori Terlebih Dahulu'),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  final List<Category>? categories = snapshot.data;
-                  debugPrint(categories.toString());
-                  return ListView.builder(
-                    itemCount: categories?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      Category category = categories![index];
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 24.0, vertical: 4.0),
-                        child: ListTile(
-                          leading: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: Colors.blue.shade100,
-                                border:
-                                    Border.all(color: Colors.grey.shade200)),
-                            width: 54,
-                            height: 54,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Image.asset(
-                                'assets/icons/lainnya.png',
-                              ),
-                            ),
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a more explicit loading indicator
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 10),
+                          Text('Loading categories...'),
+                        ],
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    debugPrint(snapshot.error.toString());
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 60,
                           ),
-                          title: Text(
-                            category.name.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 14),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: snapshot.hasData
+                                ? Text('Muat Ulang..')
+                                : Text('Buat Kategori Terlebih Dahulu'),
                           ),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  child: Stack(
-                                children: [
-                                  LinearProgressIndicator(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Colors.amber,
-                                    minHeight: 16,
-                                    value: 40 / 100,
-                                  ),
-                                  Container(
-                                    alignment: Alignment.bottomLeft,
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: const Text(
-                                      'Rp. 120000',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  )
-                                ],
-                              )),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                "2%",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w300, fontSize: 12),
-                              ),
-                            ],
+                        ],
+                      ),
+                    );
+                  } else {
+                    final List<Category>? categories = snapshot.data;
+                    debugPrint(categories.toString());
+                    return ListView.builder(
+                      itemCount: categories?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        Category category = categories![index];
+                        return CategoryCard(
+                          category: Category(
+                            id: 2,
+                            name: 'Makanan',
+                            icon: 'assets/icons/lainnya.png',
+                            total: 123,
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
+                          isHome: false,
+                          // isReminder: true,
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

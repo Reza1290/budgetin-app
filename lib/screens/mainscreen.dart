@@ -38,10 +38,15 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: true,
       onPopInvoked: (didPop) {
         if (items[selectedTab].navKey.currentState?.canPop() ?? false) {
           items[selectedTab].navKey.currentState?.pop();
         }
+        debugPrint('test');
+        // if (!didPop) {
+        //   items[selectedTab].navKey.currentState?.maybePop();
+        // }
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
