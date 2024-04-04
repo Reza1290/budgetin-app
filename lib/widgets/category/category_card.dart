@@ -2,19 +2,19 @@ import 'package:budgetin/models/database.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard(
-      {Key? key,
-      required this.category,
-      this.isHome = true,
-      this.isReminder = false})
-      : super(key: key);
+  const CategoryCard({
+    super.key,
+    required this.category,
+    this.isHome = true,
+  });
 
   final Category category;
   final bool isHome;
-  final bool isReminder;
 
   @override
   Widget build(BuildContext context) {
+    bool isReminder = false;
+
     return Container(
       // padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(

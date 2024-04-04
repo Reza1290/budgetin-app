@@ -27,7 +27,7 @@ class Filter extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () {
-            selectedService = index; 
+            selectedService = index;
             (context as Element).markNeedsBuild();
           },
           child: Container(
@@ -37,16 +37,17 @@ class Filter extends StatelessWidget {
               border: selectedService == index
                   ? null
                   : Border.all(
-                      color: const Color.fromRGBO(209, 209, 209, 1),
-                      width: 2),
+                      color: const Color.fromRGBO(209, 209, 209, 1), width: 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
               child: _buildText(
                 Service.all()[index],
                 12,
-                FontWeight.w600,
-                selectedService == index ? putih30 : const Color.fromRGBO(209, 209, 209, 1),
+                selectedService == index ? FontWeight.bold : FontWeight.w600,
+                selectedService == index
+                    ? putih30
+                    : const Color.fromRGBO(209, 209, 209, 1),
               ),
             ),
           ),

@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               // CategoryHome(),
-              const CategoryCard(
+              CategoryCard(
                 category: Category(
                   id: 2,
                   name: 'Makanan',
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 isHome: true,
               ),
-              const CategoryCard(
+              CategoryCard(
                 category: Category(
                   id: 2,
                   name: 'Makanan',
