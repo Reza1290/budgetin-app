@@ -1,4 +1,5 @@
 import 'package:budgetin/widgets/calendar.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
 class EditTransaksi extends StatefulWidget {
@@ -197,11 +198,14 @@ class _EditTransaksiState extends State<EditTransaksi> {
                 height: 45,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.pop(context);
                     setState(() {
                       isButtonPressed = true;
                     });
-                    _simpanTransaksi(context);
+                    return showSuccessAlert(context, "Transaksi berhasil disimpan!");
+                    // _simpanTransaksi(context);
                   },
+                  
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.blue),

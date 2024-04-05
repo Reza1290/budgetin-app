@@ -27,7 +27,7 @@ void showSuccessAlert(BuildContext context, String message) {
               Text(
                 message,
                 style: const TextStyle(
-                  fontSize: 15.0,
+                  fontSize: 15.0, 
                 ),
                 textAlign: TextAlign.center,
               ),

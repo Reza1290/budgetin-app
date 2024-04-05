@@ -1,8 +1,8 @@
-import 'package:budgetin/layout.dart';
 import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/edit_transaksi.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/filter.dart';
 import 'package:budgetin/widgets/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
@@ -36,7 +36,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             height: 20,
           ),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.only(left: 24, right: 15),
             child: SearchInput(),
           ),
           const SizedBox(
@@ -65,9 +65,11 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               return Slidable(
                 key: UniqueKey(),
                 endActionPane: ActionPane(
+                  
                   motion: const StretchMotion(),
                   children: [
                     SlidableAction(
+                      borderRadius: BorderRadius.circular(5),
                       autoClose: true,
                       onPressed: (_) => showDialog(
                         context: context,
@@ -80,6 +82,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                       icon: Icons.edit_square,
                     ),
                     SlidableAction(
+                      borderRadius: BorderRadius.circular(5),
                       onPressed: (value) {
                         _confirmDelete(context,
                             index); // Tampilkan dialog konfirmasi sebelum menghapus
@@ -101,6 +104,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                     );
                   },
                   child: Container(
+
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     child: RiwayatTransaksi(
                       title: riwayat.title,
@@ -122,24 +126,18 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
       setState(() {
         riwayatList.removeAt(index);
       });
-      _hapusTransaksi(context); // Panggil fungsi untuk menampilkan snackbar
+      return showFailedAlert(context, "Transaksi berhasil dihapus!");// Panggil fungsi untuk menampilkan snackbar
     }
   }
 
-  void _hapusTransaksi(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Transaksi berhasil dihapus!'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
 
   void _confirmDelete(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
+         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           title: const Text('Konfirmasi'),
           content: const Text('Apakah Anda yakin ingin menghapus riwayat ini?'),
           actions: <Widget>[
@@ -147,14 +145,14 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Tutup dialog
               },
-              child: const Text('Batal'),
+              child: const Text('Batal',style: TextStyle(color: biru40)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Tutup dialog
                 _onDismissed(context, index, true); // Hapus riwayat
               },
-              child: const Text('Ya'),
+              child: const Text('Ya', style: TextStyle(color: biru40),),
             ),
           ],
         );

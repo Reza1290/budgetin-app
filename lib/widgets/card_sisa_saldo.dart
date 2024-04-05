@@ -7,7 +7,8 @@ class CardSisaSaldo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 293.0,
+      margin: EdgeInsets.symmetric(horizontal: 24),
+      width: MediaQuery.of(context).size.width*0.790,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         gradient: const LinearGradient(
@@ -54,14 +55,14 @@ class CardSisaSaldo extends StatelessWidget {
                   "Sisa Saldo",
                    15,
                    FontWeight.w600,
-                  putih30)
+                  hitamPutih30)
             ],
           ),
           _buildText(
               "Rp 5.000.000",
                24,
               FontWeight.w800,
-              putih30),
+              hitamPutih30),
           const SizedBox(
             height: 20,
           ),

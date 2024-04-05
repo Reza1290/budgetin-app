@@ -2,6 +2,7 @@ import 'package:budgetin/models/nav.dart';
 import 'package:budgetin/screens/add_transaksi.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
+import 'package:budgetin/screens/statistik_page.dart';
 import 'package:budgetin/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
     items = [
       Nav(page: const HomePage(), navKey: homeNavKey),
       Nav(page: const RiwayatTransaksiPage(), navKey: historyNavKey),
-      Nav(page: const TabPage(tab: 3), navKey: reportNavKey),
+      Nav(page: const StatisticPage(), navKey: reportNavKey),
       Nav(page: const TabPage(tab: 4), navKey: faqNavKey),
     ];
   }

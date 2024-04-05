@@ -7,6 +7,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'Budgetin',
       // Set Raleway as the default app font.

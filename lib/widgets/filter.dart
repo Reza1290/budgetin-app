@@ -33,7 +33,7 @@ class Filter extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              color: selectedService == index ? biruPrimary : null,
+              color: selectedService == index ? biru40 : null,
               border: selectedService == index
                   ? null
                   : Border.all(
@@ -46,7 +46,7 @@ class Filter extends StatelessWidget {
                 Service.all()[index],
                 12,
                 FontWeight.w600,
-                selectedService == index ? putih30 : const Color.fromRGBO(209, 209, 209, 1),
+                selectedService == index ? hitamPutih30 : const Color.fromRGBO(209, 209, 209, 1),
               ),
             ),
           ),
