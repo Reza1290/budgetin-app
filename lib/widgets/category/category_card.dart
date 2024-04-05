@@ -6,15 +6,15 @@ class CategoryCard extends StatelessWidget {
     super.key,
     required this.category,
     this.isHome = true,
+    this.isReminder = false,
   });
 
   final Category category;
   final bool isHome;
+  final bool isReminder;
 
   @override
   Widget build(BuildContext context) {
-    bool isReminder = false;
-
     return Container(
       // padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(

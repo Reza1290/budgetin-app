@@ -26,7 +26,7 @@ class Remainder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Yuk Gunakan Remainder!",
+              "Yuk Gunakan Reminder!",
               style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 18,

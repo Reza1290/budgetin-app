@@ -143,12 +143,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                             },
                           );
                         },
-                        child: Container(
-                          child: RiwayatTransaksi(
-                            title: riwayat.title,
-                            tanggal: riwayat.tanggal,
-                            money: riwayat.money,
-                          ),
+                        child: RiwayatTransaksi(
+                          title: riwayat.title,
+                          tanggal: riwayat.tanggal,
+                          money: riwayat.money,
                         ),
                       ),
                     ),

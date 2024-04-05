@@ -4,7 +4,11 @@ class RiwayatTransaksi extends StatelessWidget {
   final String title;
   final String tanggal;
   final String money;
-  const RiwayatTransaksi({super.key, required this.title, required this.tanggal,required this.money});
+  const RiwayatTransaksi(
+      {super.key,
+      required this.title,
+      required this.tanggal,
+      required this.money});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +41,8 @@ class RiwayatTransaksi extends StatelessWidget {
                 ),
                 Positioned.fill(
                   child: Center(
-                    child: Image.network(
-                      'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
+                    child: Image.asset(
+                      'assets/icons/lainnya.png',
                       width: 29.0,
                       height: 29.0,
                     ),
@@ -86,13 +90,14 @@ class RiwayatTransaksi extends StatelessWidget {
                           ),
                           Text(
                             tanggal,
-                            style:const TextStyle(fontSize: 8.0, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 8.0, color: Colors.grey),
                           ),
                         ],
                       ),
                       Text(
                         '- \$${money}',
-                        style:const TextStyle(
+                        style: const TextStyle(
                             color: Colors.red, fontWeight: FontWeight.bold),
                       ),
                     ],
