@@ -1,21 +1,36 @@
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/screens/detail_kategori_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
     super.key,
     required this.category,
     this.isHome = true,
-    this.isReminder = false,
+    required this.totalAmount,
   });
 
+  final int totalAmount;
   final Category category;
   final bool isHome;
-  final bool isReminder;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    bool isReminder = totalAmount / category.total > 80;
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailKategoriPage(
+                categoryId: category.id,
+              ),
+            ));
+      },
+      hoverColor: Colors.transparent,
       // padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(
         contentPadding: EdgeInsets.all(0),
@@ -32,7 +47,9 @@ class CategoryCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Image.asset(
-                    'assets/icons/lainnya.png',
+                    category.icon == ''
+                        ? 'assets/icons/lainnya.png'
+                        : category.icon,
                   ),
                 ),
               ),
@@ -54,15 +71,15 @@ class CategoryCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.amber,
                           minHeight: 17,
-                          value: 40 / 100,
+                          value: totalAmount / category.total,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Container(
                             alignment: Alignment.bottomLeft,
                             padding: EdgeInsets.only(left: 10.0),
-                            child: const Text(
-                              'Rp. 120000',
+                            child: Text(
+                              TextCurrencyFormat.format(totalAmount.toString()),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: 10, fontWeight: FontWeight.w600),
@@ -76,7 +93,9 @@ class CategoryCard extends StatelessWidget {
                     width: 15,
                   ),
                   Text(
-                    "2%",
+                    (NumberFormat.percentPattern('id').format(double.parse(
+                            (totalAmount / category.total).toStringAsFixed(3))))
+                        .toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
@@ -96,8 +115,11 @@ class CategoryCard extends StatelessWidget {
                             color: Colors.redAccent,
                             size: 12,
                           ),
+                          SizedBox(
+                            width: 5,
+                          ),
                           Text(
-                            'Pengeluaran anda hampir mencapai maksimum',
+                            'Pengeluaran mendekati batas maksimal.',
                             style: TextStyle(
                                 color: Colors.redAccent, fontSize: 10),
                           )

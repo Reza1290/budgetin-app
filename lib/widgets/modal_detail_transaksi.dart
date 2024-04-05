@@ -1,8 +1,16 @@
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/dummy.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/widgets/detail_transaksi.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+AppDb _db = AppDb();
+
+DateFormat formatter = DateFormat('EEEE, d MMMM y', 'id_ID');
 
 class ModalDetailTransaksi extends StatelessWidget {
-  final Riwayat detailTransaksi;
+  final TransactionWithCategory detailTransaksi;
   const ModalDetailTransaksi({Key? key, required this.detailTransaksi})
       : super(key: key);
 
@@ -53,14 +61,14 @@ class ModalDetailTransaksi extends StatelessWidget {
                   Container(
                     width: 80,
                     height: 80,
-                    decoration:const BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color.fromRGBO(201, 218, 255, 1),
                     ),
                     child: Center(
                       child: ClipOval(
-                        child: Image.network(
-                          'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
+                        child: Image.asset(
+                          detailTransaksi.category.icon,
                           width: 50,
                           height: 50,
                         ),
@@ -68,11 +76,11 @@ class ModalDetailTransaksi extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5.0), // Jarak antara gambar dan teks
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Text(
-                      'Makanan',
-                      style: TextStyle(
+                      detailTransaksi.category.name,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -87,23 +95,29 @@ class ModalDetailTransaksi extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleText('Nama'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(detailTransaksi.title),
+                const SizedBox(
+                    height: 6.0), // Jarak antara judul dan form field
+                _buildTextFormField(detailTransaksi.transaction.name),
                 const SizedBox(
                     height: 10.0), // Jarak antara field dan judul berikutnya
                 _buildTitleText('Nominal'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(detailTransaksi.money),
+                const SizedBox(
+                    height: 6.0), // Jarak antara judul dan form field
+                _buildTextFormField(
+                    detailTransaksi.transaction.amount.toString()),
                 const SizedBox(
                     height: 10.0), // Jarak antara field dan judul berikutnya
                 _buildTitleText('Deskripsi'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField('Beli nasi goreng di gebang'),
+                const SizedBox(
+                    height: 6.0), // Jarak antara judul dan form field
+                _buildTextFormField(detailTransaksi.transaction.description),
                 const SizedBox(
                     height: 10.0), // Jarak antara field dan judul berikutnya
                 _buildTitleText('Tanggal'),
-                const SizedBox(height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(detailTransaksi.tanggal),
+                const SizedBox(
+                    height: 6.0), // Jarak antara judul dan form field
+                _buildTextFormField(
+                    detailTransaksi.transaction.transaction_date.toString()),
               ],
             ), // Jarak antara gambar dan teks
           ],
@@ -144,7 +158,7 @@ Widget _buildTextFormField(String content, {double? height}) {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6.0),
             ),
-            focusedBorder:const OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(6.0)),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 15),

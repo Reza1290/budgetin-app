@@ -1,4 +1,6 @@
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/screens/riwayat_transaksi_page.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,20 +10,40 @@ import 'package:intl/intl.dart';
 final _formKey = GlobalKey<FormState>();
 
 class AddTransaksi extends StatefulWidget {
-  const AddTransaksi({super.key});
+  final int categoryId;
+  const AddTransaksi({super.key, required this.categoryId});
 
   @override
   State<AddTransaksi> createState() => _AddTransaksiState();
 }
 
 class _AddTransaksiState extends State<AddTransaksi> {
-  final TextEditingController _moneyController = TextEditingController();
+  AppDb database = AppDb();
 
   DateTime selectedDate = DateTime.now();
   String? nama;
   String? nominal;
   String? deskripsi;
   bool isFormSubmitted = false;
+
+  DateTime now = DateTime.now();
+
+  Future insert(String name, String description, int amount, DateTime date,
+      int categoryId) async {
+    final row = await database.into(database.transactions).insertReturning(
+        TransactionsCompanion.insert(
+            name: name,
+            description: description,
+            category_id: categoryId,
+            amount: amount,
+            transaction_date: date));
+  }
+
+  TextEditingController nameTransaksiController = TextEditingController();
+  // TextEditingController amountTransaksiController = TextEditingController();
+  final TextEditingController _moneyController = TextEditingController();
+  TextEditingController deskripsiTransaksiController = TextEditingController();
+  TextEditingController dateTransaksiController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +70,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
               ),
               const SizedBox(height: 6.0),
               TextFormField(
+                controller: nameTransaksiController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6.0),
@@ -90,6 +113,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
               ),
               const SizedBox(height: 6.0),
               TextFormField(
+                controller: deskripsiTransaksiController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6.0),
@@ -166,6 +190,20 @@ class _AddTransaksiState extends State<AddTransaksi> {
                     _formKey.currentState!.validate();
                     setState(() {
                       isFormSubmitted = true;
+
+                      insert(
+                          nameTransaksiController.text,
+                          deskripsiTransaksiController.text,
+                          int.parse(_moneyController.text
+                              .toString()
+                              .replaceAll('.', '')),
+                          selectedDate,
+                          widget.categoryId);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RiwayatTransaksiPage(),
+                          ));
                     });
                     if (isInputValid()) {
                       _submitForm();

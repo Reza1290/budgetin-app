@@ -1,5 +1,7 @@
 import 'package:budgetin/layout.dart';
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/dummy.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/edit_transaksi.dart';
@@ -18,7 +20,36 @@ class RiwayatTransaksiPage extends StatefulWidget {
 }
 
 class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
+  late AppDb _db;
+
+  Stream<List<TransactionWithCategory>> getAllTransactions() {
+    return _db.getAllTransactionWithCategory();
+  }
+
   final TextEditingController searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  bool isVisible = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        isVisible = !_focusNode.hasFocus;
+      });
+    });
+    _db = AppDb();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _db.close();
+    searchController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +63,31 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         centerTitle: true,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0),
+        padding: EdgeInsets.only(top: 20.0),
         child: Column(
           children: [
-            const CardSisaSaldo(),
-            const SizedBox(
-              height: 20,
+            AnimatedSwitcher(
+              duration: Duration(milliseconds: 200),
+              child: Visibility(
+                key: Key(isVisible.toString()),
+                visible: isVisible,
+                child: const CardSisaSaldo(),
+              ),
+            ),
+            AnimatedSwitcher(
+              duration: Duration(milliseconds: 200),
+              child: Visibility(
+                key: Key(isVisible.toString()),
+                visible: isVisible,
+                child: const SizedBox(
+                  height: 20,
+                ),
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
               child: SearchInput(
-                controller: searchController,
-              ),
+                  controller: searchController, focusNode: _focusNode),
             ),
             const SizedBox(
               height: 10,
@@ -64,98 +108,124 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: SlidableAutoCloseBehavior(
-          closeWhenOpened: true,
-          child: ListView.builder(
-            itemCount: riwayatList.length,
-            itemBuilder: (context, index) {
-              final riwayat = riwayatList[index];
-              return Stack(
-                alignment: Alignment.centerRight,
-                clipBehavior: Clip.none,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        clipBehavior: Clip.none,
-                        width: 80,
-                        height: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: kuning50,
-                        ),
-                      ),
-                      Container(
-                        clipBehavior: Clip.none,
-                        width: 130,
-                        height: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: merah50,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Slidable(
-                      key: UniqueKey(),
-                      endActionPane: ActionPane(
-                        motion: const StretchMotion(),
-                        children: [
-                          SlidableAction(
-                            autoClose: true,
-                            onPressed: (_) => showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const EditTransaksi();
-                              },
-                            ),
-                            backgroundColor: kuning50,
-                            foregroundColor: Colors.white,
-                            icon: Icons.edit_square,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0)),
-                          ),
-                          SlidableAction(
-                            onPressed: (value) {
-                              _confirmDelete(context,
-                                  index); // Tampilkan dialog konfirmasi sebelum menghapus
-                            },
-                            autoClose: true,
-                            backgroundColor: merah50,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0)),
-                          ),
-                        ],
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ModalDetailTransaksi(
-                                  detailTransaksi: riwayat);
-                            },
+            closeWhenOpened: true,
+            child: StreamBuilder<List<TransactionWithCategory>>(
+              stream: getAllTransactions(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.length > 0) {
+                      return ListView.builder(
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (context, index) {
+                          final transaction = snapshot.data![index];
+                          return Stack(
+                            alignment: Alignment.centerRight,
+                            clipBehavior: Clip.none,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    clipBehavior: Clip.none,
+                                    width: 80,
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: kuning50,
+                                    ),
+                                  ),
+                                  Container(
+                                    clipBehavior: Clip.none,
+                                    width: 130,
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: merah50,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Slidable(
+                                  key: UniqueKey(),
+                                  endActionPane: ActionPane(
+                                    motion: const StretchMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        autoClose: true,
+                                        onPressed: (_) => showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return EditTransaksi();
+                                          },
+                                        ),
+                                        backgroundColor: kuning50,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.edit_square,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(9)),
+                                      ),
+                                      SlidableAction(
+                                        onPressed: (value) {
+                                          _confirmDelete(
+                                              context,
+                                              transaction.transaction
+                                                  .id); // Tampilkan dialog konfirmasi sebelum menghapus
+                                        },
+                                        autoClose: true,
+                                        backgroundColor: merah50,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(9),
+                                            bottomRight: Radius.circular(9)),
+                                      ),
+                                    ],
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return ModalDetailTransaksi(
+                                              detailTransaksi: transaction);
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      child: RiwayatTransaksi(
+                                        title: transaction.transaction.name,
+                                        tanggal: transaction
+                                            .transaction.transaction_date
+                                            .toString(),
+                                        money: transaction.transaction.amount
+                                            .toString(),
+                                        icon: transaction.category.icon,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         },
-                        child: RiwayatTransaksi(
-                          title: riwayat.title,
-                          tanggal: riwayat.tanggal,
-                          money: riwayat.money,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                      );
+                    } else {
+                      return const Text("Belum ada transaksi");
+                    }
+                  } else {
+                    return const Text("Belum ada transaksi");
+                  }
+                }
+              },
+            )),
       ),
     );
   }

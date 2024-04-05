@@ -34,7 +34,6 @@ class _AllCategoryState extends State<AllCategory> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -83,10 +82,10 @@ class _AllCategoryState extends State<AllCategory> {
               ),
             ),
             Expanded(
-              child: FutureBuilder<List<Category>>(
-                future: _db.allCategories(),
+              child: FutureBuilder<List<CategoryTotal>>(
+                future: _db.sumExpenseByCategory(),
                 builder: (BuildContext context,
-                    AsyncSnapshot<List<Category>> snapshot) {
+                    AsyncSnapshot<List<CategoryTotal>> snapshot) {
                   debugPrint(snapshot.data.toString());
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -102,7 +101,6 @@ class _AllCategoryState extends State<AllCategory> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    debugPrint(snapshot.error.toString());
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -122,19 +120,19 @@ class _AllCategoryState extends State<AllCategory> {
                       ),
                     );
                   } else {
-                    final List<Category>? categories = snapshot.data;
-                    debugPrint(categories.toString());
+                    final List<CategoryTotal>? categories = snapshot.data;
                     return ListView.builder(
                       itemCount: categories?.length ?? 0,
                       itemBuilder: (context, index) {
-                        Category category = categories![index];
+                        Category category = categories![index].category;
                         return CategoryCard(
                           category: Category(
-                            id: 2,
-                            name: 'Makanan',
-                            icon: 'assets/icons/lainnya.png',
-                            total: 123,
+                            id: category.id,
+                            name: category.name.toString(),
+                            icon: category.icon.toString(),
+                            total: category.total,
                           ),
+                          totalAmount: categories[index].totalAmount,
                           isHome: false,
                           // isReminder: true,
                         );

@@ -1,4 +1,5 @@
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/modal/show_modal.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,23 +16,28 @@ class Saldo extends StatefulWidget {
 
 class _SaldoState extends State<Saldo> {
   final TextEditingController _moneyController = TextEditingController();
+  late AppDb _db;
 
-  // void insertData() {
-  //   insertCategory(CategoriesCompanion.insert(
-  //       name: "name",
-  //       total:
-  //           int.parse(_moneyController.value.toString().replaceAll(',', ''))));
-  // }
-
-  int uang = 0;
+  int uang = 222222222222222;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // Category duit = await getCategory();
-    // uang = duit.total;
-    // print(uang);
+    _db = AppDb();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _db.close();
+    super.dispose();
+  }
+
+  Future<int> totalExpense() async {
+    return await _db.totalExpense().whenComplete(() {
+      _db.close();
+    }); // Tambahkan await di sini
   }
 
   @override
@@ -103,7 +109,7 @@ class _SaldoState extends State<Saldo> {
                       children: [
                         Expanded(
                           child: Text(
-                            uang.toString(),
+                            TextCurrencyFormat.format(uang.toString()),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w800,
@@ -138,7 +144,7 @@ class _SaldoState extends State<Saldo> {
                 ],
               ),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -149,13 +155,20 @@ class _SaldoState extends State<Saldo> {
                       color: Colors.white),
                 ),
                 SizedBox(height: 7),
-                Text(
-                  "Rp 5.000.000",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                      color: Colors.white),
-                )
+                FutureBuilder<int>(
+                    future: totalExpense(),
+                    builder: (context, snapshot) {
+                      int expense = snapshot.data ?? 0;
+
+                      return Text(
+                        TextCurrencyFormat.format(expense.toString()),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: Colors.white,
+                            overflow: TextOverflow.ellipsis),
+                      );
+                    })
               ],
             ),
           ),

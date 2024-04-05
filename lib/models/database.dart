@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:budgetin/models/category.dart';
 import 'package:budgetin/models/transaction.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:drift/drift.dart';
 // These imports are used to open the database
 import 'package:drift/native.dart';
@@ -64,6 +65,32 @@ class AppDb extends _$AppDb {
     return await (delete(categories)..where((tbl) => tbl.id.equals(id))).go();
   }
 
+  Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
+    final query = (select(transactions)).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
+  Stream<List<TransactionWithCategory>> getTransactionWithCategory(int id) {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id)),
+    ])
+      ..where(categories.id.equals(id));
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
   Future<int> insertTransaction(TransactionsCompanion entry) async {
     return await into(transactions).insert(entry);
   }
@@ -77,13 +104,77 @@ class AppDb extends _$AppDb {
         .getSingle();
   }
 
-  Future<bool> updateTransaction(TransactionsCompanion entry) async {
-    return await update(transactions).replace(entry);
+  Future updateTransactionRepo(int id, String name, int amount, int categoryId,
+      String description, DateTime date) async {
+    return (update(transactions)..where((tbl) => tbl.id.equals(id))).write(
+        TransactionsCompanion(
+            name: Value(name),
+            description: Value(description),
+            category_id: Value(categoryId),
+            amount: Value(amount),
+            transaction_date: Value(date)));
   }
 
   Future<int> deleteTransaction(int id) async {
     return await (delete(transactions)..where((tbl) => tbl.id.equals(id))).go();
   }
+
+  // Future sumExpenseByCategory(int categoryId) async {
+  //   final datas = await (select(transactions)
+  //         ..where((tbl) => tbl.category_id.equals(categoryId)))
+  //       .get();
+  //   int totalAmount = 0;
+
+  //   for (final data in datas) {
+  //     totalAmount += data.amount;
+  //   }
+
+  //   return totalAmount;
+  // }
+  Future<List<CategoryTotal>> sumExpenseByCategory() async {
+    final categoriesResult = await select(categories).get();
+
+    final List<CategoryTotal> categoryTotals = [];
+
+    for (final category in categoriesResult) {
+      final totalAmount = await _calculateTotalAmountForCategory(category.id);
+      categoryTotals.add(CategoryTotal(category, totalAmount));
+    }
+
+    return categoryTotals;
+  }
+
+  Future<int> _calculateTotalAmountForCategory(int categoryId) async {
+    final datas = await (select(transactions)
+          ..where((tbl) => tbl.category_id.equals(categoryId)))
+        .get();
+    int totalAmount = 0;
+
+    for (final data in datas) {
+      totalAmount += data.amount;
+    }
+
+    return totalAmount;
+  }
+
+  Future<int> totalExpense() async {
+    final datas = await allTransactions();
+
+    int totalExpense = 0;
+
+    for (final data in datas) {
+      totalExpense += data.amount;
+    }
+
+    return totalExpense;
+  }
+}
+
+class CategoryTotal {
+  final Category category;
+  final int totalAmount;
+
+  CategoryTotal(this.category, this.totalAmount);
 }
 
 LazyDatabase _openConnection() {

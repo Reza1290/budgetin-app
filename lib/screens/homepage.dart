@@ -3,7 +3,7 @@ import 'package:budgetin/screens/all_category.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/remainder.dart';
-import 'package:budgetin/widgets/saldo.dart';
+import 'package:budgetin/widgets/homepage/saldo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
                   icon: 'assets/icons/lainnya.png',
                   total: 123,
                 ),
+                totalAmount: 40,
                 isHome: true,
               ),
               CategoryCard(
@@ -87,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                   icon: 'assets/icons/lainnya.png',
                   total: 123,
                 ),
+                totalAmount: 40,
                 isHome: true,
               ),
               SizedBox(

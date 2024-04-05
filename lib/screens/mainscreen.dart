@@ -141,11 +141,7 @@ class _MainScreenState extends State<MainScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       GestureDetector(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddTransaksi())),
+                                        onTap: () {},
                                         child: Row(
                                           children: [
                                             Container(

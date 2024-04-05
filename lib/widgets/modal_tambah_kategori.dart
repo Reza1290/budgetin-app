@@ -145,7 +145,8 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                           final entry = CategoriesCompanion(
                               icon: drift.Value(_iconKategori),
                               name: drift.Value(_nameController.text),
-                              total: const drift.Value(123));
+                              total: drift.Value(int.parse(
+                                  _moneyController.text.replaceAll('.', ''))));
 
                           _db
                               .insertCategory(entry)

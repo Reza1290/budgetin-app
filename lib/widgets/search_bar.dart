@@ -1,10 +1,12 @@
 import 'package:budgetin/them.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class SearchInput extends StatefulWidget {
-  const SearchInput({super.key, required this.controller});
+  const SearchInput({super.key, required this.controller, this.focusNode});
 
   final TextEditingController controller;
+  final FocusNode? focusNode;
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -53,6 +55,8 @@ class _SearchInputState extends State<SearchInput> {
           child: SizedBox(
             height: 50, // Tinggi TextField
             child: TextField(
+              controller: widget.controller,
+              focusNode: widget.focusNode,
               onTapOutside: (event) {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
