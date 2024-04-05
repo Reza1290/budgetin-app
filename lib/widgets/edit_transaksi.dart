@@ -1,17 +1,25 @@
+import 'package:budgetin/models/database.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/widgets/calendar.dart';
 import 'package:flutter/material.dart';
 
 class EditTransaksi extends StatefulWidget {
-  const EditTransaksi({super.key});
+  final TransactionWithCategory transacion;
+  const EditTransaksi({super.key, required this.transacion});
 
   @override
   State<EditTransaksi> createState() => _EditTransaksiState();
 }
 
 class _EditTransaksiState extends State<EditTransaksi> {
+  AppDb _db = AppDb();
   DateTime selectedDate = DateTime.now();
   bool isButtonPressed = false;
   String? nominal;
+
+  TextEditingController nameEditTransactionController = TextEditingController();
+  TextEditingController amountEditTransactionController = TextEditingController();
+  TextEditingController descriptionEditTransactionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +66,8 @@ class _EditTransaksiState extends State<EditTransaksi> {
               SizedBox(
                 height: 40,
                 child: TextFormField(
-                  initialValue: "Nasi goreng",
+                  controller: nameEditTransactionController,
+                  initialValue: widget.transacion.transaction.name,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -85,8 +94,9 @@ class _EditTransaksiState extends State<EditTransaksi> {
               SizedBox(
                 height: 40,
                 child: TextFormField(
+                  controller: amountEditTransactionController,
                   keyboardType: TextInputType.number,
-                  initialValue: "20.000",
+                  initialValue: widget.transacion.transaction.amount.toString(),
                   onChanged: (value) {
                     setState(() {
                       nominal = value;
@@ -129,7 +139,8 @@ class _EditTransaksiState extends State<EditTransaksi> {
               SizedBox(
                 height: 40,
                 child: TextFormField(
-                  initialValue: "Beli di gebang",
+                  controller: descriptionEditTransactionController,
+                  initialValue: widget.transacion.transaction.description,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -200,6 +211,14 @@ class _EditTransaksiState extends State<EditTransaksi> {
                     setState(() {
                       isButtonPressed = true;
                     });
+                    _db.updateTransactionRepo(
+                        widget.transacion.transaction.id,
+                        widget.transacion.transaction.name,
+                        widget.transacion.transaction.amount,
+                        widget.transacion.transaction.category_id,
+                        widget.transacion.transaction.description,
+                        widget.transacion.transaction.transaction_date);
+                        _simpanTransaksi(context);
                     _simpanTransaksi(context);
                   },
                   style: ButtonStyle(
@@ -214,7 +233,7 @@ class _EditTransaksiState extends State<EditTransaksi> {
                   child: const Text(
                     "Simpan",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 18, 
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),

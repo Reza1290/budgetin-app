@@ -1,8 +1,4 @@
-import 'dart:async';
-
 import 'package:budgetin/models/database.dart';
-import 'package:budgetin/screens/detail_kategori_page.dart';
-import 'package:budgetin/widgets/category/category_view.dart';
 import 'package:budgetin/widgets/modal_tambah_kategori.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

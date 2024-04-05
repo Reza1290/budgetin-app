@@ -1,3 +1,4 @@
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/nav.dart';
 import 'package:budgetin/screens/add_transaksi.dart';
 import 'package:budgetin/screens/homepage.dart';
@@ -24,9 +25,16 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Nav> items = [];
 
+  final AppDb database = AppDb();
+
+  Future<List<Category>> getAllCategory() {
+    return database.select(database.categories).get();
+  }
+
   @override
   void initState() {
     super.initState();
+
     items = [
       Nav(page: const HomePage(), navKey: homeNavKey),
       Nav(page: const RiwayatTransaksiPage(), navKey: historyNavKey),
@@ -135,39 +143,92 @@ class _MainScreenState extends State<MainScreen> {
                                         CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      GestureDetector(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddTransaksi())),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 44,
-                                              height: 44,
-                                              padding: EdgeInsets.all(12.0),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                color: Colors.blue.shade200,
-                                              ),
-                                              child: Image.asset(
-                                                'assets/icons/lainnya.png',
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                            ),
-                                            Container(
-                                              margin:
-                                                  EdgeInsets.only(left: 12.0),
-                                              child: Text(
-                                                "Makanan",
-                                                style: TextStyle(fontSize: 14),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                      FutureBuilder<List<Category>>(
+                                          future: getAllCategory(),
+                                          builder: (context, snapshots) {
+                                            if (snapshots.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            } else {
+                                              if (snapshots.hasData) {
+                                                if (snapshots.data!.length >
+                                                    0) {
+                                                  final List<Category>?
+                                                      categories =
+                                                      snapshots.data;
+                                                  debugPrint(
+                                                      categories.toString());
+                                                  return ListView.builder(
+                                                    shrinkWrap: true,
+                                                    itemCount: categories!
+                                                        .length, // Menggunakan panjang data
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return GestureDetector(
+                                                        // Menambahkan return di sini
+                                                        onTap: () =>
+                                                            Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AddTransaksi(categoryId:categories[index].id),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 44,
+                                                              height: 44,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          12.0),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            100),
+                                                                color: Colors
+                                                                    .blue
+                                                                    .shade200,
+                                                              ),
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/icons/lainnya.png',
+                                                                fit: BoxFit
+                                                                    .fitWidth,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left:
+                                                                          12.0),
+                                                              child: Text(
+                                                                categories[
+                                                                        index]
+                                                                    .name, // Mengambil nama kategori
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  return Text(
+                                                      "Kategori Belum ada");
+                                                }
+                                              } else {
+                                                return Text(
+                                                    "Belum ada kategori");
+                                              }
+                                            }
+                                          })
                                     ],
                                   ),
                                 ),
