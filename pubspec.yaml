@@ -29,7 +29,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/icons/
-    - assets/videos/
+    - assets/images/
     - assets/fonts/
 
   fonts:

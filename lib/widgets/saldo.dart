@@ -1,3 +1,4 @@
+import 'package:budgetin/models/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,10 +12,16 @@ class Saldo extends StatefulWidget {
   State<Saldo> createState() => _SaldoState();
 }
 
-int saldo = 0;
-TextEditingController saldoController = TextEditingController();
-final formatter = NumberFormat('#,###.##','id');
+AppDb _db = AppDb();
 
+int saldo = 0;
+Future<int> totalExpense() async {
+  // Ubah deklarasi totalExpense menjadi Future<int>
+  return await _db.totalExpense(); // Tambahkan await di sini
+}
+
+TextEditingController saldoController = TextEditingController();
+final formatter = NumberFormat('#,###.##', 'id');
 
 class _SaldoState extends State<Saldo> {
   @override
@@ -52,15 +59,17 @@ class _SaldoState extends State<Saldo> {
                     onTap: () => _modalTambahSaldo(context),
                     child: Row(
                       children: [
-                         Text(
-                            "Rp ${formatter.format(saldo)}",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 16,
-                                color: Colors.white),
-                          ),
-                      SizedBox(width: 4,),
+                        Text(
+                          "Rp ${formatter.format(saldo)}",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: Colors.white),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
                         Icon(
                           Icons.edit,
                           size: 13,
@@ -74,40 +83,51 @@ class _SaldoState extends State<Saldo> {
         ),
         const SizedBox(width: 12), // Tambahkan jarak antara dua container
         Expanded(
-          child: 
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 255, 77, 77),
-                      Color.fromARGB(255, 255, 218, 247)
-                    ],
-                  ),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromARGB(255, 255, 77, 77),
+                  Color.fromARGB(255, 255, 218, 247)
+                ],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Total Pengeluaran",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: Colors.white),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Pengeluaran",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.white),
-                    ),
-                    SizedBox(height: 7),
-                    Text(
-                      "Rp 5.000.000",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                          color: Colors.white),
-                    )
-                  ],
-                ),
+                SizedBox(height: 7),
+                FutureBuilder<int>(
+                    future: totalExpense(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        int expense = snapshot.data ??
+                            0; // Menggunakan nilai default jika snapshot.data null
+                        return Text(
+                          "Rp ${formatter.format(expense)}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: Colors.white),
+                        );
+                      }
+                    })
+              ],
+            ),
           ),
         )
       ],
@@ -228,7 +248,7 @@ class _SaldoState extends State<Saldo> {
                   setState(() {
                     saldo = int.parse(saldoController.text);
                   }),
-                 Navigator.pop(context)
+                  Navigator.pop(context)
                 },
                 child: const Text(
                   'Simpan',

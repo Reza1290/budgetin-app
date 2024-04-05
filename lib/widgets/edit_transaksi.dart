@@ -16,13 +16,15 @@ class _EditTransaksiState extends State<EditTransaksi> {
   DateTime selectedDate = DateTime.now();
   bool isButtonPressed = false;
   String? nominal;
-
-  TextEditingController nameEditTransactionController = TextEditingController();
-  TextEditingController amountEditTransactionController = TextEditingController();
-  TextEditingController descriptionEditTransactionController = TextEditingController();
-
+TextEditingController nameEditTransactionController = TextEditingController();
+TextEditingController amountEditTransactionController = TextEditingController();
+TextEditingController descriptionEditTransactionController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
+    nameEditTransactionController.text = widget.transacion.transaction.name;
+    amountEditTransactionController.text = widget.transacion.transaction.amount.toString();
+    descriptionEditTransactionController.text = widget.transacion.transaction.description;
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: Container(
@@ -67,7 +69,6 @@ class _EditTransaksiState extends State<EditTransaksi> {
                 height: 40,
                 child: TextFormField(
                   controller: nameEditTransactionController,
-                  initialValue: widget.transacion.transaction.name,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -96,7 +97,6 @@ class _EditTransaksiState extends State<EditTransaksi> {
                 child: TextFormField(
                   controller: amountEditTransactionController,
                   keyboardType: TextInputType.number,
-                  initialValue: widget.transacion.transaction.amount.toString(),
                   onChanged: (value) {
                     setState(() {
                       nominal = value;
@@ -140,7 +140,6 @@ class _EditTransaksiState extends State<EditTransaksi> {
                 height: 40,
                 child: TextFormField(
                   controller: descriptionEditTransactionController,
-                  initialValue: widget.transacion.transaction.description,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -213,13 +212,12 @@ class _EditTransaksiState extends State<EditTransaksi> {
                     });
                     _db.updateTransactionRepo(
                         widget.transacion.transaction.id,
-                        widget.transacion.transaction.name,
-                        widget.transacion.transaction.amount,
+                        nameEditTransactionController.text,
+                        int.parse(amountEditTransactionController.text),
                         widget.transacion.transaction.category_id,
-                        widget.transacion.transaction.description,
+                        descriptionEditTransactionController.text,
                         widget.transacion.transaction.transaction_date);
                         _simpanTransaksi(context);
-                    _simpanTransaksi(context);
                   },
                   style: ButtonStyle(
                     backgroundColor:

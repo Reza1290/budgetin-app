@@ -120,7 +120,7 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future totalExpense() async{
+  Future<int> totalExpense() async{
     final datas = await allTransactions();
 
     int totalExpense = 0;
