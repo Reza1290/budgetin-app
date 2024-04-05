@@ -18,7 +18,7 @@ class _BottomNavbarState extends State<BottomNavbar>
   static const List<Widget> page = <Widget>[
     HomePage(),
     RiwayatTransaksiPage(),
-    Text('Secret'),
+    Center(child: Text('Secret')),
     Text('none'),
     FaqPage(),
   ];
