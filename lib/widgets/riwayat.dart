@@ -85,24 +85,31 @@ class RiwayatTransaksi extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            title,
-                            style: const TextStyle(
-                                fontSize: 16.0, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            tanggal,
-                            style: const TextStyle(
-                                fontSize: 8.0, color: Colors.grey),
-                          ),
-                        ],
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 1 / 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                            Text(
+                              tanggal,
+                              style: const TextStyle(
+                                  fontSize: 8.0,
+                                  color: Colors.grey,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        width: 90,
+                        width: MediaQuery.of(context).size.width * 1 / 4,
                         child: Text(
                           '- ' + TextCurrencyFormat.format(money),
                           style: const TextStyle(
