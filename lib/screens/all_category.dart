@@ -35,6 +35,7 @@ class _AllCategoryState extends State<AllCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         scrolledUnderElevation: 0,
         centerTitle: true,
@@ -85,7 +86,6 @@ class _AllCategoryState extends State<AllCategory> {
                 future: db!.sumExpenseByCategory(0),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<CategoryTotal>> snapshot) {
-                  debugPrint(snapshot.data.toString());
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a more explicit loading indicator
@@ -130,7 +130,6 @@ class _AllCategoryState extends State<AllCategory> {
                             name: category.name.toString(),
                             icon: category.icon.toString(),
                             total: category.total,
-                            
                           ),
                           totalAmount: categories[index].totalAmount,
                           isHome: false,

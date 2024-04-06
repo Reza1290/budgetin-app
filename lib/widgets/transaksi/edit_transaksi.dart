@@ -6,8 +6,6 @@ import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
-final _formKey = GlobalKey<FormState>();
-
 class EditTransaksi extends StatefulWidget {
   final TransactionWithCategory transaction;
   const EditTransaksi({super.key, required this.transaction});
@@ -18,6 +16,8 @@ class EditTransaksi extends StatefulWidget {
 
 class _EditTransaksiState extends State<EditTransaksi>
     with SingleTickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
+
   late AnimationController _controller;
   DateTime selectedDate = DateTime.now();
 

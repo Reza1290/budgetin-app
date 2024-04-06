@@ -11,8 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:budgetin/widgets/calendar.dart';
 import 'package:intl/intl.dart';
 
-final _formKey = GlobalKey<FormState>();
-
 class AddTransaksi extends StatefulWidget {
   final int categoryId;
   const AddTransaksi({super.key, required this.categoryId});
@@ -22,6 +20,8 @@ class AddTransaksi extends StatefulWidget {
 }
 
 class _AddTransaksiState extends State<AddTransaksi> {
+  final _formKey = GlobalKey<FormState>();
+
   DateTime selectedDate = DateTime.now();
   String? nama;
   String? nominal;

@@ -78,7 +78,6 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
                       if (snapshots.hasData) {
                         if (snapshots.data!.length > 0) {
                           final List<Category>? categories = snapshots.data;
-                          debugPrint(categories.toString());
                           return ListView.builder(
                             shrinkWrap: true,
                             itemCount:
@@ -108,7 +107,9 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
                                           color: Colors.blue.shade200,
                                         ),
                                         child: Image.asset(
-                                          'assets/icons/lainnya.png',
+                                          categories[index].icon == ''
+                                              ? 'assets/icons/lainnya.png'
+                                              : categories[index].icon,
                                           fit: BoxFit.fitWidth,
                                         ),
                                       ),
