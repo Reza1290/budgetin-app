@@ -22,7 +22,7 @@ void showSuccessAlert(BuildContext context, String message) {
               child: Column(
                 children: <Widget>[
                   Image.asset(
-                    'assets/icons/lainnya.png',
+                    'assets/images/successalert.png',
                     width: 173.0,
                     height: 159.0,
                   ),

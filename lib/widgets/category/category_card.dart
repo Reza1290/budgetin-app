@@ -26,8 +26,7 @@ class CategoryCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => DetailKategoriPage(
-                categoryId: category.id,
-              ),
+                  category: category, totalAmount: totalAmount),
             ));
       },
 

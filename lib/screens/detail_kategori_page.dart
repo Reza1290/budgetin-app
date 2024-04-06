@@ -1,26 +1,30 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/widgets/_pemanggilan_alert.dart';
 import 'package:budgetin/widgets/card_kategori_transaksi.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:budgetin/widgets/riwayat_transaksi.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class DetailKategoriPage extends StatefulWidget {
-  const DetailKategoriPage({super.key, required this.categoryId});
-  final int categoryId;
+  const DetailKategoriPage(
+      {super.key, required this.category, required this.totalAmount});
+  final Category category;
+  final int totalAmount;
   @override
   State<DetailKategoriPage> createState() => _DetailKategoriPageState();
 }
 
 class _DetailKategoriPageState extends State<DetailKategoriPage> {
   // late AppDb db;
-
   Stream<List<TransactionWithCategory>> getAllTransactions() {
-    return db!.getTransactionWithCategory(widget.categoryId);
+    return db!.getTransactionWithCategory(widget.category.id);
   }
 
   @override
@@ -48,6 +52,11 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () => _confirmDelete(context, widget.category.id),
+              icon: Icon(Icons.delete_forever_rounded))
+        ],
       ),
       body: ListView(
         children: [
@@ -57,7 +66,8 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
               children: [
                 Column(
                   children: <Widget>[
-                    CardKategoriTransaksi(),
+                    CardKategoriTransaksi(
+                        data: widget.category, total: widget.totalAmount),
                   ],
                 ),
                 SizedBox(
@@ -72,7 +82,7 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                           fontSize: 12.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Rp. 50.000',
+                      TextCurrencyFormat.format(widget.totalAmount.toString()),
                       style: TextStyle(
                           fontSize: 12.0, fontWeight: FontWeight.bold),
                     ),
@@ -96,7 +106,8 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                           fontSize: 12.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Rp. 100.000',
+                      TextCurrencyFormat.format(
+                          widget.category.total.toString()),
                       style: TextStyle(
                           fontSize: 12.0, fontWeight: FontWeight.bold),
                     ),
@@ -130,6 +141,44 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _onDismissed(BuildContext context, int index, bool delete) {
+    if (delete) {
+      showSuccessAlert(context, "Berhasil Dihapus");
+    } else {
+      showFailedAlert(context, "Gagal Terhapus");
+    }
+  }
+
+  void _confirmDelete(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi'),
+          content: const Text(
+              'Apakah Anda yakin ingin menghapus Kategori Beserta Transaksi?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                db!.deleteCategory(index);
+                Navigator.of(context).pop();
+                _onDismissed(context, index, true);
+              },
+              child: const Text('Ya'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

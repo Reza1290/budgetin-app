@@ -4,8 +4,10 @@ import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:budgetin/widgets/calendar.dart';
@@ -27,11 +29,21 @@ class _AddTransaksiState extends State<AddTransaksi> {
   String? nominal;
   String? deskripsi;
   bool isFormSubmitted = false;
+  late int sisa = 0;
 
   DateTime now = DateTime.now();
 
-  Future insert(String name, String description, int amount, DateTime date,
-      int categoryId) async {
+  Future<bool> insert(String name, String description, int amount,
+      DateTime date, int categoryId) async {
+    int maks = await db!.sumExpenseCategory(categoryId);
+    Category category = await db!.getCategory(categoryId);
+
+    if (maks + amount > category.total) {
+      setState(() {
+        sisa = category.total - maks;
+      });
+      return false;
+    }
     final row = await db!.into(db!.transactions).insertReturning(
         TransactionsCompanion.insert(
             name: name,
@@ -39,6 +51,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
             category_id: categoryId,
             amount: amount,
             transaction_date: date));
+    return true;
   }
 
   TextEditingController nameTransaksiController = TextEditingController();
@@ -167,22 +180,30 @@ class _AddTransaksiState extends State<AddTransaksi> {
                     width: double.infinity,
                     height: 57,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          insert(
+                          if (await insert(
                               nameTransaksiController.text,
                               deskripsiTransaksiController.text,
                               int.parse(
                                   _moneyController.text.replaceAll('.', '')),
                               selectedDate,
-                              widget.categoryId);
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BottomNavbar(initIndex: 1),
-                            ),
-                            (route) => false,
-                          );
+                              widget.categoryId)) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    BottomNavbar(initIndex: 1),
+                              ),
+                              (route) => false,
+                            );
+                            showSuccessAlert(context, "Berhasil!");
+                          } else {
+                            showFailedAlert(
+                                context,
+                                'Maksimum Pengeluaran Mencapai Batas! Sisa ' +
+                                    TextCurrencyFormat.format(sisa.toString()));
+                          }
                         }
                       },
                       style: ButtonStyle(

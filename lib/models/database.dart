@@ -61,14 +61,32 @@ class AppDb extends _$AppDb {
     return await update(categories).replace(entry);
   }
 
-  Future<int> deleteCategory(int id) async {
-    return await (delete(categories)..where((tbl) => tbl.id.equals(id))).go();
+  Future<void> deleteCategory(int id) async {
+    await (delete(categories)..where((tbl) => tbl.id.equals(id)))
+        .go()
+        .then((value) {
+      (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
+    });
   }
 
   Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
     final query = (select(transactions)).join([
       innerJoin(categories, categories.id.equalsExp(transactions.category_id))
     ]);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
+  Stream<List<TransactionWithCategory>> getTransactionWithCategoryLimit(
+      int limit) {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id)),
+    ]);
+    query.limit(limit);
     return query.watch().map((rows) {
       return rows.map((row) {
         return TransactionWithCategory(
@@ -119,31 +137,34 @@ class AppDb extends _$AppDb {
     return await (delete(transactions)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-  // Future sumExpenseByCategory(int categoryId) async {
-  //   final datas = await (select(transactions)
-  //         ..where((tbl) => tbl.category_id.equals(categoryId)))
-  //       .get();
-  //   int totalAmount = 0;
+  Future<int> sumExpenseCategory(int categoryId) async {
+    final datas = await (select(transactions)
+          ..where((tbl) => tbl.category_id.equals(categoryId)))
+        .get();
+    int totalAmount = 0;
 
-  //   for (final data in datas) {
-  //     totalAmount += data.amount;
-  //   }
-
-  //   return totalAmount;
-  // }
-  Future<List<CategoryTotal>> sumExpenseByCategory(int limit) async {
-    final categoriesResult = limit != 0
-        ? await (select(categories)..limit(limit)).get()
-        : await select(categories).get();
-
-    final List<CategoryTotal> categoryTotals = [];
-
-    for (final category in categoriesResult) {
-      final totalAmount = await _calculateTotalAmountForCategory(category.id);
-      categoryTotals.add(CategoryTotal(category, totalAmount));
+    for (final data in datas) {
+      totalAmount += data.amount;
     }
 
-    return categoryTotals;
+    return totalAmount;
+  }
+
+  Stream<List<CategoryTotal>> sumExpenseByCategory(int limit) {
+    final categoriesResultStream = limit != 0
+        ? (select(categories)..limit(limit)).watch()
+        : select(categories).watch();
+
+    return categoriesResultStream.asyncMap((categoriesResult) async {
+      final List<CategoryTotal> categoryTotals = [];
+
+      for (final category in categoriesResult) {
+        final totalAmount = await _calculateTotalAmountForCategory(category.id);
+        categoryTotals.add(CategoryTotal(category, totalAmount));
+      }
+
+      return categoryTotals;
+    });
   }
 
   Future<int> _calculateTotalAmountForCategory(int categoryId) async {
@@ -159,16 +180,14 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future<int> totalExpense() async {
+  Stream<int> totalExpense() async* {
     final datas = await allTransactions();
-
     int totalExpense = 0;
 
     for (final data in datas) {
       totalExpense += data.amount;
+      yield totalExpense;
     }
-
-    return totalExpense;
   }
 }
 

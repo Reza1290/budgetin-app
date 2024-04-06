@@ -82,8 +82,8 @@ class _AllCategoryState extends State<AllCategory> {
               ),
             ),
             Expanded(
-              child: FutureBuilder<List<CategoryTotal>>(
-                future: db!.sumExpenseByCategory(0),
+              child: StreamBuilder<List<CategoryTotal>>(
+                stream: db!.sumExpenseByCategory(0),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<CategoryTotal>> snapshot) {
 

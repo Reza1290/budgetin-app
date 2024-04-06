@@ -13,8 +13,8 @@ class CategoryHome extends StatefulWidget {
 class _CategoryHomeState extends State<CategoryHome> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<CategoryTotal>>(
-      future: db!.sumExpenseByCategory(2),
+    return StreamBuilder<List<CategoryTotal>>(
+      stream: db!.sumExpenseByCategory(2),
       builder:
           (BuildContext context, AsyncSnapshot<List<CategoryTotal>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

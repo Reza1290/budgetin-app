@@ -1,7 +1,12 @@
+import 'package:budgetin/main.dart';
+import 'package:budgetin/models/database.dart';
 import 'package:flutter/material.dart';
 
 class CardKategoriTransaksi extends StatelessWidget {
-  const CardKategoriTransaksi({super.key});
+  const CardKategoriTransaksi(
+      {super.key, required this.data, required this.total});
+  final Category data;
+  final int total;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +40,8 @@ class CardKategoriTransaksi extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(22.0, 22.0, 24.0, 24.0),
-                  child: Image.network(
-                    'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
+                  child: Image.asset(
+                    data.icon == '' ? 'assets/icons/lainnya.png' : data.icon,
                     width: 55.0,
                     height: 53.0,
                   ),
@@ -46,9 +51,9 @@ class CardKategoriTransaksi extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0)),
-                  const Flexible(
+                  Flexible(
                     child: Text(
-                      'Olahraga',
+                      data.name,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -58,7 +63,6 @@ class CardKategoriTransaksi extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    // CONTOH PEMANGGILAN ALERT 
                     onPressed: () {},
                     icon: const Icon(
                       Icons.edit,
