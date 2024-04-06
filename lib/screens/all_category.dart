@@ -45,12 +45,10 @@ class _AllCategoryState extends State<AllCategory> {
           color: Colors.black,
           fontFamily: 'Nunito',
         ),
-        leadingWidth: 100,
         leading: Container(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
           ),
         ),
         title: Text("Kategori Transaksi"),
@@ -86,7 +84,6 @@ class _AllCategoryState extends State<AllCategory> {
                 stream: db!.sumExpenseByCategory(0),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<CategoryTotal>> snapshot) {
-
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a more explicit loading indicator
                     return Center(

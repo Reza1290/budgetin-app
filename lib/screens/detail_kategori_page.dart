@@ -46,6 +46,12 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        leading: Container(
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+          ),
+        ),
         scrolledUnderElevation: 0,
         title: const Text(
           "Kategori Transaksi",

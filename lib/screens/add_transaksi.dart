@@ -87,6 +87,12 @@ class _AddTransaksiState extends State<AddTransaksi> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
+        leading: Container(
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+          ),
+        ),
         title: const Text(
           'Tambah Transaksi',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
