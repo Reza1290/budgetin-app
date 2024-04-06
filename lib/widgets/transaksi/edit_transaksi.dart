@@ -1,6 +1,7 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/widgets/calendar.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
@@ -160,17 +161,27 @@ class _EditTransaksiState extends State<EditTransaksi>
                     width: double.infinity,
                     height: 57,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          db!.updateTransactionRepo(
-                              widget.transaction.transaction.id,
-                              nameTransaksiController.text,
-                              int.parse(
-                                  _moneyController.text.replaceAll('.', '')),
-                              widget.transaction.transaction.category_id,
-                              deskripsiTransaksiController.text,
-                              selectedDate);
-                          _simpanTransaksi(context);
+                          int curr = await db!.sumExpenseCategory(
+                              widget.transaction.category.id);
+                          if (int.parse(_moneyController.text
+                                      .replaceAll('.', '')) +
+                                  curr <
+                              widget.transaction.category.total) {
+                            db!.updateTransactionRepo(
+                                widget.transaction.transaction.id,
+                                nameTransaksiController.text,
+                                int.parse(
+                                    _moneyController.text.replaceAll('.', '')),
+                                widget.transaction.transaction.category_id,
+                                deskripsiTransaksiController.text,
+                                selectedDate);
+                            _simpanTransaksi(context);
+                          } else {
+                            showFailedAlert(
+                                context, "Nominal Diambang Batas Maksimal");
+                          }
                         }
                       },
                       style: ButtonStyle(

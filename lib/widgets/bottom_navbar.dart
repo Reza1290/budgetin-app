@@ -19,10 +19,10 @@ class BottomNavbar extends StatefulWidget {
 
 class _BottomNavbarState extends State<BottomNavbar>
     with SingleTickerProviderStateMixin {
-  static const List<Widget> page = <Widget>[
+  static List<Widget> page = <Widget>[
     HomePage(),
     RiwayatTransaksiPage(),
-    Center(child: Text('Secret')),
+    Center(child: Image.asset('assets/images/maskot.png')),
     Text('none'),
     FaqPage(),
   ];
