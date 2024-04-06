@@ -5,14 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 class StatisticPage extends StatefulWidget {
   const StatisticPage({Key? key});
 
-  final List<Color> availableColors = const <Color>[
-    Colors.purple,
-    Colors.yellow,
-    Colors.blue,
-    Colors.red,
-    Colors.orange,
-    Colors.pink,
-  ];
+  
 
   @override
   State<StatisticPage> createState() => _StatisticPageState();
