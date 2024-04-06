@@ -1,4 +1,5 @@
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -98,7 +99,8 @@ class RiwayatTransaksi extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis),
                             ),
                             Text(
-                              tanggal,
+                              HumanReadableDateFormatter.format(
+                                  DateTime.parse(tanggal)),
                               style: const TextStyle(
                                   fontSize: 8.0,
                                   color: Colors.grey,

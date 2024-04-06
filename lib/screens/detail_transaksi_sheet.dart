@@ -1,6 +1,7 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -123,8 +124,8 @@ class _DetailTransaksiSheetContent extends StatelessWidget {
                         ),
                         Text('pada ', style: TextStyle(color: Colors.white)),
                         Text(
-                            transaction.transaction.transaction_date
-                                    .toIso8601String() +
+                            HumanReadableDateFormatter.format(
+                                    transaction.transaction.transaction_date) +
                                 " ",
                             style: TextStyle(
                                 color: Colors.white,
