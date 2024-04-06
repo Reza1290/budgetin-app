@@ -1,3 +1,4 @@
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
@@ -16,26 +17,25 @@ class Saldo extends StatefulWidget {
 
 class _SaldoState extends State<Saldo> {
   final TextEditingController _moneyController = TextEditingController();
-  AppDb _db = AppDb.getInstance();
   int uang = 222222222222222;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _db = AppDb();
+    // db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    // _db.close();
+    // db.close();
     super.dispose();
   }
 
   Future<int> totalExpense() async {
-    return await _db.totalExpense().whenComplete(() {
-      // _db.close();
+    return await db!.totalExpense().whenComplete(() {
+      // db.close();
     }); // Tambahkan await di sini
   }
 

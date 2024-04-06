@@ -1,3 +1,4 @@
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/add_transaksi.dart';
 import 'package:budgetin/widgets/search_bar.dart';
@@ -15,11 +16,10 @@ class SelectCategoryDialog extends StatefulWidget {
 class _SelectCategoryDialogState extends State<SelectCategoryDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  // late AppDb _db;
-  final AppDb _db = AppDb.getInstance();
+  // late AppDb db;
 
   Future<List<Category>> getAllCategory() {
-    return _db.select(_db.categories).get();
+    return db!.select(db!.categories).get();
   }
 
   final TextEditingController _searchController = TextEditingController();
@@ -27,14 +27,14 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
   @override
   void initState() {
     super.initState();
-    // _db = AppDb();
+    // db = AppDb();
     _controller = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    // _db.close();
+    // db.close();
     super.dispose();
   }
 

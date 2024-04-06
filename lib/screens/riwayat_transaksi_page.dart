@@ -1,4 +1,5 @@
 import 'package:budgetin/layout.dart';
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
@@ -21,11 +22,10 @@ class RiwayatTransaksiPage extends StatefulWidget {
 }
 
 class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
-  // late AppDb _db;
-  final AppDb _db = AppDb.getInstance();
+  // late AppDb db;
 
   Stream<List<TransactionWithCategory>> getAllTransactions() {
-    return _db.getAllTransactionWithCategory();
+    return db!.getAllTransactionWithCategory();
   }
 
   final TextEditingController searchController = TextEditingController();
@@ -41,13 +41,13 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         isVisible = !_focusNode.hasFocus;
       });
     });
-    // _db = AppDb();
+    // db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    // _db.close();
+    // db.close();
     searchController.dispose();
     _focusNode.dispose();
     super.dispose();

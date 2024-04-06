@@ -1,3 +1,4 @@
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
@@ -18,7 +19,6 @@ class AddTransaksi extends StatefulWidget {
 }
 
 class _AddTransaksiState extends State<AddTransaksi> {
-  AppDb database = AppDb.getInstance();
 
   DateTime selectedDate = DateTime.now();
   String? nama;
@@ -30,7 +30,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
 
   Future insert(String name, String description, int amount, DateTime date,
       int categoryId) async {
-    final row = await database.into(database.transactions).insertReturning(
+    final row = await db!.into(db!.transactions).insertReturning(
         TransactionsCompanion.insert(
             name: name,
             description: description,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/modal_tambah_kategori.dart';
@@ -16,20 +17,18 @@ class AllCategory extends StatefulWidget {
 }
 
 class _AllCategoryState extends State<AllCategory> {
-  final AppDb _db = AppDb.getInstance();
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    // _db = AppDb();
+    // db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    // _db.close();
+    // db.close();
     super.dispose();
   }
 
@@ -61,7 +60,7 @@ class _AllCategoryState extends State<AllCategory> {
           children: [
             TextButton(
               onPressed: () {
-                showModalTambahKategori(context, _db);
+                showModalTambahKategori(context, db!);
               },
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -83,7 +82,7 @@ class _AllCategoryState extends State<AllCategory> {
             ),
             Expanded(
               child: FutureBuilder<List<CategoryTotal>>(
-                future: _db.sumExpenseByCategory(),
+                future: db!.sumExpenseByCategory(),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<CategoryTotal>> snapshot) {
                   debugPrint(snapshot.data.toString());

@@ -1,3 +1,4 @@
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/widgets/_pemanggilan_alert.dart';
@@ -16,24 +17,23 @@ class DetailKategoriPage extends StatefulWidget {
 }
 
 class _DetailKategoriPageState extends State<DetailKategoriPage> {
-  // late AppDb _db;
-  final AppDb _db = AppDb.getInstance();
+  // late AppDb db;
 
   Stream<List<TransactionWithCategory>> getAllTransactions() {
-    return _db.getTransactionWithCategory(widget.categoryId);
+    return db!.getTransactionWithCategory(widget.categoryId);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _db = AppDb();
+    // db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    // _db.close();
+    // db.close();
     super.dispose();
   }
 
