@@ -16,7 +16,8 @@ class DetailKategoriPage extends StatefulWidget {
 }
 
 class _DetailKategoriPageState extends State<DetailKategoriPage> {
-  late AppDb _db;
+  // late AppDb _db;
+  final AppDb _db = AppDb.getInstance();
 
   Stream<List<TransactionWithCategory>> getAllTransactions() {
     return _db.getTransactionWithCategory(widget.categoryId);
@@ -26,13 +27,13 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _db = AppDb();
+    // _db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _db.close();
+    // _db.close();
     super.dispose();
   }
 

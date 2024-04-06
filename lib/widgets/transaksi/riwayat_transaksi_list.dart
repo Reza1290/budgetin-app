@@ -1,7 +1,8 @@
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/edit_transaksi.dart';
-import 'package:budgetin/widgets/modal_detail_transaksi.dart';
+import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -111,14 +112,7 @@ class RiwayatTransaksiList extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ModalDetailTransaksi(
-                      detailTransaksi: transaction,
-                    );
-                  },
-                );
+                showDetailTransaksiSheet(context, transaction);
               },
               child: Container(
                 child: RiwayatTransaksi(

@@ -2,11 +2,12 @@ import 'package:budgetin/layout.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/edit_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/filter.dart';
-import 'package:budgetin/widgets/modal_detail_transaksi.dart';
+import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:budgetin/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,8 @@ class RiwayatTransaksiPage extends StatefulWidget {
 }
 
 class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
-  late AppDb _db;
+  // late AppDb _db;
+  final AppDb _db = AppDb.getInstance();
 
   Stream<List<TransactionWithCategory>> getAllTransactions() {
     return _db.getAllTransactionWithCategory();
@@ -39,13 +41,13 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         isVisible = !_focusNode.hasFocus;
       });
     });
-    _db = AppDb();
+    // _db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _db.close();
+    // _db.close();
     searchController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -191,13 +193,8 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return ModalDetailTransaksi(
-                                              detailTransaksi: transaction);
-                                        },
-                                      );
+                                      showDetailTransaksiSheet(
+                                          context, transaction);
                                     },
                                     child: Container(
                                       child: RiwayatTransaksi(

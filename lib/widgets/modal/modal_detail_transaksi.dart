@@ -5,14 +5,13 @@ import 'package:budgetin/widgets/detail_transaksi.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-AppDb _db = AppDb();
+// AppDb _db = AppDb();
 
 DateFormat formatter = DateFormat('EEEE, d MMMM y', 'id_ID');
 
 class ModalDetailTransaksi extends StatelessWidget {
   final TransactionWithCategory detailTransaksi;
-  const ModalDetailTransaksi({Key? key, required this.detailTransaksi})
-      : super(key: key);
+  const ModalDetailTransaksi({super.key, required this.detailTransaksi});
 
   @override
   Widget build(BuildContext context) {

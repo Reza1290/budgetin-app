@@ -16,27 +16,26 @@ class Saldo extends StatefulWidget {
 
 class _SaldoState extends State<Saldo> {
   final TextEditingController _moneyController = TextEditingController();
-  late AppDb _db;
-
+  AppDb _db = AppDb.getInstance();
   int uang = 222222222222222;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _db = AppDb();
+    // _db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _db.close();
+    // _db.close();
     super.dispose();
   }
 
   Future<int> totalExpense() async {
     return await _db.totalExpense().whenComplete(() {
-      _db.close();
+      // _db.close();
     }); // Tambahkan await di sini
   }
 

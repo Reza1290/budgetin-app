@@ -15,7 +15,8 @@ class SelectCategoryDialog extends StatefulWidget {
 class _SelectCategoryDialogState extends State<SelectCategoryDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late AppDb _db;
+  // late AppDb _db;
+  final AppDb _db = AppDb.getInstance();
 
   Future<List<Category>> getAllCategory() {
     return _db.select(_db.categories).get();
@@ -26,14 +27,14 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
   @override
   void initState() {
     super.initState();
-    _db = AppDb();
+    // _db = AppDb();
     _controller = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _db.close();
+    // _db.close();
     super.dispose();
   }
 

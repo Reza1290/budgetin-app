@@ -71,26 +71,27 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               // CategoryHome(),
-              CategoryCard(
-                category: Category(
-                  id: 2,
-                  name: 'Makanan',
-                  icon: 'assets/icons/lainnya.png',
-                  total: 123,
-                ),
-                totalAmount: 40,
-                isHome: true,
-              ),
-              CategoryCard(
-                category: Category(
-                  id: 2,
-                  name: 'Makanan',
-                  icon: 'assets/icons/lainnya.png',
-                  total: 123,
-                ),
-                totalAmount: 40,
-                isHome: true,
-              ),
+              // CategoryCard(
+              //   category: Category(
+              //     id: 2,
+              //     name: 'Makanan',
+              //     icon: 'assets/icons/lainnya.png',
+              //     total: 123,
+              //   ),
+              //   totalAmount: 40,
+              //   isHome: true,
+              // ),
+              // CategoryCard(
+              //   category: Category(
+              //     id: 2,
+              //     name: 'Makanan',
+              //     icon: 'assets/icons/lainnya.png',
+              //     total: 123,
+              //   ),
+              //   totalAmount: 40,
+              //   isHome: true,
+
+              // ),
               SizedBox(
                 height: 30,
               ),

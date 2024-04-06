@@ -18,7 +18,11 @@ part 'database.g.dart';
   tables: [Categories, Transactions],
 )
 class AppDb extends _$AppDb {
-  AppDb() : super(_openConnection());
+  AppDb(LazyDatabase e) : super(_openConnection());
+
+  static final AppDb _singleton = AppDb(_openConnection());
+
+  factory AppDb.getInstance() => _singleton;
 
   @override
   int get schemaVersion => 2;

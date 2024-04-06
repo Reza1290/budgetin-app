@@ -30,6 +30,7 @@ class CategoryCard extends StatelessWidget {
               ),
             ));
       },
+      
       hoverColor: Colors.transparent,
       // padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(

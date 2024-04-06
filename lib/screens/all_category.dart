@@ -16,20 +16,20 @@ class AllCategory extends StatefulWidget {
 }
 
 class _AllCategoryState extends State<AllCategory> {
-  late AppDb _db;
+  final AppDb _db = AppDb.getInstance();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    _db = AppDb();
+    // _db = AppDb();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _db.close();
+    // _db.close();
     super.dispose();
   }
 

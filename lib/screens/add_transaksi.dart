@@ -18,7 +18,7 @@ class AddTransaksi extends StatefulWidget {
 }
 
 class _AddTransaksiState extends State<AddTransaksi> {
-  AppDb database = AppDb();
+  AppDb database = AppDb.getInstance();
 
   DateTime selectedDate = DateTime.now();
   String? nama;
