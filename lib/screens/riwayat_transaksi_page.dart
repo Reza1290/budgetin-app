@@ -5,6 +5,8 @@ import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/filter.dart';
@@ -254,20 +256,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
 
   void _onDismissed(BuildContext context, int index, bool delete) {
     if (delete) {
-      setState(() {
-        riwayatList.removeAt(index);
-      });
-      _hapusTransaksi(context); // Panggil fungsi untuk menampilkan snackbar
+      showSuccessAlert(context, "Berhasil Dihapus");
+    } else {
+      showFailedAlert(context, "Gagal Terhapus");
     }
-  }
-
-  void _hapusTransaksi(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Transaksi berhasil dihapus!'),
-        duration: Duration(seconds: 2),
-      ),
-    );
   }
 
   void _confirmDelete(BuildContext context, int index) {
@@ -286,6 +278,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             ),
             TextButton(
               onPressed: () {
+                db!.deleteTransaction(index);
                 Navigator.of(context).pop(); // Tutup dialog
                 _onDismissed(context, index, true); // Hapus riwayat
               },

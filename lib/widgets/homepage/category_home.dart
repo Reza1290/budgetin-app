@@ -1,3 +1,6 @@
+import 'package:budgetin/main.dart';
+import 'package:budgetin/models/database.dart';
+import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:flutter/material.dart';
 
 class CategoryHome extends StatefulWidget {
@@ -10,97 +13,43 @@ class CategoryHome extends StatefulWidget {
 class _CategoryHomeState extends State<CategoryHome> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Makanan",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-        ),
-        SizedBox(
-          height: 7,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Stack(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: 15,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7 * 0.9,
-                  height: 15,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    "90%",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 12,
-                        color: Colors.white),
+    return FutureBuilder<List<CategoryTotal>>(
+      future: db!.sumExpenseByCategory(2),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<CategoryTotal>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        final List<CategoryTotal>? categories = snapshot.data;
+        if (categories == null || categories.isEmpty) {
+          return Text('No categories found');
+        }
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              for (int index = 0;
+                  index < categories.length && index < 2;
+                  index++)
+                Center(
+                  child: CategoryCard(
+                    category: Category(
+                      id: categories[index].category.id,
+                      name: categories[index].category.name.toString(),
+                      icon: categories[index].category.icon.toString(),
+                      total: categories[index].category.total,
+                    ),
+                    totalAmount: categories[index].totalAmount,
+                    isHome: true,
+                    // isReminder: true,
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.red[400],
-                      borderRadius: BorderRadius.circular(5)),
-                )
-              ],
-            ),
-            Text(
-              "90%",
-              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
-            )
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          "Makanan",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-        ),
-        SizedBox(
-          height: 7,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Stack(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: 15,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(5)),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7 * 0.9,
-                  height: 15,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    "90%",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 12,
-                        color: Colors.white),
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.red[400],
-                      borderRadius: BorderRadius.circular(5)),
-                )
-              ],
-            ),
-            Text(
-              "90%",
-              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12),
-            )
-          ],
-        )
-      ],
+            ],
+          ),
+        );
+      },
     );
   }
 }

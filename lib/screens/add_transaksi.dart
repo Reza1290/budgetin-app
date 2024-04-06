@@ -176,13 +176,13 @@ class _AddTransaksiState extends State<AddTransaksi> {
                                   _moneyController.text.replaceAll('.', '')),
                               selectedDate,
                               widget.categoryId);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const BottomNavbar(
-                                  initIndex: 1,
-                                ),
-                              ));
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BottomNavbar(initIndex: 1),
+                            ),
+                            (route) => false,
+                          );
                         }
                       },
                       style: ButtonStyle(

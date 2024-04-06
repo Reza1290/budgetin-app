@@ -82,7 +82,7 @@ class _AllCategoryState extends State<AllCategory> {
             ),
             Expanded(
               child: FutureBuilder<List<CategoryTotal>>(
-                future: db!.sumExpenseByCategory(),
+                future: db!.sumExpenseByCategory(0),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<CategoryTotal>> snapshot) {
                   debugPrint(snapshot.data.toString());

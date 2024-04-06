@@ -3,6 +3,7 @@ import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/widgets/calendar.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -160,16 +161,17 @@ class _EditTransaksiState extends State<EditTransaksi>
                     height: 57,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {}
-                        db!.updateTransactionRepo(
-                            widget.transaction.transaction.id,
-                            nameTransaksiController.text,
-                            int.parse(
-                                _moneyController.text.replaceAll('.', '')),
-                            widget.transaction.transaction.category_id,
-                            deskripsiTransaksiController.text,
-                            selectedDate);
-                        _simpanTransaksi(context);
+                        if (_formKey.currentState!.validate()) {
+                          db!.updateTransactionRepo(
+                              widget.transaction.transaction.id,
+                              nameTransaksiController.text,
+                              int.parse(
+                                  _moneyController.text.replaceAll('.', '')),
+                              widget.transaction.transaction.category_id,
+                              deskripsiTransaksiController.text,
+                              selectedDate);
+                          _simpanTransaksi(context);
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -202,45 +204,6 @@ class _EditTransaksiState extends State<EditTransaksi>
 }
 
 void _simpanTransaksi(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Transaksi berhasil disimpan!'),
-      duration: Duration(seconds: 2),
-    ),
-  );
   Navigator.pop(context);
-}
-
-Widget _buildTextFormField(String content, {double? height}) {
-  return SizedBox(
-    height: height,
-    child: TextFormField(
-      initialValue: content,
-      style: const TextStyle(
-        fontSize: 12,
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-      ),
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6.0),
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
-          borderRadius: BorderRadius.all(Radius.circular(6.0)),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-      ),
-    ),
-  );
-}
-
-Widget _buildTitleText(String label) {
-  return Text(
-    label,
-    style: const TextStyle(
-      fontSize: 13,
-      fontWeight: FontWeight.w600,
-    ),
-  );
+  showSuccessAlert(context, "Transaksi Berhasil Diubah!");
 }

@@ -41,13 +41,14 @@ class InputMoney extends StatelessWidget {
         FilteringTextInputFormatter.digitsOnly,
         CurrencyFormat()
       ],
-      validator: (nominal) => (nominal == null || nominal.isEmpty)
-          ? 'Harap masukkan nominal transaksi'
-          : (!RegExp(r'^[0-9]+$').hasMatch(nominal.replaceAll('.', '')))
-              ? 'Nominal harus berupa angka'
-              : (nominal.replaceAll('.', '').length > 16)
-                  ? 'Nominal Terlalu Banyak'
-                  : null,
+      validator: (nominal) =>
+          (nominal == null || nominal.isEmpty || nominal == '0')
+              ? 'Harap masukkan nominal transaksi'
+              : (!RegExp(r'^[0-9]+$').hasMatch(nominal.replaceAll('.', '')))
+                  ? 'Nominal harus berupa angka'
+                  : (nominal.replaceAll('.', '').length > 16)
+                      ? 'Nominal Terlalu Banyak'
+                      : null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }

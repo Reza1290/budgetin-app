@@ -131,8 +131,10 @@ class AppDb extends _$AppDb {
 
   //   return totalAmount;
   // }
-  Future<List<CategoryTotal>> sumExpenseByCategory() async {
-    final categoriesResult = await select(categories).get();
+  Future<List<CategoryTotal>> sumExpenseByCategory(int limit) async {
+    final categoriesResult = limit != 0
+        ? await (select(categories)..limit(limit)).get()
+        : await select(categories).get();
 
     final List<CategoryTotal> categoryTotals = [];
 

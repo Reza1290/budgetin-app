@@ -2,6 +2,7 @@ import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/all_category.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
+import 'package:budgetin/widgets/homepage/category_home.dart';
 import 'package:budgetin/widgets/remainder.dart';
 import 'package:budgetin/widgets/homepage/saldo.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                       )),
                 ],
               ),
-              // CategoryHome(),
+              CategoryHome(),
               // CategoryCard(
               //   category: Category(
               //     id: 2,

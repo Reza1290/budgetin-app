@@ -1,6 +1,9 @@
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
@@ -146,6 +149,14 @@ class RiwayatTransaksiList extends StatelessWidget {
     );
   }
 
+  void _onDismissed(BuildContext context, int index, bool delete) {
+    if (delete) {
+      showSuccessAlert(context, "Berhasil Dihapus");
+    } else {
+      showFailedAlert(context, "Gagal Terhapus");
+    }
+  }
+
   void _confirmDelete(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -156,14 +167,15 @@ class RiwayatTransaksiList extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Tutup dialog
               },
               child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                // _onDismissed(context, index, true);
+                db!.deleteTransaction(index);
+                Navigator.of(context).pop(); // Tutup dialog
+                _onDismissed(context, index, true); // Hapus riwayat
               },
               child: const Text('Ya'),
             ),
