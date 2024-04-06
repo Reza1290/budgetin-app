@@ -4,5 +4,7 @@ import 'package:drift/drift.dart';
 class Categories extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(max: 128)();
+  TextColumn get icon =>
+      text().withDefault(Constant('assets/icons/lainnya.png'))();
   IntColumn get total => integer()();
 }
