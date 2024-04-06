@@ -1,6 +1,7 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/screens/detail_kategori_page.dart';
+import 'package:budgetin/them.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +12,6 @@ class CategoryCard extends StatelessWidget {
     this.isHome = true,
     required this.totalAmount,
   });
-
   final int totalAmount;
   final Category category;
   final bool isHome;
@@ -19,6 +19,11 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isReminder = totalAmount / category.total > 0.8;
+    Color color = isReminder
+        ? merahWarn
+        : totalAmount / category.total > 0.5
+            ? kuningWarn
+            : hijauWarn;
 
     return InkWell(
       onTap: () {
@@ -69,7 +74,7 @@ class CategoryCard extends StatelessWidget {
                       children: [
                         LinearProgressIndicator(
                           borderRadius: BorderRadius.circular(100),
-                          color: Colors.amber,
+                          color: color,
                           minHeight: 17,
                           value: totalAmount / category.total,
                         ),
