@@ -1,4 +1,6 @@
+import 'package:budgetin/providers/currency.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class RiwayatTransaksi extends StatelessWidget {
   final String title;
@@ -98,11 +100,17 @@ class RiwayatTransaksi extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(
-                        '- \$${money}',
-                        style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
-                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: 90,
+                        child: Text(
+                          '- ' + TextCurrencyFormat.format(money),
+                          style: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      )
                     ],
                   ),
                 ),

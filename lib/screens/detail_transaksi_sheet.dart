@@ -1,6 +1,9 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -33,7 +36,7 @@ class _DetailTransaksiSheetContent extends StatelessWidget {
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Container(
@@ -75,7 +78,72 @@ class _DetailTransaksiSheetContent extends StatelessWidget {
                 ),
               ),
             ),
-            Text(transaction.transaction.amount.toString())
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      alignment: WrapAlignment.end,
+                      runAlignment: WrapAlignment.end,
+                      children: [
+                        Text(
+                          TextCurrencyFormat.format(
+                              transaction.transaction.amount.toString()),
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.bold),
+                        ),
+                        Text(" / " +
+                            TextCurrencyFormat.format(
+                                transaction.category.total.toString()))
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                    padding: EdgeInsets.all(16),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: PrimaryColor.shade300,
+                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          'Transaksi ',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          transaction.transaction.name.toString() + " ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                        Text('pada ', style: TextStyle(color: Colors.white)),
+                        Text(
+                            transaction.transaction.transaction_date
+                                    .toIso8601String() +
+                                " ",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                transaction.transaction.description == ''
+                    ? 'Deskripsi Tidak ada.'
+                    : transaction.transaction.description,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+            )
           ],
         ),
       ),

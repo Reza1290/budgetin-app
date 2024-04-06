@@ -18,7 +18,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isReminder = totalAmount / category.total > 80;
+    bool isReminder = totalAmount / category.total > 0.8;
 
     return InkWell(
       onTap: () {
@@ -30,7 +30,7 @@ class CategoryCard extends StatelessWidget {
               ),
             ));
       },
-      
+
       hoverColor: Colors.transparent,
       // padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(

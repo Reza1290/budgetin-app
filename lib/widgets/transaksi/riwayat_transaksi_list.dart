@@ -1,7 +1,7 @@
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
-import 'package:budgetin/widgets/edit_transaksi.dart';
+import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:flutter/material.dart';
@@ -84,12 +84,29 @@ class RiwayatTransaksiList extends StatelessWidget {
               children: [
                 SlidableAction(
                   autoClose: true,
-                  onPressed: (_) => showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return EditTransaksi();
-                    },
-                  ),
+                  onPressed: (BuildContext context) {
+                    Navigator.of(context).push(PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          EditTransaksi(transaction: transaction),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(0.0, 1.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeIn;
+
+                        final tween = Tween(begin: begin, end: end);
+                        final curvedAnimation = CurvedAnimation(
+                          parent: animation,
+                          curve: curve,
+                        );
+
+                        return SlideTransition(
+                          position: tween.animate(curvedAnimation),
+                          child: child,
+                        );
+                      },
+                    ));
+                  },
                   backgroundColor: kuning50,
                   foregroundColor: Colors.white,
                   icon: Icons.edit_square,

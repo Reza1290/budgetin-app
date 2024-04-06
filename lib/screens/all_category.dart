@@ -130,6 +130,7 @@ class _AllCategoryState extends State<AllCategory> {
                             name: category.name.toString(),
                             icon: category.icon.toString(),
                             total: category.total,
+                            
                           ),
                           totalAmount: categories[index].totalAmount,
                           isHome: false,

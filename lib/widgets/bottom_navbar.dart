@@ -7,7 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavbar extends StatefulWidget {
-  const BottomNavbar({super.key});
+  const BottomNavbar({
+    super.key,
+    this.initIndex,
+  });
+  final int? initIndex;
 
   @override
   State<BottomNavbar> createState() => _BottomNavbarState();
@@ -26,7 +30,6 @@ class _BottomNavbarState extends State<BottomNavbar>
   // static const List<Widget> nav = <Widget>[
   //   Tab(),
   // ];
-
   var currentIndex = 0;
   late TabController _tabController;
 
@@ -34,7 +37,9 @@ class _BottomNavbarState extends State<BottomNavbar>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(vsync: this, length: page.length);
+    currentIndex = widget.initIndex ?? currentIndex;
+    _tabController = TabController(
+        vsync: this, length: page.length, initialIndex: currentIndex);
   }
 
   @override

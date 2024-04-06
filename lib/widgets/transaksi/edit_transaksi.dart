@@ -1,45 +1,28 @@
 import 'package:budgetin/main.dart';
-import 'package:budgetin/models/database.dart';
-import 'package:budgetin/providers/currency.dart';
-import 'package:budgetin/screens/homepage.dart';
-import 'package:budgetin/screens/riwayat_transaksi_page.dart';
-import 'package:budgetin/widgets/bottom_navbar.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/widgets/calendar.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:budgetin/widgets/calendar.dart';
-import 'package:intl/intl.dart';
 
 final _formKey = GlobalKey<FormState>();
 
-class AddTransaksi extends StatefulWidget {
-  final int categoryId;
-  const AddTransaksi({super.key, required this.categoryId});
+class EditTransaksi extends StatefulWidget {
+  final TransactionWithCategory transaction;
+  const EditTransaksi({super.key, required this.transaction});
 
   @override
-  State<AddTransaksi> createState() => _AddTransaksiState();
+  State<EditTransaksi> createState() => _EditTransaksiState();
 }
 
-class _AddTransaksiState extends State<AddTransaksi> {
+class _EditTransaksiState extends State<EditTransaksi>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
   DateTime selectedDate = DateTime.now();
-  String? nama;
-  String? nominal;
-  String? deskripsi;
+
   bool isFormSubmitted = false;
 
   DateTime now = DateTime.now();
-
-  Future insert(String name, String description, int amount, DateTime date,
-      int categoryId) async {
-    final row = await db!.into(db!.transactions).insertReturning(
-        TransactionsCompanion.insert(
-            name: name,
-            description: description,
-            category_id: categoryId,
-            amount: amount,
-            transaction_date: date));
-  }
 
   TextEditingController nameTransaksiController = TextEditingController();
   // TextEditingController amountTransaksiController = TextEditingController();
@@ -54,6 +37,13 @@ class _AddTransaksiState extends State<AddTransaksi> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _controller = AnimationController(vsync: this);
+
+    nameTransaksiController.text = widget.transaction.transaction.name;
+    _moneyController.text = widget.transaction.transaction.amount.toString();
+    deskripsiTransaksiController.text =
+        widget.transaction.transaction.description;
+    selectedDate = widget.transaction.transaction.transaction_date;
     _nameFocusNode = FocusNode();
     _moneyFocusNode = FocusNode();
     _descFocusNode = FocusNode();
@@ -65,6 +55,8 @@ class _AddTransaksiState extends State<AddTransaksi> {
     _nameFocusNode.dispose();
     _descFocusNode.dispose();
     _moneyFocusNode.dispose();
+    _controller.dispose();
+
     super.dispose();
   }
 
@@ -168,22 +160,16 @@ class _AddTransaksiState extends State<AddTransaksi> {
                     height: 57,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          insert(
-                              nameTransaksiController.text,
-                              deskripsiTransaksiController.text,
-                              int.parse(
-                                  _moneyController.text.replaceAll('.', '')),
-                              selectedDate,
-                              widget.categoryId);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const BottomNavbar(
-                                  initIndex: 1,
-                                ),
-                              ));
-                        }
+                        if (_formKey.currentState!.validate()) {}
+                        db!.updateTransactionRepo(
+                            widget.transaction.transaction.id,
+                            nameTransaksiController.text,
+                            int.parse(
+                                _moneyController.text.replaceAll('.', '')),
+                            widget.transaction.transaction.category_id,
+                            deskripsiTransaksiController.text,
+                            selectedDate);
+                        _simpanTransaksi(context);
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -205,27 +191,6 @@ class _AddTransaksiState extends State<AddTransaksi> {
                       ),
                     ),
                   ),
-                  if (isFormSubmitted &&
-                      (nama == null ||
-                          nama!.isEmpty ||
-                          nominal == null ||
-                          nominal!.isEmpty ||
-                          deskripsi == null ||
-                          deskripsi!.isEmpty)) ...[
-                    const SizedBox(height: 5.0),
-                    const AnimatedOpacity(
-                      duration: Duration(milliseconds: 200),
-                      opacity: 1,
-                      child: Text(
-                        "",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -234,10 +199,48 @@ class _AddTransaksiState extends State<AddTransaksi> {
       ),
     );
   }
+}
 
-  void _submitForm() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Form submitted successfully')),
-    );
-  }
+void _simpanTransaksi(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Transaksi berhasil disimpan!'),
+      duration: Duration(seconds: 2),
+    ),
+  );
+  Navigator.pop(context);
+}
+
+Widget _buildTextFormField(String content, {double? height}) {
+  return SizedBox(
+    height: height,
+    child: TextFormField(
+      initialValue: content,
+      style: const TextStyle(
+        fontSize: 12,
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+      ),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6.0),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+      ),
+    ),
+  );
+}
+
+Widget _buildTitleText(String label) {
+  return Text(
+    label,
+    style: const TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w600,
+    ),
+  );
 }
