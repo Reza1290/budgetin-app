@@ -98,10 +98,8 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: CategoryHome(),
-                ),
+                CategoryHome(),
+
                 // CategoryCard(
                 //   category: Category(
                 //     id: 2,

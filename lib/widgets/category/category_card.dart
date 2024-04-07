@@ -38,7 +38,7 @@ class CategoryCard extends StatelessWidget {
       hoverColor: Colors.transparent,
       // padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(
-        contentPadding: EdgeInsets.all(0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 24),
         isThreeLine: isReminder,
         leading: isHome
             ? null
@@ -59,7 +59,8 @@ class CategoryCard extends StatelessWidget {
                 ),
               ),
         title: Text(
-          category.name.toString().toUpperCase(),
+          category.name
+              .replaceFirst(category.name[0], category.name[0].toUpperCase()),
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
         subtitle: Padding(
@@ -126,7 +127,9 @@ class CategoryCard extends StatelessWidget {
                             width: 5,
                           ),
                           Text(
-                            'Pengeluaran mendekati batas maksimal.',
+                            (totalAmount / category.total > 0.98)
+                                ? 'Batas Maksimum Tercapai.'
+                                : 'Pengeluaran mendekati batas maksimal.',
                             style: TextStyle(
                                 color: Colors.redAccent, fontSize: 10),
                           )

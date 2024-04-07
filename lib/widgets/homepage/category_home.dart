@@ -18,7 +18,15 @@ class _CategoryHomeState extends State<CategoryHome> {
       builder:
           (BuildContext context, AsyncSnapshot<List<CategoryTotal>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Column(
+            children: [
+              Sekel(),
+              SizedBox(
+                height: 18,
+              ),
+              Sekel()
+            ],
+          );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
@@ -50,6 +58,63 @@ class _CategoryHomeState extends State<CategoryHome> {
           ),
         );
       },
+    );
+  }
+}
+
+class Sekel extends StatelessWidget {
+  const Sekel({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 54,
+      width: MediaQuery.of(context).size.width,
+      alignment: Alignment.topLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            // alignment: ,
+            alignment: Alignment.topLeft,
+            height: 16,
+            width: MediaQuery.of(context).size.width / 6,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(100)),
+              color: Colors.black.withOpacity(0.04),
+            ),
+          ),
+          SizedBox(
+            height: 6,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Colors.black.withOpacity(0.04),
+                ),
+                height: 14,
+                width: MediaQuery.of(context).size.width * 4 / 6,
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Colors.black.withOpacity(0.04),
+                ),
+                height: 16,
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

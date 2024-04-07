@@ -54,7 +54,7 @@ class _AllCategoryState extends State<AllCategory> {
         title: Text("Kategori Transaksi"),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        // padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: [
             TextButton(

@@ -8,6 +8,7 @@ import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class RiwayatTransaksiList extends StatelessWidget {
@@ -28,8 +29,37 @@ class RiwayatTransaksiList extends StatelessWidget {
           stream: getAllTransactions(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                height: 55,
+                child: Row(
+                  children: [
+                    Container(
+                      // alignment: ,
+                      alignment: Alignment.topLeft,
+                      height: 54,
+                      width: 54,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(9)),
+                        color: Colors.black.withOpacity(0.04),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: Container(
+                        // alignment: ,
+                        alignment: Alignment.topLeft,
+                        height: 54,
+                        // width: MediaQuery.of(context).size.width / 6,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(9)),
+                          color: Colors.black.withOpacity(0.04),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             } else {
               final transactions = snapshot.data;
