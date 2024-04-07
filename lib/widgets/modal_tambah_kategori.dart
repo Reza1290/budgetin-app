@@ -140,7 +140,7 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(7),
                                 ),
                               ),
                             ),

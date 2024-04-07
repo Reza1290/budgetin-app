@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Remainder extends StatelessWidget {
   const Remainder({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Widget svg = SvgPicture.asset('assets/images/ORY.svg');
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -50,7 +53,7 @@ class Remainder extends StatelessWidget {
           ),
         ),
         Positioned(
-          child: Image.asset('assets/images/ORY.png'),
+          child: svg,
           right: -15,
           top: -30,
         ),

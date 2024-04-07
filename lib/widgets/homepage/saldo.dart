@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Saldo extends StatefulWidget {
   const Saldo({super.key});
@@ -18,7 +19,7 @@ class Saldo extends StatefulWidget {
 class _SaldoState extends State<Saldo> {
   final TextEditingController _moneyController = TextEditingController();
   int uang = 222222222222222;
-
+  final Widget svg = SvgPicture.asset('assets/images/maskot.svg');
   @override
   void initState() {
     // TODO: implement initState
@@ -45,9 +46,9 @@ class _SaldoState extends State<Saldo> {
       clipBehavior: Clip.none,
       children: [
         Positioned(
-          child: Image.asset('assets/images/maskot.png'),
           top: -67,
           right: 0,
+          child: svg,
           // width: MediaQuery.of(context).size.width,
         ),
         Row(
