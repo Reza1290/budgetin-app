@@ -59,7 +59,7 @@ class CategoryCard extends StatelessWidget {
                 ),
               ),
         title: Text(
-          category.name.toString(),
+          category.name.toString().toUpperCase(),
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
         subtitle: Padding(
@@ -87,7 +87,9 @@ class CategoryCard extends StatelessWidget {
                               TextCurrencyFormat.format(totalAmount.toString()),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.w600),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: isReminder ? Colors.white : hitam100),
                             ),
                           ),
                         )

@@ -92,7 +92,7 @@ class RiwayatTransaksi extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              title,
+                              title.toUpperCase(),
                               style: const TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,

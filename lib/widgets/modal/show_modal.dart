@@ -68,7 +68,7 @@ Future<void> showModal(
                 }
               },
               child: const Text(
-                'Simpan',
+                'Simpan', 
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
