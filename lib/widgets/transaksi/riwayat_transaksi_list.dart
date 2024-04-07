@@ -93,16 +93,20 @@ class RiwayatTransaksiList extends StatelessWidget {
               width: 80,
               height: 55,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12)),
                 color: kuning50,
               ),
             ),
             Container(
               clipBehavior: Clip.none,
-              width: 130,
+              width: 60,
               height: 55,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(12),
+                    bottomRight: Radius.circular(12)),
                 color: merah50,
               ),
             ),
@@ -113,6 +117,7 @@ class RiwayatTransaksiList extends StatelessWidget {
           child: Slidable(
             key: UniqueKey(),
             endActionPane: ActionPane(
+              extentRatio: 0.35,
               motion: const StretchMotion(),
               children: [
                 SlidableAction(
@@ -143,6 +148,7 @@ class RiwayatTransaksiList extends StatelessWidget {
                   backgroundColor: kuning50,
                   foregroundColor: Colors.white,
                   icon: Icons.edit_square,
+                  padding: EdgeInsets.all(8),
                   borderRadius: BorderRadius.all(Radius.circular(9)),
                 ),
                 SlidableAction(
@@ -150,6 +156,7 @@ class RiwayatTransaksiList extends StatelessWidget {
                     _confirmDelete(context, transaction.transaction.id);
                   },
                   autoClose: true,
+                  padding: EdgeInsets.all(8),
                   backgroundColor: merah50,
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
