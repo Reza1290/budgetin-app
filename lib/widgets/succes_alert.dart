@@ -15,6 +15,7 @@ void showSuccessAlert(BuildContext context, String message) {
             // backgroundColor: Colors.white,
             contentPadding: const EdgeInsets.all(0),
             content: Container(
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10))),

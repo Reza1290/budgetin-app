@@ -15,6 +15,7 @@ void showFailedAlert(BuildContext context, String message) {
             // backgroundColor: Colors.white,
             contentPadding: const EdgeInsets.all(0),
             content: Container(
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -34,6 +35,7 @@ void showFailedAlert(BuildContext context, String message) {
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
                   ),
                 ],
               ),
