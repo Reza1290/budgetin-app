@@ -1,6 +1,9 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/screens/all_category.dart';
+import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
+import 'package:budgetin/widgets/modal_tambah_kategori.dart';
 import 'package:flutter/material.dart';
 
 class CategoryHome extends StatefulWidget {
@@ -32,7 +35,25 @@ class _CategoryHomeState extends State<CategoryHome> {
         }
         final List<CategoryTotal>? categories = snapshot.data;
         if (categories == null || categories.isEmpty) {
-          return Text('No categories found');
+          return Center(
+              child: Column(
+            children: [
+              Text('Silahkan Membuat Kategori Terlebih Dahulu'),
+              Container(
+                width: 60,
+                margin: EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                    color: PrimaryColor.shade300,
+                    borderRadius: BorderRadius.all(Radius.circular(9))),
+                child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      showModalTambahKategori(context, db!);
+                    },
+                    icon: Icon(Icons.add)),
+              )
+            ],
+          ));
         }
         return Container(
           width: MediaQuery.of(context).size.width,
