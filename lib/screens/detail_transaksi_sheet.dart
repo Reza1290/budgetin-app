@@ -142,7 +142,10 @@ class _DetailTransaksiSheetContent extends StatelessWidget {
                 transaction.transaction.description == ''
                     ? 'Deskripsi Tidak ada.'
                     : transaction.transaction.description,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    overflow: TextOverflow.ellipsis),
               ),
             )
           ],
