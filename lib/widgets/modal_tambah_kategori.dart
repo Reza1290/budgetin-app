@@ -1,6 +1,7 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
+import 'package:budgetin/widgets/success_category_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetin/widgets/modal_icon_kategori.dart';
@@ -114,15 +115,18 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                                 ? () {
                                     if (formKey.currentState!.validate()) {
                                       final entry = CategoriesCompanion(
-                                          icon: drift.Value(_iconKategori),
-                                          name:
-                                              drift.Value(_nameController.text),
-                                          total: drift.Value(int.parse(
-                                              _moneyController.text
-                                                  .replaceAll('.', ''))));
+                                        icon: drift.Value(_iconKategori),
+                                        name: drift.Value(_nameController.text),
+                                        total: drift.Value(int.parse(
+                                            _moneyController.text
+                                                .replaceAll('.', ''))),
+                                      );
 
-                                      _db.insertCategory(entry).then((value) =>
-                                          Navigator.of(context).pop());
+                                      _db.insertCategory(entry).then((value) {
+                                        Navigator.of(context).pop();
+                                        showSuccessCategoryAlert(context,
+                                            'Kategori berhasil disimpan!');
+                                      });
                                     }
                                   }
                                 : null,
