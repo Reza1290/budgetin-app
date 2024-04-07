@@ -10,6 +10,7 @@ void deleteAlert(BuildContext context, int index, String message) {
       return AlertDialog(
         contentPadding: const EdgeInsets.all(0),
         content: Container(
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10))),

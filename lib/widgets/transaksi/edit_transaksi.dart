@@ -31,7 +31,7 @@ class _EditTransaksiState extends State<EditTransaksi>
   final TextEditingController _moneyController = TextEditingController();
   TextEditingController deskripsiTransaksiController = TextEditingController();
   TextEditingController dateTransaksiController = TextEditingController();
-
+  late int temp;
   late final FocusNode _nameFocusNode;
   late final FocusNode _moneyFocusNode;
   late final FocusNode _descFocusNode;
@@ -40,7 +40,7 @@ class _EditTransaksiState extends State<EditTransaksi>
     // TODO: implement initState
     super.initState();
     _controller = AnimationController(vsync: this);
-
+    temp = widget.transaction.transaction.amount;
     nameTransaksiController.text = widget.transaction.transaction.name;
     _moneyController.text = widget.transaction.transaction.amount.toString();
     deskripsiTransaksiController.text =
@@ -167,7 +167,8 @@ class _EditTransaksiState extends State<EditTransaksi>
                               widget.transaction.category.id);
                           if (int.parse(_moneyController.text
                                       .replaceAll('.', '')) +
-                                  curr <
+                                  curr -
+                                  temp <
                               widget.transaction.category.total) {
                             db!.updateTransactionRepo(
                                 widget.transaction.transaction.id,

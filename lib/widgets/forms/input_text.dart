@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class InputText extends StatelessWidget {
-  const InputText({super.key, required this.controller, this.hintText, this.focusNode});
+  const InputText(
+      {super.key, required this.controller, this.hintText, this.focusNode});
   final TextEditingController controller;
   final FocusNode? focusNode;
   final String? hintText;
@@ -10,7 +11,9 @@ class InputText extends StatelessWidget {
     return TextFormField(
       validator: (value) => (value == null || value.isEmpty)
           ? '$hintText tidak boleh kosong'
-          : null,
+          : (value.length > 92)
+              ? 'Masukkan $hintText Singkat'
+              : null,
       controller: controller,
       focusNode: focusNode,
       decoration: InputDecoration(
