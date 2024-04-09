@@ -8,31 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class Saldo extends StatefulWidget {
-  const Saldo({super.key});
+class SaldoWidget extends StatefulWidget {
+  const SaldoWidget({super.key});
 
   @override
-  State<Saldo> createState() => _SaldoState();
+  State<SaldoWidget> createState() => _SaldoWidgetState();
 }
 
-class _SaldoState extends State<Saldo> {
+class _SaldoWidgetState extends State<SaldoWidget> {
+
   final TextEditingController _moneyController = TextEditingController();
-  int uang = 222222222222222;
+  int _saldo = 0;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // db = AppDb();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    // db.close();
-    super.dispose();
-  }
-
+  AppDb _db = AppDb();
   // Future<int> totalExpense() async {
   //   return await db!.totalExpense().whenComplete(() {
   //     // db.close();
@@ -41,6 +29,7 @@ class _SaldoState extends State<Saldo> {
 
   @override
   Widget build(BuildContext context) {
+    _moneyController.text = _saldo.toString();
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -114,19 +103,39 @@ class _SaldoState extends State<Saldo> {
                                 ],
                               ),
                             ),
-                            () {}),
+                            () {
+                              _db.createOrUpdateSaldo(int.parse(_moneyController.text.replaceAll('.', '')));
+                            }),
                         child: Row(
                           children: [
-                            Expanded(
-                              child: Text(
-                                TextCurrencyFormat.format(uang.toString()),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
-                                    color: Colors.white),
-                              ),
-                            ),
+                          Expanded(
+  child: FutureBuilder(
+    future: _db.getFirstSaldo(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData && snapshot.data != null) {
+        return Text(
+          TextCurrencyFormat.format(snapshot.data!.saldo),
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 16,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        return Text(
+          'No Data',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 16,
+            color: Colors.white,
+          ),
+        );
+      }
+    },
+  ),
+),
+
                             Icon(
                               Icons.edit,
                               size: 13,

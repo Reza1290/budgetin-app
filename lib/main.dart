@@ -8,6 +8,8 @@ AppDb? db;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   db = await initializeDb();
+   final database = AppDb();
+  await database.migration;
   runApp(MyApp());
 }
 
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return MaterialApp(
         home: BottomNavbar(),
         theme: ThemeData(

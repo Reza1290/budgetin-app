@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:budgetin/models/category.dart';
+import 'package:budgetin/models/saldo.dart';
 import 'package:budgetin/models/transaction.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:drift/drift.dart';
@@ -15,7 +16,7 @@ part 'database.g.dart';
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories, Transactions],
+  tables: [Categories, Transactions, Saldos],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
@@ -180,6 +181,34 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
+  Future<Saldo?> getFirstSaldo() async {
+  final query = select(saldos)..limit(1);
+  final result = await query.get();
+  if (result.isNotEmpty) {
+    return result.first;
+  } else {
+    return null;
+  }
+}
+
+Future<void> createOrUpdateSaldo(int saldo) async {
+  // Ambil hanya satu baris pertama dari tabel saldo
+  final query = await (select(saldos)).get();
+
+  if (query.isEmpty) {
+    // Jika tidak ada data saldo, tambahkan data baru
+    await into(saldos).insert(SaldosCompanion.insert(saldo: saldo));
+    print("Data saldo berhasil ditambahkan.");
+  } else {
+    // Jika data saldo sudah ada, perbarui saldo yang ada
+    await (update(saldos)..where((tbl) => tbl.id.equals(query.first.id)))
+        .write(SaldosCompanion(saldo: Value(saldo)));
+    print("Data saldo berhasil diperbarui.");
+  }
+}
+
+
+
   Stream<int> totalExpense() async* {
     final datas = await allTransactions();
     int totalExpense = 0;
@@ -190,6 +219,8 @@ class AppDb extends _$AppDb {
     }
   }
 }
+
+
 
 class CategoryTotal {
   final Category category;

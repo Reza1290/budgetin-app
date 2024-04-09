@@ -583,14 +583,184 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   }
 }
 
+class $SaldosTable extends Saldos with TableInfo<$SaldosTable, Saldo> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SaldosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _saldoMeta = const VerificationMeta('saldo');
+  @override
+  late final GeneratedColumn<int> saldo = GeneratedColumn<int>(
+      'saldo', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, saldo];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'saldos';
+  @override
+  VerificationContext validateIntegrity(Insertable<Saldo> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('saldo')) {
+      context.handle(
+          _saldoMeta, saldo.isAcceptableOrUnknown(data['saldo']!, _saldoMeta));
+    } else if (isInserting) {
+      context.missing(_saldoMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Saldo map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Saldo(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      saldo: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}saldo'])!,
+    );
+  }
+
+  @override
+  $SaldosTable createAlias(String alias) {
+    return $SaldosTable(attachedDatabase, alias);
+  }
+}
+
+class Saldo extends DataClass implements Insertable<Saldo> {
+  final int id;
+  final int saldo;
+  const Saldo({required this.id, required this.saldo});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['saldo'] = Variable<int>(saldo);
+    return map;
+  }
+
+  SaldosCompanion toCompanion(bool nullToAbsent) {
+    return SaldosCompanion(
+      id: Value(id),
+      saldo: Value(saldo),
+    );
+  }
+
+  factory Saldo.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Saldo(
+      id: serializer.fromJson<int>(json['id']),
+      saldo: serializer.fromJson<int>(json['saldo']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'saldo': serializer.toJson<int>(saldo),
+    };
+  }
+
+  Saldo copyWith({int? id, int? saldo}) => Saldo(
+        id: id ?? this.id,
+        saldo: saldo ?? this.saldo,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Saldo(')
+          ..write('id: $id, ')
+          ..write('saldo: $saldo')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, saldo);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Saldo && other.id == this.id && other.saldo == this.saldo);
+}
+
+class SaldosCompanion extends UpdateCompanion<Saldo> {
+  final Value<int> id;
+  final Value<int> saldo;
+  const SaldosCompanion({
+    this.id = const Value.absent(),
+    this.saldo = const Value.absent(),
+  });
+  SaldosCompanion.insert({
+    this.id = const Value.absent(),
+    required int saldo,
+  }) : saldo = Value(saldo);
+  static Insertable<Saldo> custom({
+    Expression<int>? id,
+    Expression<int>? saldo,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (saldo != null) 'saldo': saldo,
+    });
+  }
+
+  SaldosCompanion copyWith({Value<int>? id, Value<int>? saldo}) {
+    return SaldosCompanion(
+      id: id ?? this.id,
+      saldo: saldo ?? this.saldo,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (saldo.present) {
+      map['saldo'] = Variable<int>(saldo.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SaldosCompanion(')
+          ..write('id: $id, ')
+          ..write('saldo: $saldo')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDb extends GeneratedDatabase {
   _$AppDb(QueryExecutor e) : super(e);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $TransactionsTable transactions = $TransactionsTable(this);
+  late final $SaldosTable saldos = $SaldosTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [categories, transactions];
+      [categories, transactions, saldos];
 }
