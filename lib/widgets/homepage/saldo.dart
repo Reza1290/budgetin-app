@@ -22,6 +22,8 @@ class _SaldoWidgetState extends State<SaldoWidget> {
   final TextEditingController _moneyController = TextEditingController();
   int _saldo = 0;
 
+  final Widget svg = SvgPicture.asset('assets/images/maskot.svg');
+
   // AppDb _db = AppDb();
   // Future<int> totalExpense() async {
   //   return await db!.totalExpense().whenComplete(() {

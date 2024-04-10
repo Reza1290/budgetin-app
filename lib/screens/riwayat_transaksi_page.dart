@@ -139,17 +139,21 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                     width: 80,
                                     height: 55,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          bottomLeft: Radius.circular(12)),
                                       color: kuning50,
                                     ),
                                   ),
                                   Container(
                                     clipBehavior: Clip.none,
-                                    width: 130,
+                                    width: 60,
                                     height: 55,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: merah50,
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(12),
+                                          bottomRight: Radius.circular(12)),
+                                      color: merah50, 
                                     ),
                                   ),
                                 ],
@@ -160,6 +164,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                 child: Slidable(
                                   key: UniqueKey(),
                                   endActionPane: ActionPane(
+                                    extentRatio: 0.35,
                                     motion: const StretchMotion(),
                                     children: [
                                       SlidableAction(
@@ -198,6 +203,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                         backgroundColor: kuning50,
                                         foregroundColor: Colors.white,
                                         icon: Icons.edit_square,
+                                        padding: EdgeInsets.all(8),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(9)),
                                       ),
@@ -212,6 +218,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                         backgroundColor: merah50,
                                         foregroundColor: Colors.white,
                                         icon: Icons.delete,
+                                        padding: EdgeInsets.all(8),
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(9),
                                             bottomRight: Radius.circular(9)),
