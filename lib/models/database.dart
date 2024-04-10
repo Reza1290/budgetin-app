@@ -33,7 +33,7 @@ class AppDb extends _$AppDb {
       beforeOpen: (details) async {
         if (details.wasCreated) {
           await into(saldos)
-              .insert(SaldosCompanion.insert(id: Value(1), saldo: 0));
+              .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
         }
       },
       onUpgrade: (Migrator m, int from, int to) async {
