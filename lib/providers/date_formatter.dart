@@ -24,4 +24,9 @@ class HumanReadableDateFormatter {
       return 'Baru saja';
     }
   }
+
+  static String dateNowFormatter(DateTime value) {
+    initializeDateFormatting('id');
+    return DateFormat('EEEE, dd MMMM yyyy', 'id').format(value);
+  }
 }

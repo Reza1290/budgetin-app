@@ -1,6 +1,9 @@
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/success_category_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,8 +118,16 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                           height: 40,
                           child: ElevatedButton(
                             onPressed: _isButtonEnabled
-                                ? () {
-                                    if (formKey.currentState!.validate()) {
+                                ? () async {
+                                    if (formKey.currentState!.validate() &&
+                                        await _db.getFirstSaldo().then((value) {
+                                              return value.saldo;
+                                            }) >=
+                                            await _db.sumUsedSaldo() +
+                                                int.parse(_moneyController.text
+                                                    .replaceAll('.', ''))) {
+                                      debugPrint("hayang jajan" +
+                                          await _db.sumUsedSaldo().toString());
                                       final entry = CategoriesCompanion(
                                         icon: drift.Value(_iconKategori),
                                         name: drift.Value(_nameController.text),
@@ -126,10 +137,33 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                                       );
 
                                       _db.insertCategory(entry).then((value) {
+                                        // showSuccessCategoryAlert(context,
+                                        //     'Kategori berhasil disimpan!');
                                         Navigator.of(context).pop();
-                                        showSuccessCategoryAlert(context,
-                                            'Kategori berhasil disimpan!');
+                                        showSuccessAlert(context,
+                                            "Kategori Berhasil Disimpan.");
                                       });
+                                    } else {
+                                      int saldo = await _db
+                                          .getFirstSaldo()
+                                          .then((value) {
+                                        return value.saldo;
+                                      });
+                                      int uangInput = int.parse(_moneyController
+                                          .text
+                                          .replaceAll('.', ''));
+                                      String lebih = TextCurrencyFormat.format(
+                                          (uangInput - saldo).toString());
+                                      if (saldo < uangInput) {
+                                        showFailedAlert(context,
+                                            "Kategori Gagal Disimpan, Kelebihan $lebih");
+                                      }
+                                      if (saldo <
+                                          uangInput +
+                                              await _db.sumUsedSaldo()) {
+                                        showFailedAlert(context,
+                                            "Kategori Gagal Disimpan, Alokasi Saldo sudah habis. Silahkan melakukan alokasi ulang atau menambah Saldo");
+                                      }
                                     }
                                   }
                                 : null,

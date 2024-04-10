@@ -172,6 +172,14 @@ class AppDb extends _$AppDb {
     });
   }
 
+  Future<int> sumUsedSaldo() async {
+    int total = 0;
+    final rows = await select(categories).get();
+    total =
+        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
+    return total;
+  }
+
   Future<int> _calculateTotalAmountForCategory(int categoryId) async {
     final datas = await (select(transactions)
           ..where((tbl) => tbl.category_id.equals(categoryId)))

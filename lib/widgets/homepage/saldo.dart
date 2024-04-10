@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/modal/show_modal.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +32,18 @@ class _SaldoWidgetState extends State<SaldoWidget> {
   //     // db.close();
   //   }); // Tambahkan await di sini
   // }
+
+  void simpanSaldo(int sal, BuildContext context) async {
+    int sum = await db!.sumUsedSaldo();
+    if (sum > sal) {
+      // debugPrint("teteh" + await db!.sumUsedSaldo().toString());
+      String alokasi = TextCurrencyFormat.format(sum.toString());
+      showFailedAlert(context,
+          "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
+    } else {
+      await db!.createOrUpdateSaldo(sal);
+    }
+  }
 
   Stream<Saldo> saldoUpdate() {
     final controller = StreamController<Saldo>();
@@ -96,7 +110,7 @@ class _SaldoWidgetState extends State<SaldoWidget> {
                     InkWell(
                         onTap: () => showModal(
                                 context,
-                                "Tambah Saldo",
+                                "Ubah Saldo",
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Column(
@@ -115,9 +129,9 @@ class _SaldoWidgetState extends State<SaldoWidget> {
                                               padding:
                                                   EdgeInsets.only(bottom: 12.0),
                                               child: Text(
-                                                DateTime.now()
-                                                    .toLocal()
-                                                    .toString(),
+                                                HumanReadableDateFormatter
+                                                    .dateNowFormatter(
+                                                        DateTime.now()),
                                                 style: TextStyle(fontSize: 14),
                                               ),
                                             ),
@@ -130,8 +144,10 @@ class _SaldoWidgetState extends State<SaldoWidget> {
                                     ],
                                   ),
                                 ), () {
-                              db!.createOrUpdateSaldo(int.parse(
-                                  _moneyController.text.replaceAll('.', '')));
+                              simpanSaldo(
+                                  int.parse(_moneyController.text
+                                      .replaceAll('.', '')),
+                                  context);
                             }),
                         child: Row(
                           children: [
