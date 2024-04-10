@@ -37,10 +37,7 @@
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
-    <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-        <background android:drawable="@color/ic_launcher_background" />
-        <foreground android:drawable="@mipmap/ic_launcher_foreground" />
-    </adaptive-icon>
+    
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
