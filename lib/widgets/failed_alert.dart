@@ -19,7 +19,7 @@ void showFailedAlert(BuildContext context, String message) {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              height: 240.0,
+              height: 300.0,
               child: Column(
                 children: <Widget>[
                   Image.asset(

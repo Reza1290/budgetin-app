@@ -1,5 +1,6 @@
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/providers/date_formatter.dart';
+import 'package:budgetin/them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -30,16 +31,16 @@ class RiwayatTransaksi extends StatelessWidget {
                   height: 55.0,
                   width: 55.0,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF2F2F2),
+                    color: PrimaryColor.shade100,
                     borderRadius: const BorderRadius.all(Radius.circular(9)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.shade300,
+                        color: PrimaryColor.shade200,
                         spreadRadius: 1,
                         offset: const Offset(0, 1), // Bayangan ke bawah
                       ),
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: PrimaryColor.shade100,
                         offset: const Offset(0, -1), // Bayangan ke atas
                       ),
                     ],
@@ -70,12 +71,12 @@ class RiwayatTransaksi extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.shade300,
+                      color: PrimaryColor.shade200,
                       spreadRadius: 1,
                       offset: const Offset(0, 1),
                     ),
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: PrimaryColor.shade100,
                       offset: const Offset(0, -1),
                     ),
                   ],

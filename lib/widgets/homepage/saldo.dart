@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SaldoWidget extends StatefulWidget {
   const SaldoWidget({super.key});
@@ -55,9 +56,9 @@ class _SaldoWidgetState extends State<SaldoWidget> {
       clipBehavior: Clip.none,
       children: [
         Positioned(
-          child: Image.asset('assets/images/maskot.png'),
           top: -67,
           right: 0,
+          child: svg,
           // width: MediaQuery.of(context).size.width,
         ),
         Row(

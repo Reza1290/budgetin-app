@@ -18,10 +18,13 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
   return showModalBottomSheet<void>(
     isScrollControlled: true,
     context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
+    ),
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return Padding(
+          return Container(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SingleChildScrollView(
@@ -137,7 +140,7 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(7),
                                 ),
                               ),
                             ),
