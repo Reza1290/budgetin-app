@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 Future<void> showModal(
-    BuildContext context, String title, Widget content, Function? run) {
-  final _formKey = GlobalKey<FormState>();
+    BuildContext context, String title, Widget content, Function run) {
+  final formKey = GlobalKey<FormState>();
 
   return showDialog<void>(
     context: context,
@@ -47,8 +47,8 @@ Future<void> showModal(
         ),
         surfaceTintColor: Colors.white,
         contentPadding: const EdgeInsets.only(
-            top: 30.0, left: 30.0, right: 30.0, bottom: 60.0),
-        content: Form(key: _formKey, child: content),
+            top: 30.0, left: 30.0, right: 30.0, bottom: 30.0),
+        content: Form(key: formKey, child: content),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -62,9 +62,8 @@ Future<void> showModal(
                 ),
               ),
               onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  run!;
-                  Navigator.pop(context);
+                if (formKey.currentState!.validate()) {
+                  run();
                 }
               },
               child: const Text(

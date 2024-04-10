@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:budgetin/models/category.dart';
+import 'package:budgetin/models/saldo.dart';
 import 'package:budgetin/models/transaction.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:drift/drift.dart';
 // These imports are used to open the database
 import 'package:drift/native.dart';
@@ -14,13 +16,13 @@ part 'database.g.dart';
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories, Transactions],
+  tables: [Categories, Transactions, Saldos],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -28,17 +30,21 @@ class AppDb extends _$AppDb {
       onCreate: (Migrator m) async {
         await m.createAll();
       },
+      beforeOpen: (details) async {
+        if (details.wasCreated) {
+          await into(saldos)
+              .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
+        }
+      },
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
           // we added the dueDate property in the change from version 1 to
           // version 2
           await m.addColumn(categories, categories.icon);
         }
-        // if (from < 3) {
-        //   // we added the priority property in the change from version 1 or 2
-        //   // to version 3
-        //   await m.addColumn(categories, categories.);
-        // }
+        if (from < 3) {
+          await m.createTable($SaldosTable(attachedDatabase));
+        }
       },
     );
   }
@@ -60,8 +66,52 @@ class AppDb extends _$AppDb {
     return await update(categories).replace(entry);
   }
 
-  Future<int> deleteCategory(int id) async {
-    return await (delete(categories)..where((tbl) => tbl.id.equals(id))).go();
+  Future<void> deleteCategory(int id) async {
+    await (delete(categories)..where((tbl) => tbl.id.equals(id)))
+        .go()
+        .then((value) {
+      (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
+    });
+  }
+
+  Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
+    final query = (select(transactions)).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
+  Stream<List<TransactionWithCategory>> getTransactionWithCategoryLimit(
+      int limit) {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id)),
+    ]);
+    query.limit(limit);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
+  Stream<List<TransactionWithCategory>> getTransactionWithCategory(int id) {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id)),
+    ])
+      ..where(categories.id.equals(id));
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
   }
 
   Future<int> insertTransaction(TransactionsCompanion entry) async {
@@ -77,13 +127,129 @@ class AppDb extends _$AppDb {
         .getSingle();
   }
 
-  Future<bool> updateTransaction(TransactionsCompanion entry) async {
-    return await update(transactions).replace(entry);
+  Future updateTransactionRepo(int id, String name, int amount, int categoryId,
+      String description, DateTime date) async {
+    return (update(transactions)..where((tbl) => tbl.id.equals(id))).write(
+        TransactionsCompanion(
+            name: Value(name),
+            description: Value(description),
+            category_id: Value(categoryId),
+            amount: Value(amount),
+            transaction_date: Value(date)));
   }
 
   Future<int> deleteTransaction(int id) async {
     return await (delete(transactions)..where((tbl) => tbl.id.equals(id))).go();
   }
+
+  Future<int> sumExpenseCategory(int categoryId) async {
+    final datas = await (select(transactions)
+          ..where((tbl) => tbl.category_id.equals(categoryId)))
+        .get();
+    int totalAmount = 0;
+
+    for (final data in datas) {
+      totalAmount += data.amount;
+    }
+
+    return totalAmount;
+  }
+
+  Stream<List<CategoryTotal>> sumExpenseByCategory(int limit) {
+    final categoriesResultStream = limit != 0
+        ? (select(categories)..limit(limit)).watch()
+        : select(categories).watch();
+
+    return categoriesResultStream.asyncMap((categoriesResult) async {
+      final List<CategoryTotal> categoryTotals = [];
+
+      for (final category in categoriesResult) {
+        final totalAmount = await _calculateTotalAmountForCategory(category.id);
+        categoryTotals.add(CategoryTotal(category, totalAmount));
+      }
+
+      return categoryTotals;
+    });
+  }
+
+  Future<int> sumUsedSaldo() async {
+    int total = 0;
+    final rows = await select(categories).get();
+    total =
+        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
+    return total;
+  }
+
+  Stream<int> watchUsedSaldo() async* {
+    int total = 0;
+    final rows = await select(categories).get();
+    total =
+        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
+    yield total;
+  }
+
+  Stream<int> watchRemainSaldo() async* {
+    int total = 0;
+    final rows = await select(categories).get();
+    total =
+        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
+    int sal = await getFirstSaldo().then((value) => value.saldo);
+    yield sal - total;
+  }
+
+  Future<int> _calculateTotalAmountForCategory(int categoryId) async {
+    final datas = await (select(transactions)
+          ..where((tbl) => tbl.category_id.equals(categoryId)))
+        .get();
+    int totalAmount = 0;
+
+    for (final data in datas) {
+      totalAmount += data.amount;
+    }
+
+    return totalAmount;
+  }
+
+  Future<Saldo> getFirstSaldo() async {
+    final query = select(saldos)..limit(1);
+    final result = await query.get();
+    if (result.isNotEmpty) {
+      return result.first;
+    } else {
+      return Saldo(id: 1, saldo: 0);
+    }
+  }
+
+  Stream<Saldo> watchFirstSaldo() {
+    return (select(saldos)
+          ..orderBy([
+            // (t) => OrderingTerm(expression: t.priority, mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .watchSingle(); // Use watchSingle to get a stream of a single item
+  }
+
+  Future<int> createOrUpdateSaldo(int saldo) async {
+    return into(saldos).insertOnConflictUpdate(
+        SaldosCompanion.insert(id: Value(1), saldo: saldo));
+  }
+
+  Stream<int> totalExpense() async* {
+    final datas = await allTransactions();
+    int totalExpense = 0;
+
+    for (final data in datas) {
+      totalExpense += data.amount;
+      yield totalExpense;
+    }
+  }
+}
+
+class CategoryTotal {
+  final Category category;
+  final int totalAmount;
+
+  CategoryTotal(this.category, this.totalAmount);
 }
 
 LazyDatabase _openConnection() {

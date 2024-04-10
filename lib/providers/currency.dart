@@ -18,3 +18,12 @@ class CurrencyFormat extends TextInputFormatter {
         selection: TextSelection.collapsed(offset: newText.length));
   }
 }
+
+class TextCurrencyFormat {
+  static format(val) {
+    val = double.parse(val);
+    final money = NumberFormat("###,###,###", "ID");
+    String newValue = money.format(val);
+    return "Rp. ${newValue.replaceAll(',', '.')}";
+  }
+}

@@ -1,7 +1,25 @@
+import 'package:budgetin/main.dart';
+import 'package:budgetin/models/database.dart';
 import 'package:flutter/material.dart';
 
-class CardKategoriTransaksi extends StatelessWidget {
-  const CardKategoriTransaksi({super.key});
+class CardKategoriTransaksi extends StatefulWidget {
+  const CardKategoriTransaksi(
+      {super.key, required this.data, required this.total});
+  final Category data;
+  final int total;
+
+  @override
+  State<CardKategoriTransaksi> createState() => _CardKategoriTransaksiState();
+}
+
+class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
+  late bool isMore;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isMore = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +27,7 @@ class CardKategoriTransaksi extends StatelessWidget {
       children: <Widget>[
         Container(
           width: 342.0,
-          height: 167.0,
+          height: isMore ? null : 167.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(11.0),
             gradient: LinearGradient(
@@ -35,8 +53,10 @@ class CardKategoriTransaksi extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(22.0, 22.0, 24.0, 24.0),
-                  child: Image.network(
-                    'https://cdn-icons-png.flaticon.com/512/1160/1160908.png',
+                  child: Image.asset(
+                    widget.data.icon == ''
+                        ? 'assets/icons/lainnya.png'
+                        : widget.data.icon,
                     width: 55.0,
                     height: 53.0,
                   ),
@@ -46,22 +66,30 @@ class CardKategoriTransaksi extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0)),
-                  const Flexible(
-                    child: Text(
-                      'Olahraga',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        widget.data.name,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            overflow: isMore
+                                ? TextOverflow.clip
+                                : TextOverflow.ellipsis),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                   IconButton(
-                    // CONTOH PEMANGGILAN ALERT 
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        isMore = !isMore;
+                      });
+                    },
                     icon: const Icon(
-                      Icons.edit,
+                      Icons.remove_red_eye_outlined,
                       color: Colors.white,
                       size: 20.0,
                     ),

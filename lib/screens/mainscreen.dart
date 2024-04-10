@@ -38,10 +38,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      canPop: true,
       onPopInvoked: (didPop) {
         if (items[selectedTab].navKey.currentState?.canPop() ?? false) {
           items[selectedTab].navKey.currentState?.pop();
         }
+        // if (!didPop) {
+        //   items[selectedTab].navKey.currentState?.maybePop();
+        // }
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -136,11 +140,7 @@ class _MainScreenState extends State<MainScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       GestureDetector(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddTransaksi())),
+                                        onTap: () {},
                                         child: Row(
                                           children: [
                                             Container(

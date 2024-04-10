@@ -1,8 +1,24 @@
+import 'dart:async';
+
+import 'package:budgetin/main.dart';
+import 'package:budgetin/models/database.dart';
+import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/them.dart';
 import 'package:flutter/material.dart';
 
-class CardSisaSaldo extends StatelessWidget {
+class CardSisaSaldo extends StatefulWidget {
   const CardSisaSaldo({super.key});
+
+  @override
+  State<CardSisaSaldo> createState() => _CardSisaSaldoState();
+}
+
+class _CardSisaSaldoState extends State<CardSisaSaldo> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +38,7 @@ class CardSisaSaldo extends StatelessWidget {
           ],
         ),
       ),
-      padding:const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,39 +66,68 @@ class CardSisaSaldo extends StatelessWidget {
               const SizedBox(
                 width: 5,
               ),
-              _buildText(
-                  "Sisa Saldo",
-                   15,
-                   FontWeight.w600,
-                  putih30)
+              _buildText("Saldo Tidak Teralokasi", 15, FontWeight.w600, putih30)
             ],
           ),
-          _buildText(
-              "Rp 5.000.000",
-               24,
-              FontWeight.w800,
-              putih30),
+          StreamBuilder<int>(
+              stream: db!.watchRemainSaldo(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                } else {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      return _buildText(
+                          TextCurrencyFormat.format(snapshot.data!.toString()),
+                          24,
+                          FontWeight.w800,
+                          putih30);
+                    } else {
+                      return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                    }
+                  } else {
+                    return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                  }
+                }
+              }),
           const SizedBox(
             height: 20,
           ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ContainerSaldo(
-                  saldo: "Rp 200.000",
-                  textColour: merah60,
-                  bgColour: merah10,
-                  icon: Icons.arrow_upward_rounded),
-               SizedBox(
-                width: 10,
-              ),
-              ContainerSaldo(
-                  saldo: "Rp 3.500.00",
-                  textColour: hijau80,
-                  bgColour: hijau10,
-                  icon: Icons.arrow_downward_rounded)
-            ],
-          )
+          StreamBuilder<int>(
+              stream: db!.watchUsedSaldo(),
+              builder: (context, snapshot) {
+                String saldo = "Rp. 0";
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  saldo = "Rp. 0";
+                } else {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      saldo =
+                          TextCurrencyFormat.format(snapshot.data.toString());
+                    }
+                  } else {
+                    saldo = "Rp. 0";
+                  }
+                }
+                return ContainerSaldo(
+                    saldo: saldo,
+                    textColour: merah60,
+                    bgColour: merah10,
+                    icon: Icons.arrow_upward_rounded);
+              }),
+          // const Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     SizedBox(
+          //       width: 10,
+          //     ),
+          //     // ContainerSaldo(
+          //     //     saldo: "Rp 3.500.00",
+          //     //     textColour: hijau80,
+          //     //     bgColour: hijau10,
+          //     //     icon: Icons.arrow_downward_rounded)
+          //   ],
+          // )
         ],
       ),
     );
@@ -104,6 +149,7 @@ class ContainerSaldo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // width: MediaQuery.of(context).size.width / 2,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -126,8 +172,9 @@ class ContainerSaldo extends StatelessWidget {
           const SizedBox(
             width: 5,
           ),
-         _buildText(
-              saldo, 12, FontWeight.w600, textColour)
+          Expanded(
+            child: _buildText(saldo, 12, FontWeight.w600, textColour),
+          )
         ],
       ),
     );
@@ -143,9 +190,9 @@ Widget _buildText(
   return Text(
     text, // Teks kosong karena TextStyle hanya bisa digunakan sebagai parameter dalam Widget Text
     style: TextStyle(
-      fontSize: size,
-      fontWeight: weight,
-      color: color,
-    ),
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+        overflow: TextOverflow.ellipsis),
   );
 }
