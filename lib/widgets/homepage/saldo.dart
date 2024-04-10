@@ -7,6 +7,7 @@ import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/modal/show_modal.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +43,8 @@ class _SaldoWidgetState extends State<SaldoWidget> {
           "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
     } else {
       await db!.createOrUpdateSaldo(sal);
+      Navigator.pop(context);
+      showSuccessAlert(context, "Berhasil");
     }
   }
 
@@ -49,10 +52,8 @@ class _SaldoWidgetState extends State<SaldoWidget> {
     final controller = StreamController<Saldo>();
 
     db!.watchFirstSaldo().listen((saldo) {
-      // Update the _moneyController.text when a new saldo is emitted
       _moneyController.text = saldo.saldo.toString();
 
-      // Add the new saldo to the stream
       controller.add(saldo);
     });
 

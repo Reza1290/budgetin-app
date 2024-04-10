@@ -180,6 +180,23 @@ class AppDb extends _$AppDb {
     return total;
   }
 
+  Stream<int> watchUsedSaldo() async* {
+    int total = 0;
+    final rows = await select(categories).get();
+    total =
+        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
+    yield total;
+  }
+
+  Stream<int> watchRemainSaldo() async* {
+    int total = 0;
+    final rows = await select(categories).get();
+    total =
+        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
+    int sal = await getFirstSaldo().then((value) => value.saldo);
+    yield sal - total;
+  }
+
   Future<int> _calculateTotalAmountForCategory(int categoryId) async {
     final datas = await (select(transactions)
           ..where((tbl) => tbl.category_id.equals(categoryId)))

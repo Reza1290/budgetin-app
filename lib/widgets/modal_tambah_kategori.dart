@@ -126,8 +126,6 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                                             await _db.sumUsedSaldo() +
                                                 int.parse(_moneyController.text
                                                     .replaceAll('.', ''))) {
-                                      debugPrint("hayang jajan" +
-                                          await _db.sumUsedSaldo().toString());
                                       final entry = CategoriesCompanion(
                                         icon: drift.Value(_iconKategori),
                                         name: drift.Value(_nameController.text),
