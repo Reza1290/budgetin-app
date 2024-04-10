@@ -1,7 +1,4 @@
-import 'package:budgetin/layout.dart';
 import 'package:budgetin/main.dart';
-import 'package:budgetin/models/database.dart';
-import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
@@ -9,8 +6,6 @@ import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
-import 'package:budgetin/widgets/transaksi/filter.dart';
-import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:budgetin/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +91,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             const SizedBox(
               height: 10,
             ),
-            const Filter(),
+            // const Filter(),
             const SizedBox(
               height: 10,
             ),

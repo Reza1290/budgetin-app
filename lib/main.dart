@@ -1,6 +1,5 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
         home: BottomNavbar(),
         theme: ThemeData(

@@ -23,7 +23,9 @@ class _BottomNavbarState extends State<BottomNavbar>
     HomePage(),
     RiwayatTransaksiPage(),
     Center(child: Image.asset('assets/images/maskot.png')),
-    Text('none'),
+    Center(
+      child: Text(""),
+    ),
     FaqPage(),
   ];
 
