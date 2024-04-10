@@ -21,14 +21,17 @@ class _CategoryHomeState extends State<CategoryHome> {
       builder:
           (BuildContext context, AsyncSnapshot<List<CategoryTotal>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Column(
-            children: [
-              Sekel(),
-              SizedBox(
-                height: 18,
-              ),
-              Sekel()
-            ],
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                Sekel(),
+                SizedBox(
+                  height: 18,
+                ),
+                Sekel()
+              ],
+            ),
           );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');

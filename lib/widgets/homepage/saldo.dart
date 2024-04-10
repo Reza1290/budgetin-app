@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
@@ -16,20 +18,39 @@ class SaldoWidget extends StatefulWidget {
 }
 
 class _SaldoWidgetState extends State<SaldoWidget> {
-
   final TextEditingController _moneyController = TextEditingController();
   int _saldo = 0;
 
-  AppDb _db = AppDb();
+  // AppDb _db = AppDb();
   // Future<int> totalExpense() async {
   //   return await db!.totalExpense().whenComplete(() {
   //     // db.close();
   //   }); // Tambahkan await di sini
   // }
 
+  Stream<Saldo> saldoUpdate() {
+    final controller = StreamController<Saldo>();
+
+    db!.watchFirstSaldo().listen((saldo) {
+      // Update the _moneyController.text when a new saldo is emitted
+      _moneyController.text = saldo.saldo.toString();
+
+      // Add the new saldo to the stream
+      controller.add(saldo);
+    });
+
+    return controller.stream;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // _moneyController.text = _saldo.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    _moneyController.text = _saldo.toString();
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -71,71 +92,75 @@ class _SaldoWidgetState extends State<SaldoWidget> {
                     const SizedBox(height: 7),
                     InkWell(
                         onTap: () => showModal(
-                            context,
-                            "Tambah Saldo",
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(bottom: 12.0),
-                                          child: Text(
-                                            DateTime.now().toLocal().toString(),
-                                            style: TextStyle(fontSize: 14),
-                                          ),
+                                context,
+                                "Tambah Saldo",
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 12.0),
+                                              child: Text(
+                                                DateTime.now()
+                                                    .toLocal()
+                                                    .toString(),
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ),
+                                            InputMoney(
+                                                controller: _moneyController,
+                                                fontSize: 12)
+                                          ],
                                         ),
-                                        InputMoney(
-                                            controller: _moneyController,
-                                            fontSize: 12)
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            () {
-                              _db.createOrUpdateSaldo(int.parse(_moneyController.text.replaceAll('.', '')));
+                                ), () {
+                              db!.createOrUpdateSaldo(int.parse(
+                                  _moneyController.text.replaceAll('.', '')));
                             }),
                         child: Row(
                           children: [
-                          Expanded(
-  child: FutureBuilder(
-    future: _db.getFirstSaldo(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData && snapshot.data != null) {
-        return Text(
-          TextCurrencyFormat.format(snapshot.data!.saldo),
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 16,
-            color: Colors.white,
-          ),
-        );
-      } else {
-        return Text(
-          'No Data',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 16,
-            color: Colors.white,
-          ),
-        );
-      }
-    },
-  ),
-),
-
+                            Expanded(
+                              child: StreamBuilder(
+                                stream: saldoUpdate(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    return Text(
+                                      TextCurrencyFormat.format(
+                                          snapshot.data!.saldo.toString()),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      'Rp. 0',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
                             Icon(
                               Icons.edit,
                               size: 13,

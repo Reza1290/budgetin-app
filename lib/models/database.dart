@@ -22,7 +22,7 @@ class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -30,17 +30,21 @@ class AppDb extends _$AppDb {
       onCreate: (Migrator m) async {
         await m.createAll();
       },
+      beforeOpen: (details) async {
+        if (details.wasCreated) {
+          await into(saldos)
+              .insert(SaldosCompanion.insert(id: Value(1), saldo: 0));
+        }
+      },
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
           // we added the dueDate property in the change from version 1 to
           // version 2
           await m.addColumn(categories, categories.icon);
         }
-        // if (from < 3) {
-        //   // we added the priority property in the change from version 1 or 2
-        //   // to version 3
-        //   await m.addColumn(categories, categories.);
-        // }
+        if (from < 3) {
+          await m.createTable($SaldosTable(attachedDatabase));
+        }
       },
     );
   }
@@ -181,33 +185,29 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future<Saldo?> getFirstSaldo() async {
-  final query = select(saldos)..limit(1);
-  final result = await query.get();
-  if (result.isNotEmpty) {
-    return result.first;
-  } else {
-    return null;
+  Future<Saldo> getFirstSaldo() async {
+    final query = select(saldos)..limit(1);
+    final result = await query.get();
+    if (result.isNotEmpty) {
+      return result.first;
+    } else {
+      return Saldo(id: 1, saldo: 0);
+    }
   }
-}
 
-Future<void> createOrUpdateSaldo(int saldo) async {
-  // Ambil hanya satu baris pertama dari tabel saldo
-  final query = await (select(saldos)).get();
-
-  if (query.isEmpty) {
-    // Jika tidak ada data saldo, tambahkan data baru
-    await into(saldos).insert(SaldosCompanion.insert(saldo: saldo));
-    print("Data saldo berhasil ditambahkan.");
-  } else {
-    // Jika data saldo sudah ada, perbarui saldo yang ada
-    await (update(saldos)..where((tbl) => tbl.id.equals(query.first.id)))
-        .write(SaldosCompanion(saldo: Value(saldo)));
-    print("Data saldo berhasil diperbarui.");
+  Stream<Saldo> watchFirstSaldo() {
+    return (select(saldos)
+          ..orderBy([
+            // (t) => OrderingTerm(expression: t.priority, mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .watchSingle(); // Use watchSingle to get a stream of a single item
   }
-}
 
-
+  Future<int> createOrUpdateSaldo(int saldo) async {
+    return into(saldos).insertOnConflictUpdate(
+        SaldosCompanion.insert(id: Value(1), saldo: saldo));
+  }
 
   Stream<int> totalExpense() async* {
     final datas = await allTransactions();
@@ -219,8 +219,6 @@ Future<void> createOrUpdateSaldo(int saldo) async {
     }
   }
 }
-
-
 
 class CategoryTotal {
   final Category category;
