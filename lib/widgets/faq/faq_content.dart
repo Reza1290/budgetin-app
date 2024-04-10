@@ -20,9 +20,8 @@ class _FaqContentState extends State<FaqContent> {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue),
-          borderRadius:
-              BorderRadius.circular(10), // BorderRadius sama dengan ClipRRect
-          color: Colors.white, // Tambahkan warna putih di dalam container
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
         ),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 15),
