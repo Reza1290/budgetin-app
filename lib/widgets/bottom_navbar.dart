@@ -1,6 +1,7 @@
 import 'package:budgetin/screens/faq_page.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
+import 'package:budgetin/screens/statistic_screen.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/main/select_category_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,9 +24,7 @@ class _BottomNavbarState extends State<BottomNavbar>
     HomePage(),
     RiwayatTransaksiPage(),
     Center(child: Image.asset('assets/images/maskot.png')),
-    Center(
-      child: Text(""),
-    ),
+    StatisticScreen(),
     FaqPage(),
   ];
 
