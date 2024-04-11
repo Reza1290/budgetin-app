@@ -254,6 +254,8 @@ class $TransactionsTable extends Transactions
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
+  var date;
   $TransactionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override

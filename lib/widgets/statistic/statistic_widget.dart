@@ -1,10 +1,17 @@
 import 'package:budgetin/widgets/statistic/statistic_content.dart';
 import 'package:flutter/material.dart';
 
+class Penggunaan {
+  String name;
+  int total;
+
+  Penggunaan({required this.name, required this.total});
+}
+
 class StatisticWidget extends StatefulWidget {
   final String bulan;
-
-  const StatisticWidget({Key? key, required this.bulan}) : super(key: key);
+  final List<Penggunaan> content;
+  const StatisticWidget({super.key, required this.bulan, required this.content});
 
   @override
   State<StatisticWidget> createState() => _StatisticWidgetState();
@@ -30,13 +37,11 @@ class _StatisticWidgetState extends State<StatisticWidget> {
                 ),
               ),
               const SizedBox(height: 5),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: 0.5,
-                  backgroundColor: Colors.black.withOpacity(0.04),
-                  minHeight: 16,
-                ),
+              LinearProgressIndicator(
+                borderRadius: BorderRadius.all(Radius.circular(9)),
+                value: 0.5,
+                backgroundColor: Colors.black.withOpacity(0.04),
+                minHeight: 16,
               ),
             ],
           ),

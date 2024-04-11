@@ -1,3 +1,5 @@
+import 'package:budgetin/main.dart';
+import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/widgets/statistic/statistic_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -19,17 +21,26 @@ class StatisticScreen extends StatelessWidget {
           fontFamily: 'Nunito',
         ),
         leadingWidth: 100,
-        title: const Text("FAQ"),
+        title: const Text("Statistik"),
       ),
       body: SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          child: ListView.builder(
-              itemCount: months.length,
-              itemBuilder: (context, index) {
-                final month = months[index];
-                return StatisticWidget(bulan: month);
-              }),
+          child: StreamBuilder<List<MapEntry<DateTime, Map<String, int>>>>(
+            stream: db!.sumTransactionsByMonthAndCategory(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Text('Statistik Belum Tersedia');
+              } else {
+                final data = snapshot.data!;
+                debugPrint(data.toString());
+                return Text('');
+              }
+            },
+          ),
         ),
       ),
     );

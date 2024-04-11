@@ -29,4 +29,9 @@ class HumanReadableDateFormatter {
     initializeDateFormatting('id');
     return DateFormat('EEEE, dd MMMM yyyy', 'id').format(value);
   }
+
+  static String dateMonthFormatter(DateTime value) {
+    initializeDateFormatting('id');
+    return DateFormat('MMMM', 'id').format(value);
+  }
 }

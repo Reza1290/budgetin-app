@@ -243,6 +243,38 @@ class AppDb extends _$AppDb {
       yield totalExpense;
     }
   }
+
+  Stream<List<MapEntry<DateTime, Map<String, int>>>>
+      sumTransactionsByMonthAndCategory() async* {
+    final transactions = await select(this.transactions).get();
+
+    final List<MapEntry<DateTime, Map<String, int>>> sumsList = [];
+
+    for (var transaction in transactions) {
+      final kategori = await getCategory(transaction.category_id);
+      final categoryName = kategori.name;
+
+      final transactionDate = transaction.transaction_date;
+      final month = DateTime(transactionDate.year, transactionDate.month);
+
+      final amount = transaction.amount ?? 0;
+
+      if (!sumsList.any((entry) => entry.key == month)) {
+        sumsList.add(MapEntry(month, {}));
+      }
+
+      final monthEntry = sumsList.firstWhere((entry) => entry.key == month);
+      final monthSums = monthEntry.value;
+
+      if (monthSums.containsKey(categoryName)) {
+        monthSums[categoryName] = monthSums[categoryName]! + amount;
+      } else {
+        monthSums[categoryName] = amount;
+      }
+
+      yield List.from(sumsList);
+    }
+  }
 }
 
 class CategoryTotal {

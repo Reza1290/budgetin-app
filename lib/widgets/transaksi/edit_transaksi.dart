@@ -69,7 +69,7 @@ class _EditTransaksiState extends State<EditTransaksi>
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'Tambah Transaksi',
+          'Edit Transaksi',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
       ),
