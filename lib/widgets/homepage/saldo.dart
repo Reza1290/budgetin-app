@@ -1,44 +1,71 @@
+import 'dart:async';
+
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/modal/show_modal.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Saldo extends StatefulWidget {
-  const Saldo({super.key});
+class SaldoWidget extends StatefulWidget {
+  const SaldoWidget({super.key});
 
   @override
-  State<Saldo> createState() => _SaldoState();
+  State<SaldoWidget> createState() => _SaldoWidgetState();
 }
 
-class _SaldoState extends State<Saldo> {
+class _SaldoWidgetState extends State<SaldoWidget> {
   final TextEditingController _moneyController = TextEditingController();
-  int uang = 222222222222222;
+  int _saldo = 0;
+
   final Widget svg = SvgPicture.asset('assets/images/maskot.svg');
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // db = AppDb();
-  }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    // db.close();
-    super.dispose();
-  }
-
+  // AppDb _db = AppDb();
   // Future<int> totalExpense() async {
   //   return await db!.totalExpense().whenComplete(() {
   //     // db.close();
   //   }); // Tambahkan await di sini
   // }
+
+  void simpanSaldo(int sal, BuildContext context) async {
+    int sum = await db!.sumUsedSaldo();
+    if (sum > sal) {
+      // debugPrint("teteh" + await db!.sumUsedSaldo().toString());
+      String alokasi = TextCurrencyFormat.format(sum.toString());
+      showFailedAlert(context,
+          "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
+    } else {
+      await db!.createOrUpdateSaldo(sal);
+      Navigator.pop(context);
+      showSuccessAlert(context, "Berhasil");
+    }
+  }
+
+  Stream<Saldo> saldoUpdate() {
+    final controller = StreamController<Saldo>();
+
+    db!.watchFirstSaldo().listen((saldo) {
+      _moneyController.text = saldo.saldo.toString();
+
+      controller.add(saldo);
+    });
+
+    return controller.stream;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // _moneyController.text = _saldo.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,49 +110,75 @@ class _SaldoState extends State<Saldo> {
                     const SizedBox(height: 7),
                     InkWell(
                         onTap: () => showModal(
-                            context,
-                            "Tambah Saldo",
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(bottom: 12.0),
-                                          child: Text(
-                                            DateTime.now().toLocal().toString(),
-                                            style: TextStyle(fontSize: 14),
-                                          ),
+                                context,
+                                "Ubah Saldo",
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 12.0),
+                                              child: Text(
+                                                HumanReadableDateFormatter
+                                                    .dateNowFormatter(
+                                                        DateTime.now()),
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ),
+                                            InputMoney(
+                                                controller: _moneyController,
+                                                fontSize: 12)
+                                          ],
                                         ),
-                                        InputMoney(
-                                            controller: _moneyController,
-                                            fontSize: 12)
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            () {}),
+                                ), () {
+                              simpanSaldo(
+                                  int.parse(_moneyController.text
+                                      .replaceAll('.', '')),
+                                  context);
+                            }),
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text(
-                                TextCurrencyFormat.format(uang.toString()),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
-                                    color: Colors.white),
+                              child: StreamBuilder(
+                                stream: saldoUpdate(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    return Text(
+                                      TextCurrencyFormat.format(
+                                          snapshot.data!.saldo.toString()),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      'Rp. 0',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }
+                                },
                               ),
                             ),
                             Icon(

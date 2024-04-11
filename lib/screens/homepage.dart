@@ -5,8 +5,8 @@ import 'package:budgetin/screens/all_category.dart';
 import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/homepage/category_home.dart';
-import 'package:budgetin/widgets/remainder.dart';
 import 'package:budgetin/widgets/homepage/saldo.dart';
+import 'package:budgetin/widgets/remainder.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Saldo(),
+                  child: SaldoWidget(),
                 ),
                 const SizedBox(
                   height: 30,

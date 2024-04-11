@@ -1,7 +1,4 @@
-import 'package:budgetin/layout.dart';
 import 'package:budgetin/main.dart';
-import 'package:budgetin/models/database.dart';
-import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/them.dart';
@@ -9,8 +6,6 @@ import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
-import 'package:budgetin/widgets/transaksi/filter.dart';
-import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:budgetin/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +91,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             const SizedBox(
               height: 10,
             ),
-            const Filter(),
+            // const Filter(),
             const SizedBox(
               height: 10,
             ),
@@ -139,16 +134,20 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                     width: 80,
                                     height: 55,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          bottomLeft: Radius.circular(12)),
                                       color: kuning50,
                                     ),
                                   ),
                                   Container(
                                     clipBehavior: Clip.none,
-                                    width: 130,
+                                    width: 60,
                                     height: 55,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(12),
+                                          bottomRight: Radius.circular(12)),
                                       color: merah50,
                                     ),
                                   ),
@@ -160,6 +159,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                 child: Slidable(
                                   key: UniqueKey(),
                                   endActionPane: ActionPane(
+                                    extentRatio: 0.35,
                                     motion: const StretchMotion(),
                                     children: [
                                       SlidableAction(
@@ -198,6 +198,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                         backgroundColor: kuning50,
                                         foregroundColor: Colors.white,
                                         icon: Icons.edit_square,
+                                        padding: EdgeInsets.all(8),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(9)),
                                       ),
@@ -212,6 +213,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                         backgroundColor: merah50,
                                         foregroundColor: Colors.white,
                                         icon: Icons.delete,
+                                        padding: EdgeInsets.all(8),
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(9),
                                             bottomRight: Radius.circular(9)),
@@ -266,25 +268,90 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Konfirmasi'),
-          content: const Text('Apakah Anda yakin ingin menghapus riwayat ini?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Tutup dialog
-              },
-              child: const Text('Batal'),
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            contentPadding: const EdgeInsets.all(0),
+            content: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              height: 250.0,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 32,
+                  ),
+                  Image.asset(
+                    'assets/images/delete_alertt.png',
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
+                      "Hapus Transaksi?",
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 29,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFF2F2F2),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Tutup dialog
+                          },
+                          child: const Text(
+                            'Batal',
+                            style: TextStyle(
+                              color: Color(0xFFA3A3A3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 56,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF1D77FF),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            db!.deleteTransaction(index);
+                            _onDismissed(context, index, true);
+                          },
+                          child: const Text(
+                            'Ya',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                db!.deleteTransaction(index);
-                Navigator.of(context).pop(); // Tutup dialog
-                _onDismissed(context, index, true); // Hapus riwayat
-              },
-              child: const Text('Ya'),
-            ),
-          ],
+          ),
         );
       },
     );

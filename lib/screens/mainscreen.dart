@@ -43,7 +43,6 @@ class _MainScreenState extends State<MainScreen> {
         if (items[selectedTab].navKey.currentState?.canPop() ?? false) {
           items[selectedTab].navKey.currentState?.pop();
         }
-        debugPrint('test');
         // if (!didPop) {
         //   items[selectedTab].navKey.currentState?.maybePop();
         // }

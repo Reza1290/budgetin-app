@@ -55,7 +55,8 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
         ),
         title: Text(
           'Pilih Kategori',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
         ),
         centerTitle: true,
       ),
@@ -80,11 +81,9 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
                           final List<Category>? categories = snapshots.data;
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount:
-                                categories!.length, // Menggunakan panjang data
+                            itemCount: categories!.length,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                // Menambahkan return di sini
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -113,12 +112,16 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
                                           fit: BoxFit.fitWidth,
                                         ),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 12.0),
-                                        child: Text(
-                                          categories[index]
-                                              .name, // Mengambil nama kategori
-                                          style: TextStyle(fontSize: 14),
+                                      Expanded(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: 12.0),
+                                          child: Text(
+                                            categories[index].name,
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ),
                                         ),
                                       )
                                     ],

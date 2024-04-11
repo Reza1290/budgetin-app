@@ -61,7 +61,10 @@ class CategoryCard extends StatelessWidget {
         title: Text(
           category.name
               .replaceFirst(category.name[0], category.name[0].toUpperCase()),
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              overflow: TextOverflow.ellipsis),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),

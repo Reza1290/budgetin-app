@@ -148,8 +148,11 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
               ],
             ),
           ),
-          RiwayatTransaksiList(
-            getAllTransactions: () => getAllTransactions(),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: RiwayatTransaksiList(
+              getAllTransactions: () => getAllTransactions(),
+            ),
           ),
         ],
       ),

@@ -29,35 +29,43 @@ class FaqPage extends StatelessWidget {
                   child: Column(
                     children: [
                       FaqContent(
-                        question: 'What is the budget?',
+                        question: 'Apa Guna Saldo?',
                         answer:
-                            'The budget refers to the amount of money allocated for a specific purpose.',
+                            'Saldo adalah jumlah Maksimum yang dapat dialokasikan ke beberapa kategori.',
                       ),
                       SizedBox(height: 15),
                       FaqContent(
-                        question: 'How to manage budget?',
+                        question:
+                            'Bagaimana Cara untuk membuat alokasi berdasarkan Kategori?',
                         answer:
-                            'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
+                            'Buatlah melalui halaman Kategori, anda dapat mengakesnya pada halaman utama Kategori, klik Lainnya.',
                       ),
                       SizedBox(height: 15),
                       FaqContent(
-                        question: 'How to manage budget?',
+                        question: 'Bagaimana Cara untuk membuat Transaksi?',
                         answer:
-                            'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
+                            'Tekan Quick Button (ADD) pada tengah Halaman. ',
                       ),
                       SizedBox(height: 15),
                       FaqContent(
-                        question: 'How to manage budget?',
+                        question:
+                            'Apakah saya bisa mengubah Transaksi yang sudah saya Lakukan?',
                         answer:
-                            'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
+                            'Slide ke kiri kartu Riwayat Transaksi untuk menampilkan menu Edit dan Delete.',
                       ),
                       SizedBox(height: 15),
-                      FaqContent(
-                        question: 'How to manage budget?',
-                        answer:
-                            'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
-                      ),
-                      SizedBox(height: 15),
+                      // FaqContent(
+                      //   question: 'How to manage budget?',
+                      //   answer:
+                      //       'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
+                      // ),
+                      // SizedBox(height: 15),
+                      // FaqContent(
+                      //   question: 'How to manage budget?',
+                      //   answer:
+                      //       'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
+                      // ),
+                      // SizedBox(height: 15),
                     ],
                   ),
                 ),

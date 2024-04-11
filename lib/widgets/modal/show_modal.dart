@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 Future<void> showModal(
-    BuildContext context, String title, Widget content, Function? run) {
+    BuildContext context, String title, Widget content, Function run) {
   final formKey = GlobalKey<FormState>();
 
   return showDialog<void>(
@@ -63,12 +63,11 @@ Future<void> showModal(
               ),
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  run!;
-                  Navigator.pop(context);
+                  run();
                 }
               },
               child: const Text(
-                'Simpan', 
+                'Simpan',
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
