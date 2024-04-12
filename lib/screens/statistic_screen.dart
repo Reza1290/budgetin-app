@@ -30,13 +30,10 @@ class StatisticScreen extends StatelessWidget {
             stream: db!.sumTransactionsByMonthAndCategory(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                // If the connection state is waiting, return a loading indicator or placeholder
                 return CircularProgressIndicator();
               } else if (snapshot.hasError) {
-                // If there's an error, return an error message or handle it appropriately
                 return Center(child: Text('Data Belum Tersedia'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                // If there's no data or the data is empty, return a message indicating no data
                 return Center(child: Text('Data Belum Tersedia'));
               } else {
                 final data = snapshot.data!;
