@@ -1,7 +1,7 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/add_transaksi.dart';
-import 'package:budgetin/widgets/search_bar.dart';
+// import 'package:budgetin/widgets/search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,7 +22,7 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
     return db!.select(db!.categories).get();
   }
 
-  final TextEditingController _searchController = TextEditingController();
+  // final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -63,10 +63,10 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
       body: Container(
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: SearchInput(controller: _searchController),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.all(16),
+            //   child: SearchInput(controller: _searchController),
+            // ),
             Expanded(
               child: FutureBuilder<List<Category>>(
                   future: getAllCategory(),
@@ -131,10 +131,12 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
                             },
                           );
                         } else {
-                          return Text("Kategori Belum ada");
+                          return Center(
+                              child: Text(
+                                  "Belum ada Kategori, Silahkan buat terlebih dahulu."));
                         }
                       } else {
-                        return Text("Belum ada kategori");
+                        return Center(child: Text("Belum ada kategori"));
                       }
                     }
                   }),

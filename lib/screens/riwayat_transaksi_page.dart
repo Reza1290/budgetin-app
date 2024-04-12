@@ -9,6 +9,7 @@ import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/riwayat.dart';
 import 'package:budgetin/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class RiwayatTransaksiPage extends StatefulWidget {
@@ -62,8 +63,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         centerTitle: true,
       ),
       body: Container(
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(top: 20.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedSwitcher(
               duration: Duration(milliseconds: 200),
@@ -83,11 +86,11 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: SearchInput(
-                  controller: searchController, focusNode: _focusNode),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 24),
+            //   child: SearchInput(
+            //       controller: searchController, focusNode: _focusNode),
+            // ),
             const SizedBox(
               height: 10,
             ),
