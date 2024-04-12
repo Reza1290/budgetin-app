@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 class StatisticScreen extends StatelessWidget {
   StatisticScreen({super.key});
 
-  final List<String> months = ['Januari', 'Februari', 'Maret', 'April', 'dll'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
