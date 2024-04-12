@@ -59,7 +59,7 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
         ),
         scrolledUnderElevation: 0,
         title: const Text(
-          "Kategori Transaksi",
+          "Detail",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
