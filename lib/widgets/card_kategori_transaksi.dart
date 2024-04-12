@@ -68,7 +68,7 @@ class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
                   const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0)),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
+                      padding: EdgeInsets.symmetric(vertical: 13),
                       child: Text(
                         widget.data.name,
                         style: TextStyle(
