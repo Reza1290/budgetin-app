@@ -67,6 +67,12 @@ class _EditTransaksiState extends State<EditTransaksi>
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        leading: Container(
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+          ),
+        ),
         centerTitle: true,
         title: const Text(
           'Edit Transaksi',

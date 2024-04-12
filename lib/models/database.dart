@@ -244,35 +244,41 @@ class AppDb extends _$AppDb {
     }
   }
 
-  Stream<List<MapEntry<DateTime, Map<String, int>>>>
+  Stream<Map<DateTime, Map<dynamic, dynamic>>>
       sumTransactionsByMonthAndCategory() async* {
     final transactions = await select(this.transactions).get();
-
-    final List<MapEntry<DateTime, Map<String, int>>> sumsList = [];
+    final saldo = await getFirstSaldo().then((value) => value.saldo);
+    final Map<DateTime, Map<dynamic, dynamic>> sums = {};
+    double sum = 0;
 
     for (var transaction in transactions) {
       final kategori = await getCategory(transaction.category_id);
-      final categoryName = kategori.name;
 
+      final categoryName = kategori.name;
+      final categoryId = transaction.category_id;
       final transactionDate = transaction.transaction_date;
       final month = DateTime(transactionDate.year, transactionDate.month);
 
       final amount = transaction.amount ?? 0;
 
-      if (!sumsList.any((entry) => entry.key == month)) {
-        sumsList.add(MapEntry(month, {}));
+      if (!sums.containsKey(month)) {
+        sums[month] = {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}};
       }
+      sums[month]!["total"] = sums[month]!["total"] + amount;
+      sums[month]!["persen"] =
+          double.parse((sums[month]!["total"] / saldo).toString())
+              .toStringAsFixed(3);
 
-      final monthEntry = sumsList.firstWhere((entry) => entry.key == month);
-      final monthSums = monthEntry.value;
+      final monthSums = sums[month]!["daftar"];
 
-      if (monthSums.containsKey(categoryName)) {
-        monthSums[categoryName] = monthSums[categoryName]! + amount;
+      if (monthSums.containsKey(categoryId)) {
+        monthSums[categoryId]["amount"] =
+            (monthSums[categoryId]["amount"]! + amount);
       } else {
-        monthSums[categoryName] = amount;
+        monthSums[categoryId] = {"name": categoryName, "amount": amount};
       }
 
-      yield List.from(sumsList);
+      yield Map.from(sums);
     }
   }
 }

@@ -1,17 +1,19 @@
+import 'package:budgetin/them.dart';
 import 'package:budgetin/widgets/statistic/statistic_content.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class Penggunaan {
+class StatisticContentModel {
   String name;
-  int total;
-
-  Penggunaan({required this.name, required this.total});
+  double amount;
+  StatisticContentModel({required this.name, required this.amount});
 }
 
 class StatisticWidget extends StatefulWidget {
   final String bulan;
-  final List<Penggunaan> content;
-  const StatisticWidget({super.key, required this.bulan, required this.content});
+  final Map<dynamic, dynamic> content;
+  const StatisticWidget(
+      {super.key, required this.bulan, required this.content});
 
   @override
   State<StatisticWidget> createState() => _StatisticWidgetState();
@@ -22,6 +24,7 @@ class _StatisticWidgetState extends State<StatisticWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // debugPrint(toString());
     return Column(
       children: [
         ListTile(
@@ -39,8 +42,10 @@ class _StatisticWidgetState extends State<StatisticWidget> {
               const SizedBox(height: 5),
               LinearProgressIndicator(
                 borderRadius: BorderRadius.all(Radius.circular(9)),
-                value: 0.5,
-                backgroundColor: Colors.black.withOpacity(0.04),
+                value: double.parse(widget.content["persen"]),
+
+                // backgroundColor: Colors.black.withOpacity(0.04),
+                color: kuningWarn,
                 minHeight: 16,
               ),
             ],
@@ -56,20 +61,19 @@ class _StatisticWidgetState extends State<StatisticWidget> {
         ),
         if (_expanded)
           Column(
-            children: [
-              const StatisticContent(
-                content: "Makananan",
-                prosentase: "50%",
-              ),
-              const StatisticContent(
-                content: "Kesehatan",
-                prosentase: "10%",
-              ),
-              const StatisticContent(
-                content: "Urip",
-                prosentase: "80%",
-              ),
-            ],
+            children: widget.content["daftar"].entries
+                .map((e) {
+                  return StatisticContent(
+                    prosentase: (NumberFormat.percentPattern('id').format(
+                            double.parse(
+                                (e.value["amount"] / widget.content["saldo"])
+                                    .toStringAsFixed(3))))
+                        .toString(),
+                    content: e.value["name"].toString(),
+                  );
+                })
+                .toList()
+                .cast<Widget>(),
           ),
       ],
     );
