@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+      
         home: BottomNavbar(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
