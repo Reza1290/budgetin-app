@@ -1,6 +1,6 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
-import 'package:budgetin/screens/add_transaksi.dart';
+import 'package:budgetin/widgets/transaksi/add_transaksi.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

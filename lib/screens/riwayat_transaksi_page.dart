@@ -4,7 +4,7 @@ import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
-import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
+import 'package:budgetin/widgets/transaksi/saldo_card.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
@@ -73,7 +73,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               child: Visibility(
                 key: Key(isVisible.toString()),
                 visible: isVisible,
-                child: const CardSisaSaldo(),
+                child: const SaldoCard(),
               ),
             ),
             AnimatedSwitcher(

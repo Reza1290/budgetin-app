@@ -6,14 +6,14 @@ import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 
-class CardSisaSaldo extends StatefulWidget {
-  const CardSisaSaldo({super.key});
+class SaldoCard extends StatefulWidget {
+  const SaldoCard({super.key});
 
   @override
-  State<CardSisaSaldo> createState() => _CardSisaSaldoState();
+  State<SaldoCard> createState() => _SaldoCardState();
 }
 
-class _CardSisaSaldoState extends State<CardSisaSaldo> {
+class _SaldoCardState extends State<SaldoCard> {
   @override
   void initState() {
     // TODO: implement initState

@@ -2,7 +2,7 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
-import 'package:budgetin/widgets/category/modal_tambah_kategori.dart';
+import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
 import 'package:flutter/material.dart';
 
 class CategoryHome extends StatefulWidget {
