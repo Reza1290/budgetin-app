@@ -1,9 +1,8 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
-import 'package:budgetin/screens/all_category.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
-import 'package:budgetin/widgets/modal_tambah_kategori.dart';
+import 'package:budgetin/widgets/category/modal_tambah_kategori.dart';
 import 'package:flutter/material.dart';
 
 class CategoryHome extends StatefulWidget {
@@ -46,7 +45,7 @@ class _CategoryHomeState extends State<CategoryHome> {
                 width: 60,
                 margin: EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
-                    color: PrimaryColor.shade300,
+                    color: BudgetinColors.biru30,
                     borderRadius: BorderRadius.all(Radius.circular(9))),
                 child: IconButton(
                     color: Colors.white,

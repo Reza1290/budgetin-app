@@ -1,13 +1,13 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
-import 'package:budgetin/widgets/riwayat.dart';
-import 'package:budgetin/widgets/search_bar.dart';
+import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
+import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -86,11 +86,11 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                 ),
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 24),
-            //   child: SearchInput(
-            //       controller: searchController, focusNode: _focusNode),
-            // ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: InputSearch(
+                  controller: searchController, focusNode: _focusNode),
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -229,7 +229,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                           context, transaction);
                                     },
                                     child: Container(
-                                      child: RiwayatTransaksi(
+                                      child: RiwayatTransaksiCard(
                                         title: transaction.transaction.name,
                                         tanggal: transaction
                                             .transaction.transaction_date

@@ -10,7 +10,7 @@ import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:budgetin/widgets/calendar.dart';
+import 'package:budgetin/widgets/reusable/calendar.dart';
 import 'package:intl/intl.dart';
 
 class AddTransaksi extends StatefulWidget {

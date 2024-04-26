@@ -1,7 +1,7 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/screens/detail_kategori_page.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

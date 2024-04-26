@@ -1,7 +1,7 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
-import 'package:budgetin/widgets/detail_transaksi.dart';
+import 'package:budgetin/widgets/transaksi/detail_transaksi.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

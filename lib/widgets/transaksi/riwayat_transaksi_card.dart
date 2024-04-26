@@ -1,16 +1,16 @@
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/providers/date_formatter.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class RiwayatTransaksi extends StatelessWidget {
+class RiwayatTransaksiCard extends StatelessWidget {
   final String title;
   final String tanggal;
   final String money;
   final String icon;
 
-  const RiwayatTransaksi(
+  const RiwayatTransaksiCard(
       {super.key,
       required this.title,
       required this.tanggal,

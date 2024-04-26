@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Remainder extends StatelessWidget {
-  const Remainder({super.key});
+class Reminder extends StatelessWidget {
+  const Reminder({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/providers/date_formatter.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

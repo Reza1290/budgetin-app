@@ -1,6 +1,6 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
-import 'package:budgetin/widgets/calendar.dart';
+import 'package:budgetin/widgets/reusable/calendar.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';

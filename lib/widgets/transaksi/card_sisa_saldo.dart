@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 
 class CardSisaSaldo extends StatefulWidget {

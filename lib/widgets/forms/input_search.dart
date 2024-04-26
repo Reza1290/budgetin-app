@@ -1,18 +1,19 @@
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/modal/modal_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class SearchInput extends StatefulWidget {
-  const SearchInput({super.key, required this.controller, this.focusNode});
+class InputSearch extends StatefulWidget {
+  const InputSearch({super.key, required this.controller, this.focusNode});
 
   final TextEditingController controller;
   final FocusNode? focusNode;
 
   @override
-  State<SearchInput> createState() => _SearchInputState();
+  State<InputSearch> createState() => _InputSearchState();
 }
 
-class _SearchInputState extends State<SearchInput> {
+class _InputSearchState extends State<InputSearch> {
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -98,7 +99,7 @@ class _SearchInputState extends State<SearchInput> {
             icon: Icon(Icons.tune_rounded),
             color: Colors.white,
             onPressed: () {
-              _selectDate(context);
+              showModalFilter(context);
             },
           ),
         )
@@ -106,24 +107,3 @@ class _SearchInputState extends State<SearchInput> {
     );
   }
 }
-
-
-/*
-Expanded(
-          flex: 0,
-          child: IconButton(
-            onPressed: () {
-              _selectDate(context);
-            },
-            icon: const Icon(
-              Icons
-                  .calendar_month_rounded, // Mengubah dari 'Icons.calendar_month_rounded' menjadi 'Icons.calendar_today_rounded'
-              size: 30,
-              color: Color.fromRGBO(61, 61, 61, 1),
-            ),
-            highlightColor: Colors
-                .transparent, // Mengatur warna highlight menjadi transparan
-            splashColor: Colors.transparent,
-          ),
-        ),
-*/

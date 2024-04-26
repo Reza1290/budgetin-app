@@ -1,12 +1,10 @@
 import 'package:budgetin/main.dart';
-import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/all_category.dart';
-import 'package:budgetin/them.dart';
-import 'package:budgetin/widgets/category/category_card.dart';
-import 'package:budgetin/widgets/homepage/category_home.dart';
+import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/homepage/kategori_transaksi/category_home.dart';
 import 'package:budgetin/widgets/homepage/saldo.dart';
-import 'package:budgetin/widgets/remainder.dart';
+import 'package:budgetin/widgets/homepage/remainder.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -31,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    // TODO: implement dispose-
     super.dispose();
   }
 
@@ -45,7 +43,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 30, horizontal: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,13 +51,17 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         "Selamat Datang!",
                         style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            color: Color.fromARGB(255, 29, 119, 255)),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: BudgetinColors.biru40,
+                        ),
                       ),
                       Text(
                         "Waktunya Catat Keuangan Kamu Hari Ini.",
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: BudgetinColors.hitamPutih100,
+                        ),
                       ),
                     ],
                   ),
@@ -76,10 +78,13 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         "Kategori Transaksi",
                         style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 18),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          color: BudgetinColors.hitamPutih100,
+                        ),
                       ),
                       TextButton(
                           onPressed: () {
@@ -93,46 +98,27 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: PrimaryColor.shade400),
+                                color: BudgetinColors.biru40),
                           )),
                     ],
                   ),
                 ),
                 CategoryHome(),
-
-                // CategoryCard(
-                //   category: Category(
-                //     id: 2,
-                //     name: 'Makanan',
-                //     icon: 'assets/icons/lainnya.png',
-                //     total: 123,
-                //   ),
-                //   totalAmount: 40,
-                //   isHome: true,
-                // ),
-                // CategoryCard(
-                //   category: Category(
-                //     id: 2,
-                //     name: 'Makanan',
-                //     icon: 'assets/icons/lainnya.png',
-                //     total: 123,
-                //   ),
-                //   totalAmount: 40,
-                //   isHome: true,
-
-                // ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Remainder(),
+                  child: Reminder(),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 24),
-                  child: const Text(
+                  child: Text(
                     "Riwayat Transaksi",
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                        color: BudgetinColors.hitamPutih100),
                   ),
                 ),
                 RiwayatTransaksiList(

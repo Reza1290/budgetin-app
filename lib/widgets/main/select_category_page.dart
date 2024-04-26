@@ -1,40 +1,37 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/screens/add_transaksi.dart';
-// import 'package:budgetin/widgets/search_bar.dart';
+import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class SelectCategoryDialog extends StatefulWidget {
-  const SelectCategoryDialog({super.key});
+class SelectCategoryPage extends StatefulWidget {
+  const SelectCategoryPage({super.key});
 
   @override
-  State<SelectCategoryDialog> createState() => _SelectCategoryDialogState();
+  State<SelectCategoryPage> createState() => _SelectCategoryPageState();
 }
 
-class _SelectCategoryDialogState extends State<SelectCategoryDialog>
+class _SelectCategoryPageState extends State<SelectCategoryPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  // late AppDb db;
 
   Future<List<Category>> getAllCategory() {
     return db!.select(db!.categories).get();
   }
 
-  // final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // db = AppDb();
     _controller = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    // db.close();
     super.dispose();
   }
 
@@ -43,7 +40,7 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        shape: Border(
+        shape: const Border(
             bottom: BorderSide(
           color: Colors.black12,
         )),
@@ -63,10 +60,10 @@ class _SelectCategoryDialogState extends State<SelectCategoryDialog>
       body: Container(
         child: Column(
           children: [
-            // Padding(
-            //   padding: EdgeInsets.all(16),
-            //   child: SearchInput(controller: _searchController),
-            // ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: InputSearch(controller: _searchController),
+            ),
             Expanded(
               child: FutureBuilder<List<Category>>(
                   future: getAllCategory(),
