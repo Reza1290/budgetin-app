@@ -1,4 +1,5 @@
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/screens/on_boarding.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       
-        home: BottomNavbar(),
+        home: OnBoardingScreen1(),
+        // BottomNavbar(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
           fontFamily: 'Nunito',
