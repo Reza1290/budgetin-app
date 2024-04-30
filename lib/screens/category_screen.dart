@@ -4,31 +4,27 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
+import 'package:budgetin/widgets/modal/sheet_create_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class AllCategory extends StatefulWidget {
-  const AllCategory({super.key});
+class CategoryScreen extends StatefulWidget {
+  const CategoryScreen({super.key});
 
   @override
-  State<AllCategory> createState() => _AllCategoryState();
+  State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _AllCategoryState extends State<AllCategory> {
+class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    // db = AppDb();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    // db.close();
     super.dispose();
   }
 
@@ -59,7 +55,7 @@ class _AllCategoryState extends State<AllCategory> {
           children: [
             TextButton(
               onPressed: () {
-                showModalTambahKategori(context, db!);
+                showSheetCreateCategory(context);
               },
               child: Padding(
                 padding: const EdgeInsets.all(20.0),

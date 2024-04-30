@@ -7,7 +7,7 @@ Future<void> showModalFilter(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return BudgetinModal(
-          title: TitleModal(title: 'Hello Dunia'),
+          title: TitleModal(title: 'Filter Search'),
           content: SizedBox(
             child: Text('Test'),
           ),
