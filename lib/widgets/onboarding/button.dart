@@ -20,11 +20,11 @@ class ButtonCustom extends StatelessWidget {
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
-              blok ? Colors.blue : Colors.white),
+              blok ? Color(0xFF0C5FDD): Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
-              side: BorderSide(color: blok ? Colors.transparent : Colors.blue),
+              side: BorderSide(color: blok ? Colors.transparent : Color(0xFF0C5FDD)),
             ),
           ),
         ),
@@ -33,7 +33,7 @@ class ButtonCustom extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: blok ? Colors.white : Colors.blue,
+            color: blok ? Colors.white : Color(0xFF0C5FDD),
           ),
         ),
       ),
