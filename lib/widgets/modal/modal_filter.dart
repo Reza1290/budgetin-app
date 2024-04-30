@@ -86,7 +86,7 @@ class _FilterDialogState extends State<FilterDialog> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
-                        color: Colors.black26,
+                        color: Color(0xFFD1D1D1), 
                       ),
                       
                     )),
@@ -123,7 +123,7 @@ class _FilterDialogState extends State<FilterDialog> {
                           // Menambahkan border
                           borderRadius: BorderRadius.circular(
                               6.0), // Mengatur sudut border
-                          borderSide: BorderSide(), // Mengatur sisi border
+                          borderSide: BorderSide(color: Color(0xFFD1D1D1)), // Mengatur sisi border
                         ),
                         focusedBorder: OutlineInputBorder(
                           // Mengubah warna border ketika aktif menjadi biru
@@ -173,8 +173,7 @@ class _FilterDialogState extends State<FilterDialog> {
                         borderRadius: BorderRadius.circular(6.0),
                       ),
                       focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(6.0),),
                       ),
                       suffixIcon: const Icon(Icons.calendar_month),
                       hintText:
@@ -231,7 +230,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 // Apply filter logic here
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF1D77FF)),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
