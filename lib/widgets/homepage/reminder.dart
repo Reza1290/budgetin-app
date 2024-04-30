@@ -13,7 +13,7 @@ class Reminder extends StatelessWidget {
       children: [
         Container(
           width: 360,
-          height: 100,
+          height: 120,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient: const LinearGradient(
@@ -32,17 +32,17 @@ class Reminder extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Yuk Gunakan Reminder!",
+                  "Bingung Menggunakan\nBudgetin?",
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 18,
                       color: Colors.white),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Text(
-                  "Pemberitahuan untuk pengeluran kamu yang \nhampir mencapai batas",
+                  "Yuk pahami cara penggunaan aplikasi Budgetin\ndengan menakan banner ini!",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
