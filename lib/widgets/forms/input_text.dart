@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class InputText extends StatelessWidget {
   const InputText(
-      {super.key, required this.controller, this.hintText, this.focusNode});
-  final TextEditingController controller;
+      {super.key,  this.controller, this.hintText, this.focusNode});
+  final TextEditingController? controller;
   final FocusNode? focusNode;
   final String? hintText;
   @override

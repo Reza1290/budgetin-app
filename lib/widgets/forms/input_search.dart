@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class InputSearch extends StatefulWidget {
-  const InputSearch({super.key, required this.controller, this.focusNode});
+  const InputSearch({super.key,  this.controller, this.focusNode});
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final FocusNode? focusNode;
 
   @override
