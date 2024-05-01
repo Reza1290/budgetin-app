@@ -181,11 +181,14 @@ class AppDb extends _$AppDb {
   }
 
   Stream<int> watchUsedSaldo() async* {
-    int total = 0;
-    final rows = await select(categories).get();
-    total =
-        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
-    yield total;
+    int sal = await getFirstSaldo().then((value) => value.saldo);
+    final datas = await allTransactions();
+    int totalExpense = 0;
+
+    for (final data in datas) {
+      totalExpense += data.amount;
+    }
+    yield sal - totalExpense;
   }
 
   Stream<int> watchRemainSaldo() async* {
