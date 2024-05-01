@@ -55,6 +55,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         scrolledUnderElevation: 0,
         title: Text(
           'Riwayat Transaksi',

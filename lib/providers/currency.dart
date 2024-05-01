@@ -26,4 +26,9 @@ class TextCurrencyFormat {
     String newValue = money.format(val);
     return "Rp. ${newValue.replaceAll(',', '.')}";
   }
+
+  static toInt(String val) {
+    int saldo = int.parse(val.replaceAll('.', ''));
+    return saldo;
+  }
 }

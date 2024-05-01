@@ -41,12 +41,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           color: Colors.black,
           fontFamily: 'Nunito',
         ),
-        leading: Container(
-          child: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-          ),
-        ),
+        leading: Container(),
         title: Text("Kategori Transaksi"),
       ),
       body: Container(

@@ -2,6 +2,7 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/category_screen.dart';
 import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/bottom_navbar.dart';
 import 'package:budgetin/widgets/homepage/kategori_transaksi/category_home.dart';
 import 'package:budgetin/widgets/homepage/saldo.dart';
 import 'package:budgetin/widgets/homepage/reminder.dart';
@@ -11,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback changeTab;
+  const HomePage({super.key, required this.changeTab});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -89,10 +91,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CategoryScreen()));
+                            widget.changeTab();
                           },
                           child: Text(
                             "Lainnnya",

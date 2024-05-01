@@ -9,7 +9,7 @@ class Reminder extends StatelessWidget {
     final Widget svg = SvgPicture.asset('assets/images/ORY.svg');
 
     return Stack(
-      clipBehavior: Clip.none,
+      // clipBehavior: Clip.none,
       children: [
         Container(
           width: 360,
@@ -54,8 +54,8 @@ class Reminder extends StatelessWidget {
         ),
         Positioned(
           child: svg,
-          right: -15,
-          top: -30,
+          right: -35,
+          top: -35,
         ),
       ],
     );

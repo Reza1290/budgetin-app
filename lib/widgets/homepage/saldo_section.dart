@@ -32,8 +32,9 @@ class _SaldoSectionState extends State<SaldoSection> {
       clipBehavior: Clip.none,
       children: [
         Positioned(
-          top: -67,
-          right: 0,
+          height: 170,
+          top: -100,
+          right: -50,
           child: svg,
         ),
         Row(

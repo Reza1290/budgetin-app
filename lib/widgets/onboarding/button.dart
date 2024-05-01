@@ -1,18 +1,22 @@
+import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 
 class ButtonCustom extends StatelessWidget {
   final String title;
   final bool blok;
+  final double? width;
   final void Function() onPressed;
   const ButtonCustom(
       {super.key,
       required this.title,
       required this.blok,
-      required this.onPressed});
+      required this.onPressed,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      width: width ?? MediaQuery.of(context).size.width,
       height: 50,
       child: ElevatedButton(
         onPressed: () {
@@ -20,11 +24,12 @@ class ButtonCustom extends StatelessWidget {
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
-              blok ? Color(0xFF0C5FDD): Colors.white),
+              blok ? BudgetinColors.biru50 : Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: BorderSide(color: blok ? Colors.transparent : Color(0xFF0C5FDD)),
+              borderRadius: BorderRadius.circular(6),
+              side: BorderSide(
+                  color: blok ? Colors.transparent : BudgetinColors.biru50),
             ),
           ),
         ),
@@ -33,7 +38,7 @@ class ButtonCustom extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: blok ? Colors.white : Color(0xFF0C5FDD),
+            color: blok ? Colors.white : BudgetinColors.biru50,
           ),
         ),
       ),

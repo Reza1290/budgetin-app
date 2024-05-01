@@ -10,6 +10,7 @@ class StatisticScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: const TextStyle(

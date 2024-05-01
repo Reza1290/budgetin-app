@@ -4,15 +4,17 @@ import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CategoryHome extends StatefulWidget {
   const CategoryHome({super.key});
-
   @override
   State<CategoryHome> createState() => _CategoryHomeState();
 }
 
 class _CategoryHomeState extends State<CategoryHome> {
+  final Widget svg = SvgPicture.asset('assets/images/handling/empty.svg');
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<CategoryTotal>>(
@@ -40,19 +42,17 @@ class _CategoryHomeState extends State<CategoryHome> {
           return Center(
               child: Column(
             children: [
-              Text('Silahkan Membuat Kategori Terlebih Dahulu'),
-              Container(
-                width: 60,
-                margin: EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                    color: BudgetinColors.biru30,
-                    borderRadius: BorderRadius.all(Radius.circular(9))),
-                child: IconButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      showModalTambahKategori(context, db!);
-                    },
-                    icon: Icon(Icons.add)),
+              SizedBox(
+                height: 85,
+                child: svg,
+              ),
+              Text(
+                'Kategori Kosong',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+              ),
+              Text(
+                'Buat Kategori terlebih dahulu',
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 8),
               )
             ],
           ));

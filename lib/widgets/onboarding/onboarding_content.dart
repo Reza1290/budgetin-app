@@ -1,3 +1,4 @@
+import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -19,7 +20,7 @@ class OnBoardingContent extends StatelessWidget {
       if (i % 2 == 1) {
         spans.add(TextSpan(
           text: words[i] + ' ',
-          style: TextStyle(color: Color(0xFF1D77FF)),
+          style: TextStyle(color: BudgetinColors.biru50),
         ));
       } else {
         spans.add(TextSpan(
@@ -53,7 +54,8 @@ class OnBoardingContent extends StatelessWidget {
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 24,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Nunito'),
               children: generateTextSpans(),
             ),
           )),
