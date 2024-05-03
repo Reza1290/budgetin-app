@@ -1,6 +1,7 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CardKategoriTransaksi extends StatefulWidget {
   const CardKategoriTransaksi(
@@ -14,10 +15,15 @@ class CardKategoriTransaksi extends StatefulWidget {
 
 class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
   late bool isMore;
-  @override
+  late Widget svg;
   void initState() {
     // TODO: implement initState
     super.initState();
+    svg = SvgPicture.asset(
+      widget.data.icon == '' ? 'assets/icons/Lainnya.svg' : widget.data.icon,
+      width: 55.0,
+      height: 53.0,
+    );
     isMore = false;
   }
 
@@ -53,13 +59,7 @@ class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(22.0, 22.0, 24.0, 24.0),
-                  child: Image.asset(
-                    widget.data.icon == ''
-                        ? 'assets/icons/lainnya.png'
-                        : widget.data.icon,
-                    width: 55.0,
-                    height: 53.0,
-                  ),
+                  child: svg,
                 ),
               ),
               Row(

@@ -90,7 +90,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
               child: InputSearch(
-                  controller: searchController, focusNode: _focusNode),
+                controller: searchController,
+                focusNode: _focusNode,
+                showFilter: true,
+              ),
             ),
             const SizedBox(
               height: 10,

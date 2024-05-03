@@ -56,7 +56,7 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
 
                                 setState(() {
                                   _iconKategori =
-                                      result ?? "assets/icons/lainnya.png";
+                                      result ?? "assets/icons/Lainnya.svg";
                                   _isButtonEnabled = true;
                                 });
                               },

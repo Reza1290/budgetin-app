@@ -1,7 +1,9 @@
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
 import 'package:budgetin/widgets/reusable/title_modal.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -44,6 +46,7 @@ class _FilterDialogState extends State<FilterDialog> {
   @override
   Widget build(BuildContext context) {
     return BudgetinModal(
+      
       title: TitleModal(title: 'Filter Transaksi'),
       content: SizedBox(
         child: Column(
@@ -165,9 +168,8 @@ class _FilterDialogState extends State<FilterDialog> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 110,
-              child: ElevatedButton(
+            Expanded(
+              child: TextButton(
                 onPressed: () {
                   setState(() {
                     selectedValue = null;
@@ -175,8 +177,8 @@ class _FilterDialogState extends State<FilterDialog> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Color(0xffF2F2F2)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      BudgetinColors.hitamPutih30),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -192,20 +194,22 @@ class _FilterDialogState extends State<FilterDialog> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xffA3A3A3),
+                    color: BudgetinColors.hitamPutih50,
                   ),
                 ),
               ),
             ),
             SizedBox(
-              width: 110,
-              child: ElevatedButton(
+              width: 10,
+            ),
+            Expanded(
+              child: TextButton(
                 onPressed: () {
                   // Apply filter logic here
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Color(0xFF1D77FF)),
+                      MaterialStateProperty.all<Color>(BudgetinColors.biru50),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -222,7 +226,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: BudgetinColors.hitamPutih10,
                   ),
                 ),
               ),

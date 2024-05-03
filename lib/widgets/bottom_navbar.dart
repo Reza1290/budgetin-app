@@ -22,11 +22,8 @@ class _BottomNavbarState extends State<BottomNavbar>
     with SingleTickerProviderStateMixin {
   var currentIndex = 0;
   static List<Widget> page = <Widget>[
-    HomePage(
-      changeTab: () {},
-    ),
+    HomePage(),
     RiwayatTransaksiPage(),
-    // Center(child: Image.asset('assets/images/loading.gif')),
     Container(),
     // FaqPage(),
     CategoryScreen(),
@@ -61,25 +58,9 @@ class _BottomNavbarState extends State<BottomNavbar>
       extendBody: true,
       resizeToAvoidBottomInset: false,
       body: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: _tabController,
-        children: <Widget>[
-          HomePage(
-            changeTab: () => setState(
-              () {
-                _tabController.animateTo(3);
-                currentIndex = 3;
-              },
-            ),
-          ),
-          RiwayatTransaksiPage(),
-          // Center(child: Image.asset('assets/images/loading.gif')),
-          Container(),
-          // FaqPage(),
-          CategoryScreen(),
-          StatisticScreen(),
-        ],
-      ),
+          physics: NeverScrollableScrollPhysics(),
+          controller: _tabController,
+          children: page),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
         height: 60,

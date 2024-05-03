@@ -12,8 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
-  final VoidCallback changeTab;
-  const HomePage({super.key, required this.changeTab});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -39,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -89,17 +89,6 @@ class _HomePageState extends State<HomePage> {
                           color: BudgetinColors.hitamPutih100,
                         ),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            widget.changeTab();
-                          },
-                          child: Text(
-                            "Lainnnya",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: BudgetinColors.biru40),
-                          )),
                     ],
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/screens/detail_kategori_page.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -18,6 +19,8 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget icon = SvgPicture.asset(
+        category.icon == '' ? 'assets/icons/Lainnya.svg' : category.icon);
     bool isReminder = totalAmount / category.total > 0.8;
     Color color = isReminder
         ? merahWarn
@@ -51,11 +54,7 @@ class CategoryCard extends StatelessWidget {
                 height: 54,
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: Image.asset(
-                    category.icon == ''
-                        ? 'assets/icons/lainnya.png'
-                        : category.icon,
-                  ),
+                  child: icon,
                 ),
               ),
         title: Text(

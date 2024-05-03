@@ -1,10 +1,13 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/widgets/category/add_category_button.dart';
+import 'package:budgetin/widgets/main/select_category_card.dart';
 import 'package:budgetin/widgets/transaksi/add_transaksi.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SelectCategoryPage extends StatefulWidget {
   const SelectCategoryPage({super.key});
@@ -40,10 +43,6 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        shape: const Border(
-            bottom: BorderSide(
-          color: Colors.black12,
-        )),
         leading: InkWell(
           onTap: () {
             Navigator.of(context).pop();
@@ -61,8 +60,23 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(16),
-              child: InputSearch(controller: _searchController),
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: InputSearch(
+                      controller: _searchController,
+                      showFilter: false,
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    child: AddCategoryButton(),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: FutureBuilder<List<Category>>(
@@ -80,51 +94,8 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
                             shrinkWrap: true,
                             itemCount: categories!.length,
                             itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddTransaksi(
-                                        categoryId: categories[index].id),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 24.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 44,
-                                        height: 44,
-                                        padding: EdgeInsets.all(12.0),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          color: Colors.blue.shade200,
-                                        ),
-                                        child: Image.asset(
-                                          categories[index].icon == ''
-                                              ? 'assets/icons/lainnya.png'
-                                              : categories[index].icon,
-                                          fit: BoxFit.fitWidth,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          margin: EdgeInsets.only(left: 12.0),
-                                          child: Text(
-                                            categories[index].name,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
+                              return SelectCategoryCard(
+                                  category: categories[index]);
                             },
                           );
                         } else {

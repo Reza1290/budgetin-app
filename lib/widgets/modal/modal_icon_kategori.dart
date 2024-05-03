@@ -1,25 +1,27 @@
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
 import 'package:budgetin/widgets/reusable/title_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 Future<String?> showModalIconKategori(BuildContext context) {
   List<String> iconPath = [
-    'assets/icons/lainnya.png',
-    'assets/icons/uang.png',
-    'assets/icons/makanan.png',
-    'assets/icons/transportasi.png',
-    'assets/icons/kesehatan.png',
-    'assets/icons/olahraga.png',
-    'assets/icons/belanja.png',
-    'assets/icons/pakaian.png',
-    'assets/icons/hewan.png',
-    'assets/icons/pendidikan.png',
-    'assets/icons/bahan_makanan.png',
-    'assets/icons/bensin.png',
-    'assets/icons/minuman.png',
-    'assets/icons/teknologi.png',
-    'assets/icons/kecantikan.png',
-    'assets/icons/hiburan.png',
+    'assets/icons/null.svg',
+    'assets/icons/Makanan.svg',
+    'assets/icons/Minuman.svg',
+    'assets/icons/Kendaraan.svg',
+    'assets/icons/Pakaian.svg',
+    'assets/icons/Kesehatan.svg',
+    'assets/icons/Belanja.svg',
+    'assets/icons/Pendidikan.svg',
+    'assets/icons/Olahraga.svg',
+    'assets/icons/Uang.svg',
+    'assets/icons/Teknologi.svg',
+    'assets/icons/Belanja.svg',
+    'assets/icons/Teknologi.svg',
+    'assets/icons/Liburan.svg',
+    'assets/icons/Hiburan.svg',
+    'assets/icons/Peliharaan.svg',
   ];
 
   return showDialog<String>(
@@ -27,12 +29,13 @@ Future<String?> showModalIconKategori(BuildContext context) {
     builder: (BuildContext context) {
       return BudgetinModal(
         title: TitleModal(
-          title: 'Hello',
+          title: 'Pilih Ikon',
         ),
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: SizedBox(
             child: GridView.count(
+              physics: NeverScrollableScrollPhysics(),
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
               crossAxisCount: 4,
@@ -51,24 +54,28 @@ Future<String?> showModalIconKategori(BuildContext context) {
 GestureDetector iconComponent(String path, BuildContext context) {
   return GestureDetector(
     child: Container(
-      width: 50,
-      height: 50,
-      decoration: const BoxDecoration(
+      width: 56,
+      height: 56,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Color.fromRGBO(201, 218, 255, 1),
+        color: path == 'assets/icons/null.svg'
+            ? BudgetinColors.biru30
+            : BudgetinColors.biru10,
       ),
       child: Center(
         child: ClipRRect(
-          child: Image.asset(
+          child: SvgPicture.asset(
             path,
-            fit: BoxFit.fitWidth,
+            width: 35,
+            fit: BoxFit.fitHeight,
           ),
         ),
       ),
     ),
     onTap: () {
-      Navigator.pop(context, path);
+      Navigator.pop(context,
+          path == 'assets/icons/null.svg' ? 'assets/icons/Lainnya.svg' : path);
     },
   );
 }
-

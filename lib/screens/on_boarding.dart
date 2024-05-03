@@ -1,4 +1,6 @@
+import 'package:budgetin/controller/category_controller.dart';
 import 'package:budgetin/main.dart';
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
@@ -77,6 +79,7 @@ class OnBoardingScreen2 extends StatelessWidget {
   final _formOnboard2Key = GlobalKey<FormState>();
   final FocusNode _focusDuit = FocusNode();
   final TextEditingController _alokasiController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,10 +102,14 @@ class OnBoardingScreen2 extends StatelessWidget {
                       key: _formOnboard2Key,
                       child: Column(
                         children: [
-                          InputText(hintText: 'Masukkan nama kategori'),
+                          InputText(
+                            hintText: 'Masukkan nama kategori',
+                            controller: _nameController,
+                          ),
                           SizedBox(height: 24),
                           InputMoney(
                             focusNode: _focusDuit,
+                            controller: _alokasiController,
                             fontSize: 12,
                             hintText:
                                 'Masukkan alokasi dana untuk kategori ini',
@@ -134,16 +141,23 @@ class OnBoardingScreen2 extends StatelessWidget {
                         width: MediaQuery.of(context).size.width / 4 * 2,
                         title: "Selanjutnya",
                         blok: true,
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formOnboard2Key.currentState!.validate()) {
-                            int saldo = TextCurrencyFormat.toInt(
-                                _alokasiController.text);
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BottomNavbar()),
+                            bool res = await CategoryController.insert(
+                              _nameController.text,
+                              'assets/icons/Lainnya.svg',
+                              _alokasiController.text,
                             );
+
+                            if (res) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BottomNavbar(),
+                                ),
+                                (route) => false,
+                              );
+                            }
                           } else {
                             _focusDuit.requestFocus();
                           }

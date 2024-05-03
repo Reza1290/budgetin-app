@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        color: BudgetinColors.hitamPutih10,
         home: FutureBuilder(
           future: db!.isSaldoNotCretedYet(),
           builder: (context, snapshot) {

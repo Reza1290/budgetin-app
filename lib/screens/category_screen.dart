@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
+import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
 import 'package:budgetin/widgets/modal/sheet_create_category.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,9 +20,11 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  late TextEditingController _searchController;
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
   }
 
   @override
@@ -48,26 +52,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
         // padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: [
-            TextButton(
-              onPressed: () {
-                showSheetCreateCategory(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.add_circle, color: Colors.blue[400]),
-                    SizedBox(width: 20),
-                    Text(
-                      "Tambah Kategori",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.blue[400],
-                      ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: InputSearch(
+                      controller: _searchController,
+                      showFilter: true,
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    child: AddCategoryButton(),
+                  ),
+                ],
               ),
             ),
             Expanded(

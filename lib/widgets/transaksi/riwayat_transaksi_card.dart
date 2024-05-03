@@ -3,6 +3,7 @@ import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RiwayatTransaksiCard extends StatelessWidget {
   final String title;
@@ -48,8 +49,8 @@ class RiwayatTransaksiCard extends StatelessWidget {
                 ),
                 Positioned.fill(
                   child: Center(
-                    child: Image.asset(
-                      icon == '' ? 'assets/icons/lainnya.png' : icon,
+                    child: SvgPicture.asset(
+                      icon == '' ? 'assets/icons/Lainnya.svg' : icon,
                       width: 29.0,
                       height: 29.0,
                     ),

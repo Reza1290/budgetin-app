@@ -19,6 +19,7 @@ class BudgetinModal extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       insetPadding: EdgeInsets.only(left: 32, right: 32),
       backgroundColor: BudgetinColors.hitamPutih10,
+      surfaceTintColor: BudgetinColors.hitamPutih10,
       child: SingleChildScrollView(
         child: Padding(
           padding:

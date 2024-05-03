@@ -31,7 +31,7 @@ class $CategoriesTable extends Categories
       'icon', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      defaultValue: Constant('assets/icons/lainnya.png'));
+      defaultValue: Constant('assets/icons/Lainnya.svg'));
   static const VerificationMeta _totalMeta = const VerificationMeta('total');
   @override
   late final GeneratedColumn<int> total = GeneratedColumn<int>(

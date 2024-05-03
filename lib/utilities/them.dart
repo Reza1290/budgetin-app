@@ -18,6 +18,8 @@ const Color hitam80 = Color.fromRGBO(102, 102, 102, 1);
 const Color hitam50 = Color.fromRGBO(163, 163, 163, 1);
 const Color hitam100 = Color(0xff3d3d3d);
 
+const Color textPrimary = Color(0xFF3D3D3D);
+
 class PrimaryColor {
   static const Map<String, Color> _colors = {
     'shade100': Color(0xFFEBF3FF),
@@ -170,4 +172,3 @@ class BudgetinColors {
   static Color get hitamPutih20 => _hitamPutih['hitamPutih20']!;
   static Color get hitamPutih10 => _hitamPutih['hitamPutih10']!;
 }
-
