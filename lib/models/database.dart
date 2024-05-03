@@ -62,6 +62,12 @@ class AppDb extends _$AppDb {
         .getSingle();
   }
 
+  Future<List<Category>> searchCategoryRepo(String keyword) async {
+    return await (select(categories)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .get();
+  }
+
   Future<bool> updateCategory(CategoriesCompanion entry) async {
     return await update(categories).replace(entry);
   }
@@ -73,6 +79,7 @@ class AppDb extends _$AppDb {
       (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
     });
   }
+
 
   Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
     final query = (select(transactions)).join([
@@ -86,6 +93,19 @@ class AppDb extends _$AppDb {
     });
   }
 
+  Stream<List<TransactionWithCategory>> searchTransactionRepo (
+      String keyword)  {
+      final query =  (select(transactions)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .join([innerJoin(categories, categories.id.equalsExp(transactions.category_id))]);
+    return query.watch().map((rows) {
+      return rows.map((row){
+        return TransactionWithCategory(
+          row.readTable(transactions), row.readTable(categories)
+        );
+      } ).toList();
+    });
+  }
   Stream<List<TransactionWithCategory>> getTransactionWithCategoryLimit(
       int limit) {
     final query = select(transactions).join([

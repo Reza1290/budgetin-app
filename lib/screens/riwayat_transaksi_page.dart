@@ -1,4 +1,5 @@
 import 'package:budgetin/main.dart';
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
@@ -26,9 +27,12 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     return db!.getAllTransactionWithCategory();
   }
 
+  Stream<List<TransactionWithCategory>> searchTransaction(String keyword){
+    return db!.searchTransactionRepo(keyword);
+  }
+
   final TextEditingController searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
   bool isVisible = true;
   @override
   void initState() {
@@ -56,7 +60,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: Text(
+        title: const Text(
           'Riwayat Transaksi',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
@@ -64,12 +68,12 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(top: 20.0),
+        padding:const EdgeInsets.only(top: 20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               child: Visibility(
                 key: Key(isVisible.toString()),
                 visible: isVisible,
@@ -77,7 +81,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               ),
             ),
             AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               child: Visibility(
                 key: Key(isVisible.toString()),
                 visible: isVisible,
@@ -87,7 +91,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: InputSearch(
                   controller: searchController, focusNode: _focusNode),
             ),
@@ -112,10 +116,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         child: SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: StreamBuilder<List<TransactionWithCategory>>(
-              stream: getAllTransactions(),
+              stream: searchController.text != null ? searchTransaction(searchController.text) :  getAllTransactions(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else {
