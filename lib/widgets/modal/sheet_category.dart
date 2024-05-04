@@ -1,4 +1,5 @@
 import 'package:budgetin/controller/category_controller.dart';
+import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
@@ -8,10 +9,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Future<void> showSheetCreateCategory(BuildContext context) {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _alokasiController = TextEditingController();
-  String val = "assets/icons/Plus.svg";
+Future<void> showSheetCategory(BuildContext context, [Category? category]) {
+  final TextEditingController _nameController =
+      TextEditingController(text: category != null ? category.name : '');
+  final TextEditingController _alokasiController = TextEditingController(
+      text: category != null ? category.total.toString() : '');
+  String val = category != null ? category.icon : "assets/icons/Plus.svg";
   bool isValid = true;
   final _formKey = GlobalKey<FormState>();
 
@@ -124,9 +127,15 @@ Future<void> showSheetCreateCategory(BuildContext context) {
                                 isValid = false;
                               });
                             }
+
                             if (_formKey.currentState!.validate() && isValid) {
-                              CategoryController.insert(_nameController.text,
-                                  val, _alokasiController.text);
+                              if (category != null) {
+                                CategoryController.insert(_nameController.text,
+                                    val, _alokasiController.text, category.id);
+                              } else {
+                                CategoryController.insert(_nameController.text,
+                                    val, _alokasiController.text);
+                              }
                             }
                           },
                           child: Container(

@@ -48,6 +48,10 @@ class MyApp extends StatelessWidget {
         ),
         // BottomNavbar(),
         theme: ThemeData(
+          bottomSheetTheme:
+              const BottomSheetThemeData(surfaceTintColor: Colors.white),
+          dialogBackgroundColor: Colors.white,
+
           // primarySwatch: Budgetin,
           fontFamily: 'Nunito',
         ));

@@ -28,6 +28,7 @@ class _FilterDialogState extends State<FilterDialog> {
 
   String? selectedValue;
   late DateTime selectedDate;
+  late DateTime selectedDateEnd;
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -41,34 +42,43 @@ class _FilterDialogState extends State<FilterDialog> {
   void initState() {
     super.initState();
     selectedDate = DateTime.now();
+    selectedDateEnd = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
     return BudgetinModal(
-      
       title: TitleModal(title: 'Filter Transaksi'),
       content: SizedBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 6.0),
-            const Text(
-              "Kategori",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 6),
+              child: const Text(
+                "Kategori",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
             ),
-            const SizedBox(height: 6.0),
             DropdownButtonHideUnderline(
               child: DropdownButton2<String>(
                 isExpanded: true,
                 hint: Text(
-                  'Select Item',
+                  'Pilih Kategori',
                   style: TextStyle(
                     fontSize: 14,
                     color: Theme.of(context).hintColor,
                   ),
                 ),
 
+                iconStyleData: IconStyleData(
+                    icon: Icon(
+                      Icons.arrow_drop_down_rounded,
+                    ),
+                    openMenuIcon: Transform.rotate(
+                      angle: 3,
+                      child: Icon(Icons.arrow_drop_down_rounded),
+                    )),
                 items: items
                     .map((item) => DropdownMenuItem(
                           value: item,
@@ -121,8 +131,8 @@ class _FilterDialogState extends State<FilterDialog> {
                           horizontal: 10,
                           vertical: 8,
                         ),
-                        hintText: 'Search for an item...',
-                        hintStyle: const TextStyle(fontSize: 12),
+                        hintText: 'Cari berdasarkan nama..',
+                        hintStyle: const TextStyle(fontSize: 13),
                         border: OutlineInputBorder(
                           // Menambahkan border
                           borderRadius: BorderRadius.circular(
@@ -153,12 +163,13 @@ class _FilterDialogState extends State<FilterDialog> {
                 },
               ),
             ),
-            const SizedBox(height: 6.0),
-            const Text(
-              "Tanggal",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, bottom: 6),
+              child: Text(
+                "Rentang Tanggal",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
             ),
-            const SizedBox(height: 6.0),
             _buildCalendarDialogButton(),
           ],
         ),
@@ -255,7 +266,7 @@ class _FilterDialogState extends State<FilterDialog> {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle: dayTextStyle,
-      calendarType: CalendarDatePicker2Type.single,
+      calendarType: CalendarDatePicker2Type.range,
       selectedDayHighlightColor: Color(0xFF1D77FF),
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
@@ -359,13 +370,15 @@ class _FilterDialogState extends State<FilterDialog> {
             config: config,
             dialogSize: const Size(325, 400),
             borderRadius: BorderRadius.circular(15),
-            value: [selectedDate],
+            value: [selectedDate, selectedDateEnd],
             dialogBackgroundColor: Colors.white,
           );
           if (values != null) {
             setState(() {
-              selectedDate = values[0] ??
-                  DateTime.now(); // Tetapkan nilai yang dipilih ke selectedDate
+              selectedDate = values[0] ?? DateTime.now();
+              selectedDateEnd = values[1] ?? DateTime.now();
+
+              print(values); // Tetapkan nilai yang dipilih ke selectedDate
             });
           }
         },
@@ -382,7 +395,7 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
               suffixIcon: const Icon(Icons.calendar_month),
               hintText:
-                  "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                  "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} - ${selectedDateEnd.day}/${selectedDateEnd.month}/${selectedDateEnd.year}",
               hintStyle: const TextStyle(
                 color: Colors.black,
                 fontSize: 14,

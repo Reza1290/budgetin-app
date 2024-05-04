@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
-import 'package:budgetin/widgets/modal/sheet_create_category.dart';
+import 'package:budgetin/widgets/modal/sheet_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +36,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         scrolledUnderElevation: 0,

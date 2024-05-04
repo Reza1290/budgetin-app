@@ -1,5 +1,5 @@
 import 'package:budgetin/utilities/them.dart';
-import 'package:budgetin/widgets/modal/sheet_create_category.dart';
+import 'package:budgetin/widgets/modal/sheet_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,7 +12,7 @@ class AddCategoryButton extends StatelessWidget {
     Widget svg = SvgPicture.asset('assets/icons/Plus.svg');
     return InkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: () => showSheetCreateCategory(context),
+      onTap: () => showSheetCategory(context),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(

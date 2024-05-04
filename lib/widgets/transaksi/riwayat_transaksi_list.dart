@@ -173,6 +173,7 @@ class RiwayatTransaksiList extends StatelessWidget {
               },
               child: Container(
                 child: RiwayatTransaksiCard(
+                  category: transaction.category.name,
                   title: transaction.transaction.name,
                   tanggal: transaction.transaction.transaction_date.toString(),
                   money: transaction.transaction.amount.toString(),

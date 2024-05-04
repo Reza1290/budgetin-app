@@ -25,6 +25,11 @@ class HumanReadableDateFormatter {
     }
   }
 
+  static formatToDate(DateTime dateTime) {
+    initializeDateFormatting('id');
+    return DateFormat('dd MMMM yyyy', 'id').format(dateTime);
+  }
+
   static String dateNowFormatter(DateTime value) {
     initializeDateFormatting('id');
     return DateFormat('EEEE, dd MMMM yyyy', 'id').format(value);

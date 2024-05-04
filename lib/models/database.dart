@@ -73,12 +73,17 @@ class AppDb extends _$AppDb {
     return await update(categories).replace(entry);
   }
 
-  Future<void> deleteCategory(int id) async {
-    await (delete(categories)..where((tbl) => tbl.id.equals(id)))
-        .go()
-        .then((value) {
-      (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
-    });
+  Future<bool> deleteCategory(int id) async {
+    try {
+      await (delete(categories)..where((tbl) => tbl.id.equals(id)))
+          .go()
+          .then((value) {
+        (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {

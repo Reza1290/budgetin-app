@@ -54,6 +54,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
         leading: Container(),
         scrolledUnderElevation: 0,
@@ -234,6 +235,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                     },
                                     child: Container(
                                       child: RiwayatTransaksiCard(
+                                        category: transaction.category.name,
                                         title: transaction.transaction.name,
                                         tanggal: transaction
                                             .transaction.transaction_date

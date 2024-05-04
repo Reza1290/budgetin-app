@@ -35,26 +35,30 @@ class _CategoryHomeState extends State<CategoryHome> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          // return Text('Error: ${snapshot.error}');
+          return Text('');
         }
         final List<CategoryTotal>? categories = snapshot.data;
         if (categories == null || categories.isEmpty) {
           return Center(
-              child: Column(
-            children: [
-              SizedBox(
-                height: 85,
-                child: svg,
-              ),
-              Text(
-                'Kategori Kosong',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
-              ),
-              Text(
-                'Buat Kategori terlebih dahulu',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 8),
-              )
-            ],
+              child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 85,
+                  child: svg,
+                ),
+                Text(
+                  'Kategori Kosong',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                ),
+                Text(
+                  'Buat Kategori terlebih dahulu',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 8),
+                )
+              ],
+            ),
           ));
         }
         return Container(
