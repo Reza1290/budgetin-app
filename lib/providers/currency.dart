@@ -24,7 +24,7 @@ class TextCurrencyFormat {
     val = double.parse(val);
     final money = NumberFormat("###,###,###", "ID");
     String newValue = money.format(val);
-    return "Rp. ${newValue.replaceAll(',', '.')}";
+    return "Rp${newValue.replaceAll(',', '.')}";
   }
 
   static toInt(String val) {
