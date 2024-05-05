@@ -36,120 +36,164 @@ class _DetailTransaksiSheetContent extends StatelessWidget {
       height: MediaQuery.of(context).size.height / 4 * 3,
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                // height: 300,
-                child: CustomPaint(
-                  size: const Size(50, 20),
-                  painter: SliderPaint(),
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  // height: 300,
+                  child: CustomPaint(
+                    size: const Size(50, 20),
+                    painter: SliderPaint(),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.black12))),
-              // margin: EdgeInsets.symmetric(vertical: 5),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              const Center(
+                child: Text(
+                  'Detail Transaksi',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Text(
-                        'Detail Transaksi',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Center(
+                      child: Wrap(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            padding: const EdgeInsets.all(16),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                                color: Color(0xFFD4E5FF),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              alignment: WrapAlignment.center,
+                              runAlignment: WrapAlignment.center,
+                              children: [
+                                Text(
+                                  TextCurrencyFormat.format(transaction
+                                      .transaction.amount
+                                      .toString()),
+                                  style: const TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(" / " +
+                                    TextCurrencyFormat.format(
+                                        transaction.category.total.toString()))
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.close_rounded))
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 8),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Nama Transaksi ",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              Text(
+                                transaction.transaction.name,
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            height: 1,
+                            color: const Color(0xFFD1D1D1),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Kategori ",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              Text(
+                                transaction.category.name,
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            height: 1,
+                            color: const Color(0xFFD1D1D1),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Tanggal ",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              Text(
+                                HumanReadableDateFormatter.formatToDate(
+                                    transaction.transaction.transaction_date),
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          // berikan garis bawah abu2
+                          Container(
+                            height: 1,
+                            color: const Color(0xFFD1D1D1),
+                          ),
+                          const SizedBox(height: 15),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Deskripsi",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              transaction.transaction.description == ''
+                                  ? 'Deskripsi Tidak ada.'
+                                  : transaction.transaction.description,
+                              style: const TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.end,
-                      alignment: WrapAlignment.end,
-                      runAlignment: WrapAlignment.end,
-                      children: [
-                        Text(
-                          TextCurrencyFormat.format(
-                              transaction.transaction.amount.toString()),
-                          style: TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.bold),
-                        ),
-                        Text(" / " +
-                            TextCurrencyFormat.format(
-                                transaction.category.total.toString()))
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                    padding: EdgeInsets.all(16),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        color: PrimaryColor.shade300,
-                        borderRadius: BorderRadius.all(Radius.circular(12))),
-                    child: Wrap(
-                      children: [
-                        Text(
-                          'Transaksi ',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          transaction.transaction.name.toString() + " ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                        Text('pada ', style: TextStyle(color: Colors.white)),
-                        Text(
-                            HumanReadableDateFormatter.format(
-                                    transaction.transaction.transaction_date) +
-                                " ",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                transaction.transaction.description == ''
-                    ? 'Deskripsi Tidak ada.'
-                    : transaction.transaction.description,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    overflow: TextOverflow.ellipsis),
-              ),
-            )
-          ],
-        ),
+            ]),
       ),
     );
   }
