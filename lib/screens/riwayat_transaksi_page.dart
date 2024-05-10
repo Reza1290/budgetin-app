@@ -35,9 +35,15 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     // TODO: implement initState
     super.initState();
     _focusNode.addListener(() {
-      setState(() {
-        isVisible = !_focusNode.hasFocus;
-      });
+      if (searchController.text != '') {
+        setState(() {
+          isVisible = false;
+        });
+      } else {
+        setState(() {
+          isVisible = !_focusNode.hasFocus;
+        });
+      }
     });
     // db = AppDb();
   }
@@ -72,22 +78,17 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
           children: [
             AnimatedSwitcher(
               duration: Duration(milliseconds: 200),
+              switchInCurve: Curves.easeInCirc,
               child: Visibility(
                 key: Key(isVisible.toString()),
                 visible: isVisible,
-                child: const SaldoCard(),
-              ),
-            ),
-            AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              child: Visibility(
-                key: Key(isVisible.toString()),
-                visible: isVisible,
-                child: const SizedBox(
-                  height: 20,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: SaldoCard(),
                 ),
               ),
             ),
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
               child: InputSearch(

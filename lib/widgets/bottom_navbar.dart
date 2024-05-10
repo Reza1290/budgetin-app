@@ -1,6 +1,7 @@
 import 'package:budgetin/screens/category_screen.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
+import 'package:budgetin/screens/statistic_page.dart';
 import 'package:budgetin/screens/statistic_screen.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/main/select_category_page.dart';
@@ -27,7 +28,8 @@ class _BottomNavbarState extends State<BottomNavbar>
     Container(),
     // FaqPage(),
     CategoryScreen(),
-    StatisticScreen(),
+    // StatisticScreen(),
+    StatisticPage(),
   ];
 
   // static const List<Widget> nav = <Widget>[

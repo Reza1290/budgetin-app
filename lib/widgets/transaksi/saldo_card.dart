@@ -23,7 +23,8 @@ class _SaldoCardState extends State<SaldoCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 293.0,
+      margin: EdgeInsets.symmetric(horizontal: 24),
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         gradient: const LinearGradient(
@@ -42,7 +43,7 @@ class _SaldoCardState extends State<SaldoCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildText("Sisa Saldo", 15, FontWeight.w600, putih30),
+          _buildText("Sisa Saldo", 16, FontWeight.w700, putih30),
           SizedBox(height: 10),
           StreamBuilder<int>(
               stream: db!.watchUsedSaldo(),
@@ -54,7 +55,7 @@ class _SaldoCardState extends State<SaldoCard> {
                     if (snapshot.data != null) {
                       return _buildText(
                           TextCurrencyFormat.format(snapshot.data!.toString()),
-                          26.37,
+                          26,
                           FontWeight.w800,
                           putih30);
                     } else {
@@ -71,22 +72,21 @@ class _SaldoCardState extends State<SaldoCard> {
           ),
           Divider(
             height: 5.0,
-             color: putih30,
+            color: putih30,
           ),
           SizedBox(
             height: 10.5,
-            
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: 120,
-                child: ElevatedButton(
+              Expanded(
+                child: TextButton(
                   onPressed: () {
                     // Tindakan saat tombol pertama ditekan
                   },
-                  style: ElevatedButton.styleFrom(
+                  style: TextButton.styleFrom(
+                    backgroundColor: BudgetinColors.hitamPutih10,
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(5), // Mengatur radius menjadi 5
@@ -96,40 +96,59 @@ class _SaldoCardState extends State<SaldoCard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.edit, color: BudgetinColors.biru60,),
+                      Icon(
+                        Icons.edit,
+                        color: BudgetinColors.biru90,
+                      ),
                       SizedBox(
                         width: 5,
                       ),
-                      Text("Ubah", style: TextStyle(fontSize: 13.29, fontWeight: FontWeight.bold, color: BudgetinColors.biru60),)
+                      Text(
+                        "Ubah Saldo",
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: BudgetinColors.biru90),
+                      )
                     ],
                   ),
                 ),
               ),
               SizedBox(
-                width: 120,
-                child: ElevatedButton(
-                onPressed: () {
-                  // Tindakan saat tombol pertama ditekan
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(5), // Mengatur radius menjadi 5
-                  ),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 10), // Mengatur padding menjadi 0
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.share,color: BudgetinColors.biru60,),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Bagikan",style: TextStyle(fontSize: 13.29, fontWeight: FontWeight.bold, color: BudgetinColors.biru60))
-                  ],
-                ),
+                width: 20,
               ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    // Tindakan saat tombol pertama ditekan
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: BudgetinColors.hitamPutih10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(5), // Mengatur radius menjadi 5
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 10), // Mengatur padding menjadi 0
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.share,
+                        color: BudgetinColors.biru90,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Bagikan",
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: BudgetinColors.biru90))
+                    ],
+                  ),
+                ),
               )
             ],
           )

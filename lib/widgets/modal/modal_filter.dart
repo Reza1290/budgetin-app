@@ -266,7 +266,7 @@ class _FilterDialogState extends State<FilterDialog> {
     final config = CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle: dayTextStyle,
-      calendarType: CalendarDatePicker2Type.range,
+      calendarType: CalendarDatePicker2Type.single,
       selectedDayHighlightColor: Color(0xFF1D77FF),
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
@@ -370,13 +370,13 @@ class _FilterDialogState extends State<FilterDialog> {
             config: config,
             dialogSize: const Size(325, 400),
             borderRadius: BorderRadius.circular(15),
-            value: [selectedDate, selectedDateEnd],
+            value: [selectedDate],
             dialogBackgroundColor: Colors.white,
           );
           if (values != null) {
             setState(() {
               selectedDate = values[0] ?? DateTime.now();
-              selectedDateEnd = values[1] ?? DateTime.now();
+              // selectedDateEnd = values[1] ?? DateTime.now();
 
               print(values); // Tetapkan nilai yang dipilih ke selectedDate
             });
@@ -395,7 +395,7 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
               suffixIcon: const Icon(Icons.calendar_month),
               hintText:
-                  "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} - ${selectedDateEnd.day}/${selectedDateEnd.month}/${selectedDateEnd.year}",
+                  "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ",
               hintStyle: const TextStyle(
                 color: Colors.black,
                 fontSize: 14,

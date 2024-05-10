@@ -330,6 +330,27 @@ class AppDb extends _$AppDb {
       yield Map.from(sums);
     }
   }
+
+  Future<List<double>> getTransactionsByMonth() async {
+    final transactions = select(this.transactions)
+      ..where((tbl) => tbl.transaction_date.year.equals(DateTime.now().year))
+      ..get();
+
+    final saldo = await getFirstSaldo().then((value) => value!.saldo);
+    final transaksi = await transactions.get();
+    List<double> data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    List<double> persen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    double amount = 0;
+    for (var transaction in transaksi) {
+      data[transaction.transaction_date.month - 1] =
+          transaction.amount + data[transaction.transaction_date.month - 1];
+      persen[transaction.transaction_date.month - 1] =
+          data[transaction.transaction_date.month - 1] / saldo +
+              persen[transaction.transaction_date.month - 1];
+    }
+    print(persen);
+    return data;
+  }
 }
 
 class CategoryTotal {

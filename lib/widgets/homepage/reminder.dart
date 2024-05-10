@@ -61,8 +61,9 @@ class Reminder extends StatelessWidget {
           ),
           Positioned(
             child: svg,
+            width: 140,
             right: -35,
-            top: -35,
+            top: -30,
           ),
         ],
       ),

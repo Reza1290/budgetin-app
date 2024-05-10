@@ -7,6 +7,7 @@ import 'package:budgetin/widgets/homepage/kategori_transaksi/category_home.dart'
 import 'package:budgetin/widgets/homepage/saldo.dart';
 import 'package:budgetin/widgets/homepage/reminder.dart';
 import 'package:budgetin/widgets/homepage/saldo_section.dart';
+import 'package:budgetin/widgets/statistic/statistic_bar.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -78,6 +79,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: StatisticBar(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

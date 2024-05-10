@@ -28,107 +28,96 @@ class _SaldoSectionState extends State<SaldoSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Positioned(
-          height: 170,
-          top: -100,
-          right: -50,
-          child: svg,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xff4979C2), Color(0xff4D9FFF)],
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Saldo",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.white),
-                    ),
-                    const SizedBox(height: 7),
-                    StreamBuilder<int>(
-                      stream: db!.watchUsedSaldo(),
-                      builder: (context, snapshot) {
-                        int expense = snapshot.data ?? 0;
-
-                        return Text(
-                          TextCurrencyFormat.format(expense.toString()),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: Colors.white,
-                              overflow: TextOverflow.ellipsis),
-                        );
-                      },
-                    )
-                  ],
-                ),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xff4979C2), Color(0xff4D9FFF)],
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      // Color.fromARGB(255, 255, 218, 247)
-                      Color(0xffC2497C),
-                      Color.fromARGB(255, 255, 77, 77),
-                    ],
-                  ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Saldo",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: Colors.white),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Pengeluaran",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.white),
-                    ),
-                    SizedBox(height: 7),
-                    StreamBuilder<int>(
-                      stream: db!.totalExpense(),
-                      builder: (context, snapshot) {
-                        int expense = snapshot.data ?? 0;
+                const SizedBox(height: 7),
+                StreamBuilder<int>(
+                  stream: db!.watchUsedSaldo(),
+                  builder: (context, snapshot) {
+                    int expense = snapshot.data ?? 0;
 
-                        return Text(
-                          TextCurrencyFormat.format(expense.toString()),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: Colors.white,
-                              overflow: TextOverflow.ellipsis),
-                        );
-                      },
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
+                    return Text(
+                      TextCurrencyFormat.format(expense.toString()),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                          color: Colors.white,
+                          overflow: TextOverflow.ellipsis),
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
         ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  // Color.fromARGB(255, 255, 218, 247)
+                  Color(0xffC2497C),
+                  Color.fromARGB(255, 255, 77, 77),
+                ],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Total Pengeluaran",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: Colors.white),
+                ),
+                SizedBox(height: 7),
+                StreamBuilder<int>(
+                  stream: db!.totalExpense(),
+                  builder: (context, snapshot) {
+                    int expense = snapshot.data ?? 0;
+
+                    return Text(
+                      TextCurrencyFormat.format(expense.toString()),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                          color: Colors.white,
+                          overflow: TextOverflow.ellipsis),
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
