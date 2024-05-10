@@ -42,92 +42,120 @@ class _SaldoCardState extends State<SaldoCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width:
-                    20, // Ukuran lingkaran, disesuaikan dengan kebutuhan Anda
-                height:
-                    20, // Ukuran lingkaran, disesuaikan dengan kebutuhan Anda
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle, // Mengatur bentuk menjadi lingkaran
-                  color:
-                      biru10, // Warna latar belakang lingkaran, sesuaikan dengan kebutuhan Anda
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.attach_money_rounded,
-                    color: Color.fromARGB(255, 0, 0,
-                        0), // Warna ikon, sesuaikan dengan kebutuhan Anda
-                    size: 20, // Ukuran ikon, sesuaikan dengan kebutuhan Anda
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              _buildText("Saldo Tidak Teralokasi", 15, FontWeight.w600, putih30)
-            ],
-          ),
+          _buildText("Sisa Saldo", 15, FontWeight.w600, putih30),
+          SizedBox(height: 10),
           StreamBuilder<int>(
-              stream: db!.watchRemainSaldo(),
+              stream: db!.watchUsedSaldo(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                  return _buildText("Rp. 0", 26.37, FontWeight.w800, putih30);
                 } else {
                   if (snapshot.hasData) {
                     if (snapshot.data != null) {
                       return _buildText(
                           TextCurrencyFormat.format(snapshot.data!.toString()),
-                          24,
+                          26.37,
                           FontWeight.w800,
                           putih30);
                     } else {
-                      return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                      return _buildText(
+                          "Rp. 0", 26.37, FontWeight.w800, putih30);
                     }
                   } else {
-                    return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                    return _buildText("Rp. 0", 26.37, FontWeight.w800, putih30);
                   }
                 }
               }),
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: 10.0,
           ),
-          StreamBuilder<int>(
-              stream: db!.watchUsedSaldo(),
-              builder: (context, snapshot) {
-                String saldo = "Rp. 0";
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  saldo = "Rp. 0";
-                } else {
-                  if (snapshot.hasData) {
-                    if (snapshot.data != null) {
-                      saldo =
-                          TextCurrencyFormat.format(snapshot.data.toString());
-                    }
-                  } else {
-                    saldo = "Rp. 0";
-                  }
-                }
-                return ContainerSaldo(
-                    saldo: saldo,
-                    textColour: merah60,
-                    bgColour: merah10,
-                    icon: Icons.arrow_upward_rounded);
-              }),
-          // const Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     SizedBox(
-          //       width: 10,
-          //     ),
-          //     // ContainerSaldo(
-          //     //     saldo: "Rp 3.500.00",
-          //     //     textColour: hijau80,
-          //     //     bgColour: hijau10,
-          //     //     icon: Icons.arrow_downward_rounded)
-          //   ],
-          // )
+          Divider(
+            height: 5.0,
+             color: putih30,
+          ),
+          SizedBox(
+            height: 10.5,
+            
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 120,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Tindakan saat tombol pertama ditekan
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(5), // Mengatur radius menjadi 5
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.edit, color: BudgetinColors.biru60,),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Ubah", style: TextStyle(fontSize: 13.29, fontWeight: FontWeight.bold, color: BudgetinColors.biru60),)
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 120,
+                child: ElevatedButton(
+                onPressed: () {
+                  // Tindakan saat tombol pertama ditekan
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(5), // Mengatur radius menjadi 5
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10), // Mengatur padding menjadi 0
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.share,color: BudgetinColors.biru60,),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Bagikan",style: TextStyle(fontSize: 13.29, fontWeight: FontWeight.bold, color: BudgetinColors.biru60))
+                  ],
+                ),
+              ),
+              )
+            ],
+          )
+
+          // StreamBuilder<int>(
+          //     stream: db!.watchUsedSaldo(),
+          //     builder: (context, snapshot) {
+          //       String saldo = "Rp. 0";
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         saldo = "Rp. 0";
+          //       } else {
+          //         if (snapshot.hasData) {
+          //           if (snapshot.data != null) {
+          //             saldo =
+          //                 TextCurrencyFormat.format(snapshot.data.toString());
+          //           }
+          //         } else {
+          //           saldo = "Rp. 0";
+          //         }
+          //       }
+          //       return ContainerSaldo(
+          //           saldo: saldo,
+          //           textColour: merah60,
+          //           bgColour: merah10,
+          //           icon: Icons.arrow_upward_rounded);
+          //     }),
         ],
       ),
     );
