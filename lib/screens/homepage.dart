@@ -55,15 +55,15 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         "Selamat Datang!",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 28,
                           fontWeight: FontWeight.w800,
-                          color: BudgetinColors.biru40,
+                          color: BudgetinColors.biru80,
                         ),
                       ),
                       Text(
-                        "Waktunya Catat Keuangan Kamu Hari Ini.",
+                        "Waktunya Catat Keuanganmu Hari Ini.",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           color: BudgetinColors.hitamPutih100,
                         ),
                       ),
@@ -79,7 +79,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: StatisticBar(),
+                  child: StatisticBar(
+                    isHomepage: true,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),

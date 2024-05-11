@@ -38,6 +38,9 @@ class MyApp extends StatelessWidget {
                 ),
               );
             } else if (snapshot.hasData) {
+              final a = db!.getBudgetinVariable('monthNow');
+
+              print(a);
               if (snapshot.data != null && snapshot.data == false) {
                 // print(snapshot.data);
                 return BottomNavbar();

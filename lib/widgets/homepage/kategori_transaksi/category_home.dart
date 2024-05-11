@@ -75,6 +75,7 @@ class _CategoryHomeState extends State<CategoryHome> {
                       name: categories[index].category.name.toString(),
                       icon: categories[index].category.icon.toString(),
                       total: categories[index].category.total,
+                      createdAt: categories[index].category.createdAt
                     ),
                     totalAmount: categories[index].totalAmount,
                     isHome: true,

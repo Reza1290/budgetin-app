@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class StatisticBar extends StatefulWidget {
-  const StatisticBar({super.key});
+  final bool? isHomepage;
+  final Function? callback;
+  final int? bulan;
+  const StatisticBar(
+      {super.key, this.isHomepage = false, this.callback, this.bulan});
 
   @override
   State<StatisticBar> createState() => _StatisticBarState();
@@ -15,13 +19,21 @@ class StatisticBar extends StatefulWidget {
 class _StatisticBarState extends State<StatisticBar> {
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex = -1;
+  bool isThereNoTransaction = true;
 
   List<double> dataBulanan = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   Future<List<double>> getDataBulanan() async {
     List<double> data = await db!.getTransactionsByMonth();
-
     setState(() {
-      dataBulanan = data;
+      if (data.any((element) => element > 0)) {
+        dataBulanan = data;
+        isThereNoTransaction = false;
+      } else {
+        isThereNoTransaction = true;
+      }
+      if (!widget.isHomepage! && widget.bulan != null) {
+        touchedIndex = widget.bulan!;
+      }
     });
     return data;
   }
@@ -42,16 +54,18 @@ class _StatisticBarState extends State<StatisticBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: !widget.isHomepage! ? EdgeInsets.all(8) : EdgeInsets.zero,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: BudgetinColors.biru20, width: 2),
+        border: !widget.isHomepage!
+            ? Border.all(color: BudgetinColors.biru20, width: 2)
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(bottom: 10),
             child: Text(
               "Grafik Pengeluaran",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -60,26 +74,30 @@ class _StatisticBarState extends State<StatisticBar> {
           Container(
             child: Padding(
               padding: const EdgeInsets.only(top: 20, right: 20),
-              child: AspectRatio(
-                aspectRatio: 2,
-                child: Stack(
-                  children: [
-                    Column(
-                      children: [
-                        Expanded(
-                          child: BarChart(
-                            mainBarData(),
-                            swapAnimationDuration: animDuration,
+              child: !isThereNoTransaction
+                  ? AspectRatio(
+                      aspectRatio: 2,
+                      child: Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Expanded(
+                                child: BarChart(
+                                  mainBarData(),
+                                  swapAnimationDuration: animDuration,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                      ],
+                        ],
+                      ),
+                    )
+                  : Container(
+                      child: Text('Buat Dulu Transaksi'),
                     ),
-                  ],
-                ),
-              ),
             ),
           ),
         ],
@@ -92,7 +110,7 @@ class _StatisticBarState extends State<StatisticBar> {
     double y, {
     bool isTouched = false,
     Color? barColor,
-    double width = 20,
+    double width = 16,
     List<int> showTooltips = const [],
   }) {
     return BarChartGroupData(
@@ -100,7 +118,7 @@ class _StatisticBarState extends State<StatisticBar> {
       barRods: [
         BarChartRodData(
           toY: y,
-          color: isTouched ? Colors.amber : Color(0xFFA4CEFF),
+          color: isTouched ? BudgetinColors.biru80 : BudgetinColors.biru30,
           width: width,
         ),
       ],
@@ -126,48 +144,65 @@ class _StatisticBarState extends State<StatisticBar> {
       alignment: BarChartAlignment.center,
       groupsSpace: 12,
       barTouchData: BarTouchData(
+        touchCallback: (FlTouchEvent event, barTouchResponse) {
+          setState(() {
+            if (!event.isInterestedForInteractions ||
+                barTouchResponse == null ||
+                barTouchResponse.spot == null) {
+              if (widget.isHomepage!) {
+                touchedIndex = -1;
+              }
+              if (!widget.isHomepage!) {
+                widget.callback!(touchedIndex);
+              }
+              return;
+            }
+            touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+          });
+        },
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (_) => Colors.blueGrey,
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: -10,
+          direction: TooltipDirection.top,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             String weekDay;
             switch (group.x) {
               case 0:
-                weekDay = 'January';
+                weekDay = 'Januari';
                 break;
               case 1:
-                weekDay = 'February';
+                weekDay = 'Februari';
                 break;
               case 2:
-                weekDay = 'March';
+                weekDay = 'Maret';
                 break;
               case 3:
                 weekDay = 'April';
                 break;
               case 4:
-                weekDay = 'May';
+                weekDay = 'Mei';
                 break;
               case 5:
-                weekDay = 'June';
+                weekDay = 'Juni';
                 break;
               case 6:
-                weekDay = 'July';
+                weekDay = 'Juli';
                 break;
               case 7:
-                weekDay = 'August';
+                weekDay = 'Agustus';
                 break;
               case 8:
                 weekDay = 'September';
                 break;
               case 9:
-                weekDay = 'October';
+                weekDay = 'Oktober';
                 break;
               case 10:
                 weekDay = 'November';
                 break;
               case 11:
-                weekDay = 'December';
+                weekDay = 'Desember';
                 break;
 
               default:
@@ -213,7 +248,7 @@ class _StatisticBarState extends State<StatisticBar> {
             showTitles: true,
             getTitlesWidget: leftTitles,
             // interval: interval,
-            reservedSize: 42,
+            reservedSize: 30,
           ),
         ),
         topTitles: const AxisTitles(

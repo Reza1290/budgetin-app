@@ -117,11 +117,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         Category category = categories![index].category;
                         return CategoryCard(
                           category: Category(
-                            id: category.id,
-                            name: category.name.toString(),
-                            icon: category.icon.toString(),
-                            total: category.total,
-                          ),
+                              id: category.id,
+                              name: category.name.toString(),
+                              icon: category.icon.toString(),
+                              total: category.total,
+                              createdAt: category.createdAt),
                           totalAmount: categories[index].totalAmount,
                           isHome: false,
                           // isReminder: true,
