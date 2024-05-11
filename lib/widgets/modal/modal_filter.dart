@@ -1,13 +1,13 @@
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
+import 'package:budgetin/widgets/reusable/newCalender.dart';
+import 'package:budgetin/widgets/reusable/rangeDate.dart';
 import 'package:budgetin/widgets/reusable/title_modal.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-final today = DateUtils.dateOnly(DateTime.now());
 
 class FilterDialog extends StatefulWidget {
   @override
@@ -26,9 +26,11 @@ class _FilterDialogState extends State<FilterDialog> {
     'B_Item4',
   ];
 
-  String? selectedValue;
-  late DateTime selectedDate;
-  late DateTime selectedDateEnd;
+
+  late String? _selectedValue;
+  late DateTime _selectedDate = DateTime.now();
+  late DateTime _selectedDate2 = DateTime.now();
+  // late DateTime _selectedDateEnd = DateTime.now();
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -41,8 +43,10 @@ class _FilterDialogState extends State<FilterDialog> {
   @override
   void initState() {
     super.initState();
-    selectedDate = DateTime.now();
-    selectedDateEnd = DateTime.now();
+    // selectedDate = DateTime.now();
+    // selectedDateEnd = DateTime.now();
+    _selectedValue = items
+        .first; // Inisialisasi _selectedValue dengan nilai pertama dari items
   }
 
   @override
@@ -90,10 +94,10 @@ class _FilterDialogState extends State<FilterDialog> {
                           ),
                         ))
                     .toList(),
-                value: selectedValue,
+                value: _selectedValue,
                 onChanged: (value) {
                   setState(() {
-                    selectedValue = value;
+                    _selectedValue = value;
                   });
                 },
                 buttonStyleData: ButtonStyleData(
@@ -170,7 +174,8 @@ class _FilterDialogState extends State<FilterDialog> {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
-            _buildCalendarDialogButton(),
+
+           RangeDate(),
           ],
         ),
       ),
@@ -183,8 +188,9 @@ class _FilterDialogState extends State<FilterDialog> {
               child: TextButton(
                 onPressed: () {
                   setState(() {
-                    selectedValue = null;
-                    selectedDate = DateTime.now();
+                    _selectedValue = null;
+                    _selectedDate = DateTime.now();
+                    
                   });
                 },
                 style: ButtonStyle(
@@ -243,168 +249,6 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  String _getValueText(
-    CalendarDatePicker2Type datePickerType,
-    DateTime value,
-  ) {
-    var date = DateUtils.dateOnly(value); // Menghilangkan waktu dari DateTime
-    var valueText = date
-        .toString()
-        .replaceAll('00:00:00.000', ''); // Menghilangkan informasi waktu
-    return valueText;
-  }
-
-  _buildCalendarDialogButton() {
-    const dayTextStyle =
-        TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
-
-    final config = CalendarDatePicker2WithActionButtonsConfig(
-      calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
-      dayTextStyle: dayTextStyle,
-      calendarType: CalendarDatePicker2Type.single,
-      selectedDayHighlightColor: Color(0xFF1D77FF),
-      closeDialogOnCancelTapped: true,
-      firstDayOfWeek: 1,
-      weekdayLabelTextStyle: const TextStyle(
-        color: Colors.black87,
-        fontWeight: FontWeight.bold,
-      ),
-      controlsTextStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 15,
-        fontWeight: FontWeight.bold,
-      ),
-      selectedDayTextStyle: dayTextStyle.copyWith(color: Colors.white),
-      dayBuilder: ({
-        required date,
-        textStyle,
-        decoration,
-        isSelected,
-        isDisabled,
-        isToday,
-      }) {
-        Widget? dayWidget;
-        if (date.day % 3 == 0 && date.day % 9 != 0) {
-          dayWidget = Container(
-            decoration: decoration,
-            child: Center(
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  Text(
-                    MaterialLocalizations.of(context).formatDecimal(date.day),
-                    style: textStyle,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 27.5),
-                    child: Container(
-                      height: 4,
-                      width: 4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: isSelected == true
-                            ? Colors.white
-                            : Colors.grey[500],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-        return dayWidget;
-      },
-      yearBuilder: ({
-        required year,
-        decoration,
-        isCurrentYear,
-        isDisabled,
-        isSelected,
-        textStyle,
-      }) {
-        return Center(
-          child: Container(
-            decoration: decoration,
-            height: 36,
-            width: 72,
-            child: Center(
-              child: Semantics(
-                selected: isSelected,
-                button: true,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      year.toString(),
-                      style: textStyle,
-                    ),
-                    if (isCurrentYear == true)
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 5),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-    return SizedBox(
-      height: 40,
-      child: GestureDetector(
-        onTap: () async {
-          final values = await showCalendarDatePicker2Dialog(
-            context: context,
-            config: config,
-            dialogSize: const Size(325, 400),
-            borderRadius: BorderRadius.circular(15),
-            value: [selectedDate],
-            dialogBackgroundColor: Colors.white,
-          );
-          if (values != null) {
-            setState(() {
-              selectedDate = values[0] ?? DateTime.now();
-              // selectedDateEnd = values[1] ?? DateTime.now();
-
-              print(values); // Tetapkan nilai yang dipilih ke selectedDate
-            });
-          }
-        },
-        child: AbsorbPointer(
-          child: TextFormField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6.0),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(6.0),
-                ),
-              ),
-              suffixIcon: const Icon(Icons.calendar_month),
-              hintText:
-                  "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ",
-              hintStyle: const TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-            ),
-            readOnly: true,
-          ),
         ),
       ),
     );
