@@ -48,20 +48,23 @@ class OnBoardingContent extends StatelessWidget {
           SvgPicture.asset(image),
           const SizedBox(height: verticalSpacing),
           // Title
-          Center(
+          Align(
+              alignment: Alignment.center,
               child: RichText(
-            text: TextSpan(
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Nunito'),
-              children: generateTextSpans(),
-            ),
-          )),
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: 'Nunito'),
+                  children: generateTextSpans(),
+                ),
+              )),
           const SizedBox(height: 10),
           // Subtitle
           Center(
+              child: Center(
             child: Text(
               subtitle,
               textAlign: TextAlign.center,
@@ -71,7 +74,7 @@ class OnBoardingContent extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-          ),
+          )),
         ],
       ),
     );
