@@ -4,6 +4,7 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/modal/modal_bagikan.dart';
 import 'package:flutter/material.dart';
 
 class SaldoCard extends StatefulWidget {
@@ -120,7 +121,7 @@ class _SaldoCardState extends State<SaldoCard> {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    // Tindakan saat tombol pertama ditekan
+                    showModalBagikan(context);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: BudgetinColors.hitamPutih10,
