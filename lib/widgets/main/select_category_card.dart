@@ -1,6 +1,6 @@
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
-import 'package:budgetin/widgets/transaksi/add_transaksi.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +18,8 @@ class SelectCategoryCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AddTransaksi(categoryId: category.id),
+          builder: (context) =>
+              CreateUpdateTransaksiPage(categoryId: category.id),
         ),
       ),
       child: Padding(

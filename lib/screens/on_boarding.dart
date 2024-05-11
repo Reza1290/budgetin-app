@@ -58,10 +58,10 @@ class OnBoardingScreen1 extends StatelessWidget {
                       }
 
                       int res = await db!.insertBudgetinVariable(
-                          'monthNow', DateTime.now().month.toString());
-                      if (res > 0) {
-                        print('MASUK SALDONYA' + res.toString());
-                      }
+                          'monthNow', DateTime.now().toString());
+                      // if (res > 0) {
+                      //   print('MASUK SALDONYA' + res.toString());
+                      // }
 
                       Navigator.push(
                         context,
@@ -159,7 +159,9 @@ class OnBoardingScreen2 extends StatelessWidget {
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => OnBoardingScreen3(),
+                                  builder: (context) => BottomNavbar(
+                                    initIndex: 0,
+                                  ),
                                 ),
                                 (route) => false,
                               );
@@ -198,7 +200,7 @@ class OnBoardingScreen3 extends StatelessWidget {
                       title:
                           'Yeyyy !!! Bulan lalu kamu berhasil menghemat Rp1.000.000',
                       subtitle:
-                          'Saat ini memasuki bulan baru, kategori transaksi akan di-reset. Apakah saldo bulan ini sama dengan bulan lalu?',
+                          'Saat ini memasuki bulan baru, Alokasi pada kategori akan di-reset. Apakah Kategori dan Saldo bulan ini sama dengan bulan lalu?',
                     ),
                     SizedBox(height: 24),
                   ],
@@ -218,7 +220,12 @@ class OnBoardingScreen3 extends StatelessWidget {
                         title: "Tidak",
                         blok: false,
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OnBoardingScreen4()),
+                            (route) => false,
+                          );
                         },
                       ),
                       ButtonCustom(
@@ -226,11 +233,19 @@ class OnBoardingScreen3 extends StatelessWidget {
                         title: "Ya",
                         blok: true,
                         onPressed: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OnBoardingScreen4()),
-                          );
+                          bool res = await db!.copyPreviousCategoryAndSaldo();
+                          if (res) {
+                            await db!.insertBudgetinVariable(
+                                'monthNow', DateTime.now().toString());
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavbar(
+                                        initIndex: 0,
+                                      )),
+                              (route) => false,
+                            );
+                          }
                         },
                       ),
                     ],
@@ -285,13 +300,25 @@ class OnBoardingScreen4 extends StatelessWidget {
                   title: "Selanjutnya",
                   blok: true,
                   onPressed: () async {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BottomNavbar(),
-                      ),
-                      (route) => false,
-                    );
+                    if (_formOnboard4Key.currentState!.validate()) {
+                      // int saldo =
+                      int saldo =
+                          TextCurrencyFormat.toInt(_saldo2Controller.text);
+                      if (await db!.isSaldoLessThanAllocation(saldo)) {
+                        await db!.createOrUpdateSaldo(saldo);
+                      }
+
+                      int res = await db!.insertBudgetinVariable(
+                          'monthNow', DateTime.now().toString());
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BottomNavbar(),
+                        ),
+                        (route) => false,
+                      );
+                    }
                   },
                 ),
               ),

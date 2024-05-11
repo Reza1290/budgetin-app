@@ -4,6 +4,7 @@ import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/saldo_card.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
@@ -178,8 +179,12 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                               .push(PageRouteBuilder(
                                             pageBuilder: (context, animation,
                                                     secondaryAnimation) =>
-                                                EditTransaksi(
-                                                    transaction: transaction),
+                                                CreateUpdateTransaksiPage(
+                                              categoryId:
+                                                  transaction.category.id,
+                                              dataTransaction: transaction,
+                                              isEditPage: true,
+                                            ),
                                             transitionsBuilder: (context,
                                                 animation,
                                                 secondaryAnimation,

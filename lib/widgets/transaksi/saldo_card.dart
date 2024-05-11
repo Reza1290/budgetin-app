@@ -3,8 +3,13 @@ import 'dart:async';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/modal/modal_bagikan.dart';
+import 'package:budgetin/widgets/modal/show_modal.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
 class SaldoCard extends StatefulWidget {
@@ -15,6 +20,9 @@ class SaldoCard extends StatefulWidget {
 }
 
 class _SaldoCardState extends State<SaldoCard> {
+  late TextEditingController _moneyController =
+      TextEditingController(text: '0');
+
   @override
   void initState() {
     // TODO: implement initState
@@ -83,9 +91,42 @@ class _SaldoCardState extends State<SaldoCard> {
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed: () {
-                    // Tindakan saat tombol pertama ditekan
-                  },
+                  onPressed: () => showModal(
+                      context,
+                      "Ubah Saldo",
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 12.0),
+                                    child: Text(
+                                      HumanReadableDateFormatter
+                                          .dateNowFormatter(DateTime.now()),
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                  InputMoney(
+                                      controller: _moneyController,
+                                      fontSize: 12)
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ), () {
+                    simpanSaldo(
+                        int.parse(_moneyController.text.replaceAll('.', '')),
+                        context);
+                  }),
                   style: TextButton.styleFrom(
                     backgroundColor: BudgetinColors.hitamPutih10,
                     shape: RoundedRectangleBorder(
@@ -179,6 +220,20 @@ class _SaldoCardState extends State<SaldoCard> {
         ],
       ),
     );
+  }
+
+  void simpanSaldo(int sal, BuildContext context) async {
+    int sum = await db!.sumUsedSaldo();
+    if (sum > sal) {
+      // debugPrint("teteh" + await db!.sumUsedSaldo().toString());
+      String alokasi = TextCurrencyFormat.format(sum.toString());
+      showFailedAlert(context,
+          "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
+    } else {
+      await db!.createOrUpdateSaldo(sal);
+      Navigator.pop(context);
+      showSuccessAlert(context, "Berhasil");
+    }
   }
 }
 

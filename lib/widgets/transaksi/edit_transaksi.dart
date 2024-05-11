@@ -103,8 +103,8 @@ class _EditTransaksiState extends State<EditTransaksi>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const BudgetStatusCard(
-                      category: "Makanan", remainingAmount: "50000"),
+                  // const BudgetStatusCard(
+                  //     category: "Makanan", remainingAmount: "50000"),
                   const Text(
                     "Tanggal",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

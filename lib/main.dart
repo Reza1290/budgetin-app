@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
                   snapshot.data![1] == false) {
                 return BottomNavbar();
               } else if (snapshot.data![1] == true) {
-                return OnBoardingScreen1();
+                return OnBoardingScreen3();
               }
             }
             return OnBoardingScreen1();
