@@ -57,6 +57,12 @@ class OnBoardingScreen1 extends StatelessWidget {
                         await db!.createOrUpdateSaldo(saldo);
                       }
 
+                      int res = await db!.insertBudgetinVariable(
+                          'monthNow', DateTime.now().month.toString());
+                      if (res > 0) {
+                        print('MASUK SALDONYA' + res.toString());
+                      }
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(

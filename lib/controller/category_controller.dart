@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 class CategoryController {
   static insert<bool>(String name, String icon, String total, [int? id]) async {
     int saldoBulanIni = await db!.getFirstSaldo().then((value) => value!.saldo);
+    print("a" + saldoBulanIni.toString());
     int totalAlokasi = await db!.sumUsedSaldo();
     int totalCategoryNow = 0;
     if (id != null) {

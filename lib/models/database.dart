@@ -190,9 +190,23 @@ class AppDb extends _$AppDb {
   }
 
   Stream<List<CategoryTotal>> sumExpenseByCategory(int limit) {
+    DateTime now = DateTime.now();
     final categoriesResultStream = limit != 0
-        ? (select(categories)..limit(limit)).watch()
-        : select(categories).watch();
+        ? (select(categories)
+              ..where(
+                (tbl) =>
+                    tbl.createdAt.month.equals(now.month) &
+                    tbl.createdAt.year.equals(now.year),
+              )
+              ..limit(limit))
+            .watch()
+        : (select(categories)
+              ..where(
+                (tbl) =>
+                    tbl.createdAt.month.equals(now.month) &
+                    tbl.createdAt.year.equals(now.year),
+              ))
+            .watch();
 
     return categoriesResultStream.asyncMap((categoriesResult) async {
       final List<CategoryTotal> categoryTotals = [];
@@ -208,7 +222,13 @@ class AppDb extends _$AppDb {
 
   Future<int> sumUsedSaldo() async {
     int total = 0;
-    final rows = await select(categories).get();
+    final rowsQuery = select(categories)
+      ..where((tbl) =>
+          tbl.createdAt.month.equals(DateTime.now().month) &
+          tbl.createdAt.year.equals(DateTime.now().year))
+      ..get();
+    final rows = await rowsQuery.get();
+
     total =
         rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
     return total;
@@ -247,13 +267,26 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future<bool> isSaldoNotCretedYet() async {
+  Future<List<bool>> isSaldoNotCretedYet() async {
+    List<bool> res = [false, false];
     final query = select(saldos)..limit(1);
     final result = await query.get();
+    final a = await getBudgetinVariable('monthNow');
+    int now = DateTime.now().month;
+
     if (result.isNotEmpty) {
-      return false;
+      if (a != null && a != now.toString()) {
+        res = [false, true];
+        return res;
+      }
+      return res;
     } else {
-      return true;
+      if (a != null && a != now.toString()) {
+        res = [true, true];
+        return res;
+      }
+      res = [true, false];
+      return res;
     }
   }
 
@@ -263,7 +296,7 @@ class AppDb extends _$AppDb {
       ..where((tbl) =>
           tbl.createdAt.year.equals(now.year) &
           tbl.createdAt.month.equals(now.month))
-      ..limit(1);
+      ..getSingleOrNull();
     final result = await query.get();
 
     return result.isNotEmpty
@@ -459,21 +492,33 @@ class AppDb extends _$AppDb {
   }
 
   Future<String?> getBudgetinVariable(String key) async {
-    final res = await (select(budgetinVariables)
-          ..where((tbl) => tbl.name.equals(key))
-          ..getSingle())
-        .getSingleOrNull();
+    final existingVarQuery = select(budgetinVariables)
+      ..where((tbl) => tbl.name.equals(key))
+      ..getSingleOrNull();
 
-    if (res != null) {
-      return res.value;
+    final existingVar = await existingVarQuery.getSingleOrNull();
+
+    if (existingVar != null) {
+      return existingVar.value;
     } else {
       return null;
     }
   }
 
-  Future<int> insertBudgetinVariable(String key, String value) {
-    return into(budgetinVariables).insertOnConflictUpdate(
-        BudgetinVariablesCompanion(name: Value(key), value: Value(value)));
+  Future<int> insertBudgetinVariable(String key, String value) async {
+    final existingVar = await (select(budgetinVariables)
+          ..where((tbl) => tbl.name.equals(key)))
+        .getSingleOrNull();
+
+    if (existingVar != null) {
+      return (update(budgetinVariables)
+            ..where((tbl) => tbl.id.equals(existingVar.id)))
+          .write(BudgetinVariablesCompanion(
+              name: Value(key), value: Value(value)));
+    } else {
+      return into(budgetinVariables).insert(
+          BudgetinVariablesCompanion(name: Value(key), value: Value(value)));
+    }
   }
 }
 
