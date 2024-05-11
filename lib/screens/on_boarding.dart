@@ -136,7 +136,7 @@ class OnBoardingScreen2 extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ButtonCustom(
-                        width: MediaQuery.of(context).size.width / 3,
+                        width: MediaQuery.of(context).size.width / 2.8,
                         title: "Kembali",
                         blok: false,
                         onPressed: () {
@@ -159,7 +159,7 @@ class OnBoardingScreen2 extends StatelessWidget {
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BottomNavbar(),
+                                  builder: (context) => OnBoardingScreen3(),
                                 ),
                                 (route) => false,
                               );
@@ -171,6 +171,130 @@ class OnBoardingScreen2 extends StatelessWidget {
                       ),
                     ],
                   )),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OnBoardingScreen3 extends StatelessWidget {
+  const OnBoardingScreen3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    OnBoardingContent(
+                      image: 'assets/images/onBoarding3.svg',
+                      title:
+                          'Yeyyy !!! Bulan lalu kamu berhasil menghemat Rp1.000.000',
+                      subtitle:
+                          'Saat ini memasuki bulan baru, kategori transaksi akan di-reset. Apakah saldo bulan ini sama dengan bulan lalu?',
+                    ),
+                    SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SizedBox(
+                  // width: double.infinity,
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ButtonCustom(
+                        width: MediaQuery.of(context).size.width / 2.8,
+                        title: "Tidak",
+                        blok: false,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ButtonCustom(
+                        width: MediaQuery.of(context).size.width / 4 * 2,
+                        title: "Ya",
+                        blok: true,
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OnBoardingScreen4()),
+                          );
+                        },
+                      ),
+                    ],
+                  )),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OnBoardingScreen4 extends StatelessWidget {
+  OnBoardingScreen4({super.key});
+
+  final _formOnboard4Key = GlobalKey<FormState>();
+  final TextEditingController _saldo2Controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    OnBoardingContent(
+                      image: 'assets/images/onBoarding4.svg',
+                      title: 'Kelola Keuanganmu Bulan Ini',
+                      subtitle:
+                          'Masukkan saldo atau pendapatanmu kembali untuk bulan ini!',
+                    ),
+                    SizedBox(height: 24),
+                    Form(
+                      key: _formOnboard4Key,
+                      child: InputMoney(
+                          controller: _saldo2Controller, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ButtonCustom(
+                  title: "Selanjutnya",
+                  blok: true,
+                  onPressed: () async {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BottomNavbar(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
