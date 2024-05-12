@@ -226,6 +226,30 @@ class AppDb extends _$AppDb {
     });
   }
 
+  Stream<List<CategoryTotal>> sumExpenseByCategorySearch(String keyword) {
+    // print(keyword);
+    DateTime now = DateTime.now();
+    final categoriesResultStream = (select(categories)
+          ..where(
+            (tbl) =>
+                tbl.createdAt.month.equals(now.month) &
+                tbl.createdAt.year.equals(now.year) &
+                tbl.name.like('%$keyword%'),
+          ))
+        .watch();
+
+    return categoriesResultStream.asyncMap((categoriesResult) async {
+      final List<CategoryTotal> categoryTotals = [];
+
+      for (final category in categoriesResult) {
+        final totalAmount = await _calculateTotalAmountForCategory(category.id);
+        categoryTotals.add(CategoryTotal(category, totalAmount));
+      }
+
+      return categoryTotals;
+    });
+  }
+
   Future<int> sumUsedSaldo() async {
     int total = 0;
     final rowsQuery = select(categories)
@@ -507,7 +531,6 @@ class AppDb extends _$AppDb {
               persen[transaction.transaction_date.month - 1];
     }
 
-    print(persen);
     return data;
   }
 
@@ -582,6 +605,16 @@ class AppDb extends _$AppDb {
         .watch();
   }
 
+  Stream<List<Category>> getAllCategoryByMonthAndYearSearch(String keyword) {
+    DateTime now = DateTime.now();
+    return (select(categories)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year) &
+              tbl.name.like(keyword)))
+        .watch();
+  }
+
   Future<TransactionInsert> streamCategoryById(int id, bool edit,
       {int temp = 0}) async {
     Category category = await getCategory(id);
@@ -621,8 +654,14 @@ class AppDb extends _$AppDb {
 
   Future<List<TransactionWithCategory>> getTransactionInRange(
       DateTime start, DateTime end) async {
+    DateTime adjustedStart =
+        DateTime(start.year, start.month, start.day, 0, 0, 0);
+
+    DateTime adjustedEnd = DateTime(end.year, end.month, end.day, 23, 59, 59);
+
     final query = await (select(transactions)
-          ..where((tbl) => tbl.transaction_date.isBetweenValues(start, end)))
+          ..where((tbl) =>
+              tbl.transaction_date.isBetweenValues(adjustedStart, adjustedEnd)))
         .join([
       innerJoin(categories, categories.id.equalsExp(transactions.category_id))
     ]).get();

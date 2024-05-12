@@ -40,26 +40,21 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
   bool isVisible = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _focusNode.addListener(() {
-      if (searchController.text != '') {
-        setState(() {
-          isVisible = false;
-        });
-      } else {
-        setState(() {
-          isVisible = !_focusNode.hasFocus;
-        });
-      }
+    _focusNode.addListener(_updateVisibility);
+    searchController.addListener(_updateVisibility);
+  }
+
+  void _updateVisibility() {
+    setState(() {
+      isVisible = searchController.text.isEmpty || !_focusNode.hasFocus;
     });
-    // db = AppDb();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    // db.close();
+    searchController.removeListener(_updateVisibility);
+    _focusNode.removeListener(_updateVisibility);
     searchController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -102,7 +97,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               child: InputSearch(
                 controller: searchController,
                 focusNode: _focusNode,
-                showFilter: true,
+                showFilter: false,
               ),
             ),
             const SizedBox(
@@ -302,7 +297,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
       // showSuccessAlert(context, "Berhasil Dihapus");
     } else {
       // showFailedAlert(context, "Gagal Terhapus");
-       showModalInformation(
+      showModalInformation(
           context, 'assets/images/alertNo.svg', "Gagal Terhapus", true);
     }
   }

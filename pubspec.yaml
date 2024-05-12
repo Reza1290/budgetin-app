@@ -24,7 +24,7 @@ dependencies:
   pdf: ^3.10.8
   syncfusion_flutter_xlsio: ^25.1.42
   open_file: ^3.2.1
-  excel: ^4.0.3
+  # excel: ^4.0.3
 
 dev_dependencies:
   flutter_test:

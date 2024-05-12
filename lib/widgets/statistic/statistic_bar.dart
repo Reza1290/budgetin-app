@@ -22,32 +22,40 @@ class _StatisticBarState extends State<StatisticBar> {
   bool isThereNoTransaction = true;
 
   List<double> dataBulanan = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  Future<List<double>> getDataBulanan() async {
-    List<double> data = await db!.getTransactionsByMonth();
-    setState(() {
-      if (data.any((element) => element > 0)) {
-        dataBulanan = data;
-        isThereNoTransaction = false;
-      } else {
-        isThereNoTransaction = true;
-      }
-      if (!widget.isHomepage! && widget.bulan != null) {
-        touchedIndex = widget.bulan!;
-      }
-    });
-    return data;
-  }
+  late Future<List<double>> _dataBulananFuture;
 
   @override
   void initState() {
     super.initState();
-    // TODO: implement initState
-    getDataBulanan();
+    _dataBulananFuture = getDataBulanan();
+  }
+
+  Future<List<double>> getDataBulanan() async {
+    try {
+      List<double> data = await db!.getTransactionsByMonth();
+      if (!mounted) return []; // Check if the widget is still mounted
+      setState(() {
+        if (data.any((element) => element > 0)) {
+          dataBulanan = data;
+          isThereNoTransaction = false;
+        } else {
+          isThereNoTransaction = true;
+        }
+        if (!widget.isHomepage! && widget.bulan != null) {
+          touchedIndex = widget.bulan!;
+        }
+      });
+      return data;
+    } catch (error) {
+      // print('Error fetching data: $error');
+      return [];
+    }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    // Cancel the asynchronous operation if it's still running
+    _dataBulananFuture.then((_) {}).catchError((_) {});
     super.dispose();
   }
 
@@ -79,7 +87,7 @@ class _StatisticBarState extends State<StatisticBar> {
                   : null,
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 20, right: 20),
+              padding: const EdgeInsets.only(top: 20, bottom: 20),
               child: !isThereNoTransaction
                   ? AspectRatio(
                       aspectRatio: 2,
@@ -104,7 +112,7 @@ class _StatisticBarState extends State<StatisticBar> {
                   : Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Center(child: Text('Buat Dulu Transaksi')),
+                        child: Center(child: Text('Belum Ada Transaksi')),
                       ),
                     ),
             ),

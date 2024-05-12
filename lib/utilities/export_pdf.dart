@@ -49,7 +49,7 @@ class PdfService {
   }
 
   Future<void> savedPdfFile(String filename, Uint8List bytelist) async {
-    print("ini hanya test");
+    // print("ini hanya test");
     final output = await getTemporaryDirectory();
     var filePath = "${output.path}/$filename.pdf";
     final file = File(filePath);

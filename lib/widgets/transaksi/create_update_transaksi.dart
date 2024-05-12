@@ -88,6 +88,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
+        scrolledUnderElevation: 0,
         leading: Container(
           child: IconButton(
             onPressed: () => Navigator.pop(context),
@@ -269,7 +270,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                             showModalInformation(
                                 context,
                                 'assets/images/alertYes.svg',
-                                "Berhasil Diperbarui",
+                                "Berhasil Tersimpan",
                                 true);
                             // showSuccessAlert(context, "Berhasil!");
                           } else {

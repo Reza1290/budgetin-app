@@ -2,6 +2,7 @@ import 'package:budgetin/controller/category_controller.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/sheet_category.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:flutter/material.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
@@ -44,9 +45,15 @@ class _DetailCategoryActionsState extends State<DetailCategoryActions> {
           ),
           PopupMenuItem<SampleItem>(
             onTap: () async {
-              bool res = await CategoryController.delete(widget.category.id);
-              Navigator.of(context).pop();
-              print(res);
+              showModalInformation(
+                  context,
+                  'assets/images/modal_gagal.svg',
+                  "Hapus Kategori Beserta Transaksi?",
+                  false, onPressed: () async {
+                bool res = await CategoryController.delete(widget.category.id);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Tutup dialog
+              });
             },
             value: SampleItem.itemTwo,
             child: Row(

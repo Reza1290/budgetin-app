@@ -5,6 +5,7 @@ import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/modal/budgetin_sheet.dart';
 import 'package:budgetin/widgets/modal/modal_icon_kategori.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -121,20 +122,40 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 30),
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (val == 'assets/icons/Plus.svg') {
                               setState(() {
                                 isValid = false;
                               });
                             }
-
+                            bool res = false;
                             if (_formKey.currentState!.validate() && isValid) {
                               if (category != null) {
-                                CategoryController.insert(_nameController.text,
-                                    val, _alokasiController.text, category.id);
+                                res = await CategoryController.insert(
+                                    _nameController.text,
+                                    val,
+                                    _alokasiController.text,
+                                    category.id);
                               } else {
-                                CategoryController.insert(_nameController.text,
-                                    val, _alokasiController.text);
+                                res = await CategoryController.insert(
+                                    _nameController.text,
+                                    val,
+                                    _alokasiController.text);
+                              }
+                              // print('res' + res.toString());
+                              if (res) {
+                                Navigator.pop(context);
+                                showModalInformation(
+                                    context,
+                                    'assets/images/alertYes.svg',
+                                    'Kategori Berhasil Ditambahkan.',
+                                    true);
+                              } else {
+                                showModalInformation(
+                                    context,
+                                    'assets/images/alertNo.svg',
+                                    'Alokasi Melebihi Saldo Kamu.',
+                                    true);
                               }
                             }
                           },

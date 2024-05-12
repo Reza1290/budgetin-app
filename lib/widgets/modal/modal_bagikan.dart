@@ -1,5 +1,6 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/utilities/export_excel.dart';
 import 'package:budgetin/utilities/export_pdf.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
@@ -62,16 +63,16 @@ class _ShareDialogState extends State<ShareDialog> {
                   _selectedIndex == 0,
                   (isSelected) => _handleSelect(0),
                 ),
-                _box(
-                  'assets/images/word.svg',
-                  _selectedIndex == 1,
-                  (isSelected) => _handleSelect(1),
-                ),
-                _box(
-                  'assets/images/excel.svg',
-                  _selectedIndex == 2,
-                  (isSelected) => _handleSelect(2),
-                ),
+                // _box(
+                //   'assets/images/word.svg',
+                //   _selectedIndex == 1,
+                //   (isSelected) => _handleSelect(0),
+                // ),
+                // _box(
+                //   'assets/images/excel.svg',
+                //   _selectedIndex == 2,
+                //   (isSelected) => _handleSelect(2),
+                // ),
               ],
             ),
             Padding(
@@ -95,12 +96,42 @@ class _ShareDialogState extends State<ShareDialog> {
               child: TextButton(
                 onPressed: () async {
                   PdfService pdf = PdfService();
+                  // ExcelService excel = ExcelService();
                   List<TransactionWithCategory> ts = await db!
                       .getTransactionInRange(
                           selectedTanggal[0], selectedTanggal[1]);
 
-                  final bytes = await pdf.generatePdf(ts);
-                  pdf.savedPdfFile('Test.pdf', bytes);
+                  DateTime adjustedStart = DateTime(
+                      selectedTanggal[0].year,
+                      selectedTanggal[0].month,
+                      selectedTanggal[0].day,
+                      0,
+                      0,
+                      0);
+
+                  DateTime adjustedEnd = DateTime(
+                      selectedTanggal[1].year,
+                      selectedTanggal[1].month,
+                      selectedTanggal[1].day,
+                      23,
+                      59,
+                      59);
+                  if (_selectedIndex == 0) {
+                    final bytes = await pdf.generatePdf(ts);
+                    pdf.savedPdfFile(
+                        'BudgetIn  $adjustedStart - $adjustedEnd Laporan.pdf',
+                        bytes);
+                  } else if (_selectedIndex == 1) {
+                    // final bytes = await pdf.generatePdf(ts);
+                    // pdf.savedPdfFile(
+                    //     'BudgetIn  $adjustedStart - $adjustedEnd Laporan.docx',
+                    //     bytes);
+                  } else if (_selectedIndex == 2) {
+                    // final bytes = await excel.generateExcel(ts);
+                    // excel.savedExcelFile(
+                    //     'BudgetIn  $adjustedStart - $adjustedEnd Laporan.xlsx',
+                    //     bytes);
+                  }
                 },
                 style: ButtonStyle(
                   backgroundColor:

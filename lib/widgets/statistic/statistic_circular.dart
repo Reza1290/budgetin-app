@@ -15,7 +15,7 @@ class StatisticCircular extends StatefulWidget {
 class _StatisticCircularState extends State<StatisticCircular> {
   @override
   Widget build(BuildContext context) {
-    print(widget.bulan);
+    // print(widget.bulan);
 
     return Center(
       child: StreamBuilder<List<StatisticData>>(
@@ -29,7 +29,7 @@ class _StatisticCircularState extends State<StatisticCircular> {
                 snapshot.data!.isNotEmpty &&
                 snapshot.data != null) {
               double total = snapshot.data![widget.bulan].persen;
-              print(total);
+              // print(total);
               List<StatisticData>? dataPerCategory =
                   List.from(snapshot.data ?? []);
               List<StatisticData>? dataTotal = List.from(snapshot.data ?? []);

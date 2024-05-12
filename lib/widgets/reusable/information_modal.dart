@@ -1,4 +1,4 @@
-
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,6 +20,7 @@ class InformationModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BudgetinModal(
+      padding: EdgeInsets.all(24),
       title: Text(""),
       content: SizedBox(
         width: double.infinity,
@@ -58,42 +59,54 @@ class InformationModal extends StatelessWidget {
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width/3.2,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF2F2F2),
+                Expanded(
+                  child: InkWell(
                     borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
+                    onTap: () {
                       Navigator.of(context).pop(); // Tutup dialog
                     },
-                    child: const Text(
-                      'Batal',
-                      style: TextStyle(
-                        color: Color(0xFFA3A3A3),
+                    child: Container(
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF2F2F2),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: Text('Batal',
+                            style: TextStyle(
+                                color: BudgetinColors.hitamPutih50,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),
                 ),
-              
-                Container(
-                  width: MediaQuery.of(context).size.width/3.2,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF1D77FF),
+                SizedBox(
+                  width: 12,
+                ),
+                Expanded(
+                  child: InkWell(
                     borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: TextButton(
-                    onPressed: onPressed as void Function()? ?? () {},
-                    child: const Text(
-                      'Ya',
-                      style: TextStyle(color: Colors.white),
+                    onTap: onPressed as void Function()? ?? () {},
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 3.2,
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: BudgetinColors.merah50,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Ya',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                
               ],
             ),
     );
@@ -109,12 +122,20 @@ Future<void> showModalInformation(
 }) async {
   return showDialog<void>(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
-      return InformationModal(
-        message: message,
-        isFailed: isFailed,
-        content: content,
-        onPressed: onPressed,
+      if (isFailed)
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+        });
+      return PopScope(
+        canPop: false,
+        child: InformationModal(
+          message: message,
+          isFailed: isFailed,
+          content: content,
+          onPressed: onPressed,
+        ),
       );
     },
   );
