@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputMoney extends StatelessWidget {
-  const InputMoney(
-      {super.key,
-      this.controller,
-      this.hintText,
-      required this.fontSize,
-      this.formKey,
-      this.focusNode});
+  const InputMoney({
+    super.key,
+    this.controller,
+    this.hintText,
+    required this.fontSize,
+    this.formKey,
+    this.focusNode,
+  });
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final double fontSize;

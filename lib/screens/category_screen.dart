@@ -62,7 +62,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: InputSearch(
                       controller: _searchController,
-                      showFilter: true,
+                      showFilter: false,
                     ),
                   ),
                   Padding(

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:budgetin/models/category.dart';
 import 'package:budgetin/models/saldo.dart';
+import 'package:budgetin/models/saldo_data.dart';
 import 'package:budgetin/models/statistic_category.dart';
 import 'package:budgetin/models/statistic_data.dart';
 import 'package:budgetin/models/transaction.dart';
@@ -575,6 +576,13 @@ class AppDb extends _$AppDb {
     return TransactionInsert(
         category: category,
         total: edit ? (category.total - maks + temp) : category.total - maks);
+  }
+
+  Future<SaldoData> getDataSaldo() async {
+    Saldo? saldo = await getFirstSaldo();
+    int alokasi = await sumUsedSaldo();
+
+    return SaldoData(saldo: saldo!.saldo, teralokasi: alokasi);
   }
 }
 

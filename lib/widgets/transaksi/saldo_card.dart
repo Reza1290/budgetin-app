@@ -8,6 +8,7 @@ import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/modal/modal_bagikan.dart';
+import 'package:budgetin/widgets/modal/modal_saldo.dart';
 import 'package:budgetin/widgets/modal/show_modal.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
@@ -91,42 +92,7 @@ class _SaldoCardState extends State<SaldoCard> {
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed: () => showModal(
-                      context,
-                      "Ubah Saldo",
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 12.0),
-                                    child: Text(
-                                      HumanReadableDateFormatter
-                                          .dateNowFormatter(DateTime.now()),
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                  ),
-                                  InputMoney(
-                                      controller: _moneyController,
-                                      fontSize: 12)
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ), () {
-                    simpanSaldo(
-                        int.parse(_moneyController.text.replaceAll('.', '')),
-                        context);
-                  }),
+                  onPressed: () => showModalSaldo(context),
                   style: TextButton.styleFrom(
                     backgroundColor: BudgetinColors.hitamPutih10,
                     shape: RoundedRectangleBorder(

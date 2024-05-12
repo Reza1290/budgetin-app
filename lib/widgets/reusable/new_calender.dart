@@ -12,8 +12,8 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 //   return valueText;
 // }
 
-Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,String label,
-    Function(DateTime) onDateSelected) {
+Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,
+    String label, Function(DateTime) onDateSelected) {
   return SizedBox(
     height: 40,
     child: GestureDetector(
@@ -27,7 +27,7 @@ Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,Str
           dialogBackgroundColor: Colors.white,
         );
         // onDateSelected(selectedDate);
-        onDateSelected(values![0]!);
+        onDateSelected(values?[0] ?? DateTime.now());
       },
       child: AbsorbPointer(
         child: TextFormField(

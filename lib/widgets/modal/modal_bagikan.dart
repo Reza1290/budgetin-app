@@ -1,7 +1,7 @@
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
-import 'package:budgetin/widgets/reusable/newCalender.dart';
-import 'package:budgetin/widgets/reusable/rangeDate.dart';
+import 'package:budgetin/widgets/reusable/new_calender.dart';
+import 'package:budgetin/widgets/reusable/range_date.dart';
 import 'package:budgetin/widgets/reusable/title_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -84,32 +84,30 @@ class _ShareDialogState extends State<ShareDialog> {
             margin: EdgeInsets.symmetric(vertical: 20),
             child: SizedBox(
               width: double.infinity,
-              child: Expanded(
-                child: TextButton(
-                  onPressed: () {
-                    // Apply filter logic here
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(BudgetinColors.biru50),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                        side: BorderSide(color: Colors.transparent),
-                      ),
-                    ),
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      EdgeInsets.all(
-                          2), // Atur padding di sini sesuai kebutuhan Anda
+              child: TextButton(
+                onPressed: () {
+                  // Apply filter logic here
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(BudgetinColors.biru50),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      side: BorderSide(color: Colors.transparent),
                     ),
                   ),
-                  child: Text(
-                    'Unduh',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: BudgetinColors.hitamPutih10,
-                    ),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.all(
+                        2), // Atur padding di sini sesuai kebutuhan Anda
+                  ),
+                ),
+                child: Text(
+                  'Unduh',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: BudgetinColors.hitamPutih10,
                   ),
                 ),
               ),

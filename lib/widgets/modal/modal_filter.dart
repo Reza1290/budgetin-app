@@ -1,7 +1,7 @@
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
-import 'package:budgetin/widgets/reusable/newCalender.dart';
-import 'package:budgetin/widgets/reusable/rangeDate.dart';
+import 'package:budgetin/widgets/reusable/new_calender.dart';
+import 'package:budgetin/widgets/reusable/range_date.dart';
 import 'package:budgetin/widgets/reusable/title_modal.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
