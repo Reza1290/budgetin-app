@@ -11,6 +11,7 @@ import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/reusable/budget_status_card.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -265,12 +266,23 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                               ),
                               (route) => false,
                             );
-                            showSuccessAlert(context, "Berhasil!");
-                          } else {
-                            showFailedAlert(
+                            showModalInformation(
                                 context,
+                                'assets/images/alertYes.svg',
+                                "Berhasil Diperbarui",
+                                true);
+                            // showSuccessAlert(context, "Berhasil!");
+                          } else {
+                            showModalInformation(
+                                context,
+                                'assets/images/alertNo.svg',
                                 'Maksimum Pengeluaran Mencapai Batas! Sisa ' +
-                                    TextCurrencyFormat.format(sisa.toString()));
+                                    TextCurrencyFormat.format(sisa.toString()),
+                                true);
+                            // showFailedAlert(
+                            //     context,
+                            //     'Maksimum Pengeluaran Mencapai Batas! Sisa ' +
+                            //         TextCurrencyFormat.format(sisa.toString()));
                           }
                         }
                       },

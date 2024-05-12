@@ -3,6 +3,7 @@ import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/saldo_card.dart';
@@ -218,10 +219,25 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                       ),
                                       SlidableAction(
                                         onPressed: (value) {
-                                          _confirmDelete(
+                                          showModalInformation(
                                               context,
-                                              transaction.transaction
-                                                  .id); // Tampilkan dialog konfirmasi sebelum menghapus
+                                              'assets/images/modal_gagal.svg',
+                                              "Hapus Transaksi",
+                                              false, onPressed: () {
+                                            db!.deleteTransaction(
+                                                transaction.transaction.id);
+                                            Navigator.of(context).pop();
+
+                                            _onDismissed(
+                                                context,
+                                                transaction.transaction.id,
+                                                true);
+                                          });
+
+                                          // _confirmDelete(
+                                          //     context,
+                                          //     transaction.transaction
+                                          //         .id); // Tampilkan dialog konfirmasi sebelum menghapus
                                         },
                                         autoClose: true,
                                         backgroundColor: merah50,
@@ -273,9 +289,13 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
 
   void _onDismissed(BuildContext context, int index, bool delete) {
     if (delete) {
-      showSuccessAlert(context, "Berhasil Dihapus");
+      showModalInformation(
+          context, 'assets/images/alertYes.svg', "Berhasil Dihapus", true);
+      // showSuccessAlert(context, "Berhasil Dihapus");
     } else {
-      showFailedAlert(context, "Gagal Terhapus");
+      // showFailedAlert(context, "Gagal Terhapus");
+       showModalInformation(
+          context, 'assets/images/alertNo.svg', "Gagal Terhapus", true);
     }
   }
 
