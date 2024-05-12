@@ -128,11 +128,15 @@ class _ShareDialogState extends State<ShareDialog> {
             Container(
               width: 55,
               height: 55,
-              color: isSelected ? Colors.blue : Color(0xFFF2F2F2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7.86),
+                color: isSelected ? BudgetinColors.biru50 : Color(0xFFF2F2F2),
+              ),
             ),
             // Layer kedua: Icon
             SvgPicture.asset(
               image,
+              // ignore: deprecated_member_use
               color:
                   isSelected ? Color(0xFFF2F2F2) : BudgetinColors.hitamPutih50,
             ),
@@ -141,30 +145,6 @@ class _ShareDialogState extends State<ShareDialog> {
       ),
     );
   }
-
-  // Widget _box(final String image,) {
-  //   return InkWell(
-  //      onTap: () {
-  //       setState(() {
-  //         _isPressed = !_isPressed;
-  //       });
-  //     },
-
-  //     child: Center(
-  //         child: Stack(
-  //       alignment: Alignment.center,
-  //       children: [
-  //         Container(
-  //           width: 55,
-  //           height: 55,
-  //           color: _isPressed ? Colors.blue : Color(0xFFF2F2F2),
-  //         ),
-  //         // Layer kedua: Icon
-  //         SvgPicture.asset(image, color: _isPressed ? Color(0xFFF2F2F2) : BudgetinColors.hitamPutih50,),
-  //       ],
-  //     )),
-  //   );
-  // }
 }
 
 Future<void> showModalBagikan(BuildContext context) async {
