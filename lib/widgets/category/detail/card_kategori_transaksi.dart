@@ -1,6 +1,7 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CardKategoriTransaksi extends StatefulWidget {
   const CardKategoriTransaksi(
@@ -14,10 +15,15 @@ class CardKategoriTransaksi extends StatefulWidget {
 
 class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
   late bool isMore;
-  @override
+  late Widget svg;
   void initState() {
     // TODO: implement initState
     super.initState();
+    svg = SvgPicture.asset(
+      widget.data.icon == '' ? 'assets/icons/Lainnya.svg' : widget.data.icon,
+      width: 55.0,
+      height: 55.0,
+    );
     isMore = false;
   }
 
@@ -26,8 +32,8 @@ class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
     return Stack(
       children: <Widget>[
         Container(
-          width: 342.0,
-          height: isMore ? null : 167.0,
+          width: MediaQuery.of(context).size.width,
+          height: 167.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(11.0),
             gradient: LinearGradient(
@@ -52,49 +58,24 @@ class _CardKategoriTransaksiState extends State<CardKategoriTransaksi> {
                   color: Color(0xFFF2F2F2),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(22.0, 22.0, 24.0, 24.0),
-                  child: Image.asset(
-                    widget.data.icon == ''
-                        ? 'assets/icons/lainnya.png'
-                        : widget.data.icon,
-                    width: 55.0,
-                    height: 53.0,
-                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: svg,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0)),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 13),
-                      child: Text(
-                        widget.data.name,
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            overflow: isMore
-                                ? TextOverflow.clip
-                                : TextOverflow.ellipsis),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+              const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0)),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13, horizontal: 5),
+                  child: Text(
+                    widget.data.name,
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isMore = !isMore;
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.remove_red_eye_outlined,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),

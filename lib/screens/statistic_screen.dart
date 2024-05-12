@@ -1,5 +1,6 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/providers/date_formatter.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/statistic/statistic_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,9 @@ class StatisticScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
+        leading: Container(),
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: const TextStyle(

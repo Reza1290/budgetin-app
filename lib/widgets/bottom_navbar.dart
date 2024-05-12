@@ -1,4 +1,4 @@
-import 'package:budgetin/screens/faq_page.dart';
+import 'package:budgetin/screens/category_screen.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
 import 'package:budgetin/screens/statistic_screen.dart';
@@ -20,18 +20,19 @@ class BottomNavbar extends StatefulWidget {
 
 class _BottomNavbarState extends State<BottomNavbar>
     with SingleTickerProviderStateMixin {
+  var currentIndex = 0;
   static List<Widget> page = <Widget>[
     HomePage(),
     RiwayatTransaksiPage(),
-    Center(child: Image.asset('assets/images/maskot.png')),
+    Container(),
+    // FaqPage(),
+    CategoryScreen(),
     StatisticScreen(),
-    FaqPage(),
   ];
 
   // static const List<Widget> nav = <Widget>[
   //   Tab(),
   // ];
-  var currentIndex = 0;
   late TabController _tabController;
 
   @override
@@ -59,9 +60,7 @@ class _BottomNavbarState extends State<BottomNavbar>
       body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           controller: _tabController,
-          children: page.map((Widget page) {
-            return page;
-          }).toList()),
+          children: page),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
         height: 60,
@@ -222,13 +221,13 @@ class _BottomNavbarState extends State<BottomNavbar>
     );
   }
 
-  List<String> menu = ["Beranda", "Transaksi", "", "Statistik", "FAQ"];
+  List<String> menu = ["Beranda", "Transaksi", "", "Kategori", "Statistik"];
 
   List<IconData> listOfIcons = [
     Icons.home_rounded,
     Icons.receipt_rounded,
     Icons.document_scanner,
+    Icons.category_rounded,
     Icons.assessment_rounded,
-    Icons.live_help_rounded,
   ];
 }

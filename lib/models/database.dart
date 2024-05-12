@@ -32,8 +32,8 @@ class AppDb extends _$AppDb {
       },
       beforeOpen: (details) async {
         if (details.wasCreated) {
-          await into(saldos)
-              .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
+          // await into(saldos)
+          //     .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
         }
       },
       onUpgrade: (Migrator m, int from, int to) async {
@@ -45,9 +45,16 @@ class AppDb extends _$AppDb {
         if (from < 3) {
           await m.createTable($SaldosTable(attachedDatabase));
         }
+        if (from < 4) {
+          await m.addColumn(saldos, saldos.createdAt);
+        }
       },
     );
   }
+
+  // Future<bool> insertSaldo(){
+
+  // }
 
   Future<int> insertCategory(CategoriesCompanion entry) async {
     return await into(categories).insert(entry);
@@ -72,12 +79,17 @@ class AppDb extends _$AppDb {
     return await update(categories).replace(entry);
   }
 
-  Future<void> deleteCategory(int id) async {
-    await (delete(categories)..where((tbl) => tbl.id.equals(id)))
-        .go()
-        .then((value) {
-      (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
-    });
+  Future<bool> deleteCategory(int id) async {
+    try {
+      await (delete(categories)..where((tbl) => tbl.id.equals(id)))
+          .go()
+          .then((value) {
+        (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
 
@@ -201,11 +213,14 @@ class AppDb extends _$AppDb {
   }
 
   Stream<int> watchUsedSaldo() async* {
-    int total = 0;
-    final rows = await select(categories).get();
-    total =
-        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
-    yield total;
+    int sal = await getFirstSaldo().then((value) => value!.saldo);
+    final datas = await allTransactions();
+    int totalExpense = 0;
+
+    for (final data in datas) {
+      totalExpense += data.amount;
+    }
+    yield sal - totalExpense;
   }
 
   Stream<int> watchRemainSaldo() async* {
@@ -213,7 +228,7 @@ class AppDb extends _$AppDb {
     final rows = await select(categories).get();
     total =
         rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
-    int sal = await getFirstSaldo().then((value) => value.saldo);
+    int sal = await getFirstSaldo().then((value) => value!.saldo);
     yield sal - total;
   }
 
@@ -230,14 +245,28 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future<Saldo> getFirstSaldo() async {
+  Future<bool> isSaldoNotCretedYet() async {
     final query = select(saldos)..limit(1);
     final result = await query.get();
     if (result.isNotEmpty) {
-      return result.first;
+      return false;
     } else {
-      return Saldo(id: 1, saldo: 0);
+      return true;
     }
+  }
+
+  Future<Saldo?> getFirstSaldo() async {
+    final now = DateTime.now();
+    final query = select(saldos)
+      ..where((tbl) =>
+          tbl.createdAt.year.equals(now.year) &
+          tbl.createdAt.month.equals(now.month))
+      ..limit(1);
+    final result = await query.get();
+
+    return result.isNotEmpty
+        ? result.first
+        : Saldo(id: 1, saldo: 0, createdAt: DateTime.now());
   }
 
   Stream<Saldo> watchFirstSaldo() {
@@ -246,12 +275,32 @@ class AppDb extends _$AppDb {
             // (t) => OrderingTerm(expression: t.priority, mode: OrderingMode.desc)
           ])
           ..limit(1))
-        .watchSingle(); // Use watchSingle to get a stream of a single item
+        .watchSingle();
   }
 
   Future<int> createOrUpdateSaldo(int saldo) async {
-    return into(saldos).insertOnConflictUpdate(
-        SaldosCompanion.insert(id: Value(1), saldo: saldo));
+    final now = DateTime.now();
+    final existingSaldo = await (select(saldos)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year)))
+        .getSingleOrNull();
+
+    if (existingSaldo != null) {
+      return (update(saldos)..where((tbl) => tbl.id.equals(existingSaldo.id)))
+          .write(SaldosCompanion(saldo: Value(saldo)));
+    } else {
+      return into(saldos).insert(SaldosCompanion.insert(saldo: saldo));
+    }
+  }
+
+  Future<bool> isSaldoLessThanAllocation(int saldo) async {
+    int allocation = await sumUsedSaldo();
+    if (saldo < allocation) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   Stream<int> totalExpense() async* {
@@ -267,7 +316,7 @@ class AppDb extends _$AppDb {
   Stream<Map<DateTime, Map<dynamic, dynamic>>>
       sumTransactionsByMonthAndCategory() async* {
     final transactions = await select(this.transactions).get();
-    final saldo = await getFirstSaldo().then((value) => value.saldo);
+    final saldo = await getFirstSaldo().then((value) => value!.saldo);
     final Map<DateTime, Map<dynamic, dynamic>> sums = {};
     double sum = 0;
 

@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class InputSearch extends StatefulWidget {
-  const InputSearch({super.key, required this.controller, this.focusNode});
+  final bool showFilter;
+  const InputSearch(
+      {super.key, this.controller, this.focusNode, required this.showFilter});
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final FocusNode? focusNode;
 
   @override
@@ -87,22 +89,24 @@ class _InputSearchState extends State<InputSearch> {
             ),
           ),
         ),
-        const SizedBox(
-          width: 16,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: PrimaryColor.shade400,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.tune_rounded),
-            color: Colors.white,
-            onPressed: () {
-              showModalFilter(context);
-            },
-          ),
-        )
+        widget.showFilter
+            ? Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: PrimaryColor.shade400,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.tune_rounded),
+                    color: Colors.white,
+                    onPressed: () {
+                      showModalFilter(context);
+                    },
+                  ),
+                ),
+              )
+            : Container()
       ],
     );
   }

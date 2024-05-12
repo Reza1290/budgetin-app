@@ -3,16 +3,19 @@ import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RiwayatTransaksiCard extends StatelessWidget {
   final String title;
   final String tanggal;
   final String money;
   final String icon;
+  final String category;
 
   const RiwayatTransaksiCard(
       {super.key,
       required this.title,
+      required this.category,
       required this.tanggal,
       required this.money,
       required this.icon});
@@ -31,16 +34,16 @@ class RiwayatTransaksiCard extends StatelessWidget {
                   height: 55.0,
                   width: 55.0,
                   decoration: BoxDecoration(
-                    color: PrimaryColor.shade100,
+                    color: BudgetinColors.biru10,
                     borderRadius: const BorderRadius.all(Radius.circular(9)),
                     boxShadow: [
                       BoxShadow(
-                        color: PrimaryColor.shade200,
+                        color: BudgetinColors.biru10,
                         spreadRadius: 1,
                         offset: const Offset(0, 1), // Bayangan ke bawah
                       ),
                       BoxShadow(
-                        color: PrimaryColor.shade100,
+                        color: BudgetinColors.biru10,
                         offset: const Offset(0, -1), // Bayangan ke atas
                       ),
                     ],
@@ -48,8 +51,8 @@ class RiwayatTransaksiCard extends StatelessWidget {
                 ),
                 Positioned.fill(
                   child: Center(
-                    child: Image.asset(
-                      icon == '' ? 'assets/icons/lainnya.png' : icon,
+                    child: SvgPicture.asset(
+                      icon == '' ? 'assets/icons/Lainnya.svg' : icon,
                       width: 29.0,
                       height: 29.0,
                     ),
@@ -71,16 +74,16 @@ class RiwayatTransaksiCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: PrimaryColor.shade200,
+                      color: BudgetinColors.biru20,
                       spreadRadius: 1,
                       offset: const Offset(0, 1),
                     ),
                     BoxShadow(
-                      color: PrimaryColor.shade100,
+                      color: BudgetinColors.biru20,
                       offset: const Offset(0, -1),
                     ),
                   ],
-                  color: Colors.white,
+                  color: BudgetinColors.hitamPutih10,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 9.0, 16.0, 9.0),
@@ -98,14 +101,16 @@ class RiwayatTransaksiCard extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.ellipsis),
+                                  overflow: TextOverflow.ellipsis,
+                                  color: textPrimary),
                             ),
                             Text(
-                              HumanReadableDateFormatter.format(
-                                  DateTime.parse(tanggal)),
-                              style: const TextStyle(
+                              "$category - " +
+                                  HumanReadableDateFormatter.formatToDate(
+                                      DateTime.parse(tanggal)),
+                              style: TextStyle(
                                   fontSize: 8.0,
-                                  color: Colors.grey,
+                                  color: BudgetinColors.hitamPutih50,
                                   overflow: TextOverflow.ellipsis),
                             ),
                           ],
@@ -116,8 +121,8 @@ class RiwayatTransaksiCard extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 1 / 4,
                         child: Text(
                           '- ' + TextCurrencyFormat.format(money),
-                          style: const TextStyle(
-                              color: Colors.red,
+                          style: TextStyle(
+                              color: BudgetinColors.merah40,
                               fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis),
                         ),

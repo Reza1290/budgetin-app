@@ -56,7 +56,7 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
 
                                 setState(() {
                                   _iconKategori =
-                                      result ?? "assets/icons/lainnya.png";
+                                      result ?? "assets/icons/Lainnya.svg";
                                   _isButtonEnabled = true;
                                 });
                               },
@@ -121,7 +121,7 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                                 ? () async {
                                     if (formKey.currentState!.validate() &&
                                         await _db.getFirstSaldo().then((value) {
-                                              return value.saldo;
+                                              return value!.saldo;
                                             }) >=
                                             await _db.sumUsedSaldo() +
                                                 int.parse(_moneyController.text
@@ -145,7 +145,7 @@ Future<void> showModalTambahKategori(BuildContext context, AppDb _db) {
                                       int saldo = await _db
                                           .getFirstSaldo()
                                           .then((value) {
-                                        return value.saldo;
+                                        return value!.saldo;
                                       });
                                       int uangInput = int.parse(_moneyController
                                           .text

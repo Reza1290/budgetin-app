@@ -31,7 +31,7 @@ class $CategoriesTable extends Categories
       'icon', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      defaultValue: Constant('assets/icons/lainnya.png'));
+      defaultValue: Constant('assets/icons/Lainnya.svg'));
   static const VerificationMeta _totalMeta = const VerificationMeta('total');
   @override
   late final GeneratedColumn<int> total = GeneratedColumn<int>(
@@ -254,8 +254,6 @@ class $TransactionsTable extends Transactions
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
-  var date;
   $TransactionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
@@ -604,8 +602,16 @@ class $SaldosTable extends Saldos with TableInfo<$SaldosTable, Saldo> {
   late final GeneratedColumn<int> saldo = GeneratedColumn<int>(
       'saldo', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  List<GeneratedColumn> get $columns => [id, saldo];
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [id, saldo, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -625,6 +631,10 @@ class $SaldosTable extends Saldos with TableInfo<$SaldosTable, Saldo> {
     } else if (isInserting) {
       context.missing(_saldoMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
     return context;
   }
 
@@ -638,6 +648,8 @@ class $SaldosTable extends Saldos with TableInfo<$SaldosTable, Saldo> {
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       saldo: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}saldo'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
   }
 
@@ -650,12 +662,14 @@ class $SaldosTable extends Saldos with TableInfo<$SaldosTable, Saldo> {
 class Saldo extends DataClass implements Insertable<Saldo> {
   final int id;
   final int saldo;
-  const Saldo({required this.id, required this.saldo});
+  final DateTime createdAt;
+  const Saldo({required this.id, required this.saldo, required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['saldo'] = Variable<int>(saldo);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -663,6 +677,7 @@ class Saldo extends DataClass implements Insertable<Saldo> {
     return SaldosCompanion(
       id: Value(id),
       saldo: Value(saldo),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -672,6 +687,7 @@ class Saldo extends DataClass implements Insertable<Saldo> {
     return Saldo(
       id: serializer.fromJson<int>(json['id']),
       saldo: serializer.fromJson<int>(json['saldo']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -680,55 +696,68 @@ class Saldo extends DataClass implements Insertable<Saldo> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'saldo': serializer.toJson<int>(saldo),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  Saldo copyWith({int? id, int? saldo}) => Saldo(
+  Saldo copyWith({int? id, int? saldo, DateTime? createdAt}) => Saldo(
         id: id ?? this.id,
         saldo: saldo ?? this.saldo,
+        createdAt: createdAt ?? this.createdAt,
       );
   @override
   String toString() {
     return (StringBuffer('Saldo(')
           ..write('id: $id, ')
-          ..write('saldo: $saldo')
+          ..write('saldo: $saldo, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, saldo);
+  int get hashCode => Object.hash(id, saldo, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Saldo && other.id == this.id && other.saldo == this.saldo);
+      (other is Saldo &&
+          other.id == this.id &&
+          other.saldo == this.saldo &&
+          other.createdAt == this.createdAt);
 }
 
 class SaldosCompanion extends UpdateCompanion<Saldo> {
   final Value<int> id;
   final Value<int> saldo;
+  final Value<DateTime> createdAt;
   const SaldosCompanion({
     this.id = const Value.absent(),
     this.saldo = const Value.absent(),
+    this.createdAt = const Value.absent(),
   });
   SaldosCompanion.insert({
     this.id = const Value.absent(),
     required int saldo,
+    this.createdAt = const Value.absent(),
   }) : saldo = Value(saldo);
   static Insertable<Saldo> custom({
     Expression<int>? id,
     Expression<int>? saldo,
+    Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (saldo != null) 'saldo': saldo,
+      if (createdAt != null) 'created_at': createdAt,
     });
   }
 
-  SaldosCompanion copyWith({Value<int>? id, Value<int>? saldo}) {
+  SaldosCompanion copyWith(
+      {Value<int>? id, Value<int>? saldo, Value<DateTime>? createdAt}) {
     return SaldosCompanion(
       id: id ?? this.id,
       saldo: saldo ?? this.saldo,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -741,6 +770,9 @@ class SaldosCompanion extends UpdateCompanion<Saldo> {
     if (saldo.present) {
       map['saldo'] = Variable<int>(saldo.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     return map;
   }
 
@@ -748,7 +780,8 @@ class SaldosCompanion extends UpdateCompanion<Saldo> {
   String toString() {
     return (StringBuffer('SaldosCompanion(')
           ..write('id: $id, ')
-          ..write('saldo: $saldo')
+          ..write('saldo: $saldo, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }

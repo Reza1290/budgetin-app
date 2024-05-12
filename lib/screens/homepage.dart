@@ -1,10 +1,12 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
-import 'package:budgetin/screens/all_category.dart';
+import 'package:budgetin/screens/category_screen.dart';
 import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/bottom_navbar.dart';
 import 'package:budgetin/widgets/homepage/kategori_transaksi/category_home.dart';
 import 'package:budgetin/widgets/homepage/saldo.dart';
-import 'package:budgetin/widgets/homepage/remainder.dart';
+import 'package:budgetin/widgets/homepage/reminder.dart';
+import 'package:budgetin/widgets/homepage/saldo_section.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -68,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: SaldoWidget(),
+                  child: SaldoSection(),
                 ),
                 const SizedBox(
                   height: 30,
@@ -86,20 +89,6 @@ class _HomePageState extends State<HomePage> {
                           color: BudgetinColors.hitamPutih100,
                         ),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AllCategory()));
-                          },
-                          child: Text(
-                            "Lainnnya",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: BudgetinColors.biru40),
-                          )),
                     ],
                   ),
                 ),
