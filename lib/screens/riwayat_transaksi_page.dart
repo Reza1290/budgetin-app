@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
@@ -26,6 +28,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
 
   Stream<List<TransactionWithCategory>> getAllTransactions() {
     return db!.getAllTransactionWithCategory();
+  }
+
+  Stream<List<TransactionWithCategory>> searchTransaction(String keyword) {
+    return db!.searchTransactionRepo(keyword);
   }
 
   final TextEditingController searchController = TextEditingController();
@@ -120,7 +126,9 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         child: SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: StreamBuilder<List<TransactionWithCategory>>(
-              stream: getAllTransactions(),
+              stream: searchController.text != null
+                  ? searchTransaction(searchController.text)
+                  : getAllTransactions(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(

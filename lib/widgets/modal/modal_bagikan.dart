@@ -1,3 +1,6 @@
+import 'package:budgetin/main.dart';
+import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/utilities/export_pdf.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
 import 'package:budgetin/widgets/reusable/new_calender.dart';
@@ -18,12 +21,13 @@ class _ShareDialogState extends State<ShareDialog> {
   // late DateTime _selectedDate = DateTime.now();
   // late DateTime _selectedDate2 = DateTime.now();
   // bool _isPressed = false;
-  int _selectedIndex = -1;
+  List<DateTime> selectedTanggal = [DateTime.now(), DateTime.now()];
+  int _selectedIndex = 0;
 
   void _handleSelect(int index) {
     setState(() {
       if (_selectedIndex == index) {
-        _selectedIndex = -1; // Unselect if already selected
+        _selectedIndex = 0; // Unselect if already selected
       } else {
         _selectedIndex = index;
       }
@@ -77,7 +81,11 @@ class _ShareDialogState extends State<ShareDialog> {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
-            RangeDate(),
+            RangeDate(
+              setTanggal: (tanggal) {
+                selectedTanggal = tanggal;
+              },
+            ),
           ],
         )),
         actions: Container(
@@ -85,8 +93,14 @@ class _ShareDialogState extends State<ShareDialog> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () {
-                  // Apply filter logic here
+                onPressed: () async {
+                  PdfService pdf = PdfService();
+                  List<TransactionWithCategory> ts = await db!
+                      .getTransactionInRange(
+                          selectedTanggal[0], selectedTanggal[1]);
+
+                  final bytes = await pdf.generatePdf(ts);
+                  pdf.savedPdfFile('Test.pdf', bytes);
                 },
                 style: ButtonStyle(
                   backgroundColor:
