@@ -1,3 +1,4 @@
+import 'package:budgetin/controller/saldo_controller.dart';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/saldo_data.dart';
 import 'package:budgetin/providers/currency.dart';
@@ -8,6 +9,10 @@ import 'package:flutter/material.dart';
 Future<void> showModalSaldo(BuildContext context) {
   TextEditingController moneyController = TextEditingController();
   FocusNode moneyFocus = FocusNode(canRequestFocus: true);
+  FocusNode keyboardFocus = FocusNode(canRequestFocus: true);
+  final formKeySaldo = GlobalKey<FormState>();
+  final saldoKey = GlobalKey<FormState>();
+
   moneyFocus.requestFocus();
   return showModalBottomSheet<void>(
     backgroundColor: Colors.white,
@@ -31,7 +36,7 @@ Future<void> showModalSaldo(BuildContext context) {
                   child: FutureBuilder<SaldoData>(
                       future: db!.getDataSaldo(),
                       builder: (context, snapshot) {
-                        return Column(
+                          return Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -65,12 +70,30 @@ Future<void> showModalSaldo(BuildContext context) {
                                     fontSize: 13, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            InputMoney(
-                              fontSize: 13,
-                              controller: moneyController,
-                              focusNode: moneyFocus,
-                              hintText:
-                                  '${snapshot.connectionState != ConnectionState.waiting ? snapshot.hasData && snapshot.data != null ? snapshot.data!.saldo : 0 : 0}',
+                            Form(
+                              key: formKeySaldo,
+                              child: InputMoney(
+                                key: saldoKey,
+                                formKey: formKeySaldo,
+                                fontSize: 13,
+                                controller: moneyController,
+                                focusNode: moneyFocus,
+                                errorText: 'Pastikan Diatas Teralokasi',
+                                hintText:
+                                    '${snapshot.connectionState != ConnectionState.waiting ? snapshot.hasData && snapshot.data != null ? snapshot.data!.saldo : 0 : 0}',
+                                onEditingComplete: () async {
+                                  if (formKeySaldo.currentState!.validate()) {
+                                    bool a = await SaldoController.simpanSaldo(
+                                        int.parse(moneyController.text
+                                            .replaceAll('.', '')));
+
+                                    if (a) {
+                                      print('a');
+                                      Navigator.pop(context);
+                                    }
+                                  }
+                                },
+                              ),
                             ),
                           ],
                         );

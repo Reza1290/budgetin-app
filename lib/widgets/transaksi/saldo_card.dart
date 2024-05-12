@@ -53,18 +53,19 @@ class _SaldoCardState extends State<SaldoCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildText("Sisa Saldo", 16, FontWeight.w700, putih30),
+          _buildText("Saldo Bulan Ini", 16, FontWeight.w700, putih30),
           SizedBox(height: 10),
-          StreamBuilder<int>(
-              stream: db!.watchUsedSaldo(),
+          StreamBuilder<Saldo>(
+              stream: db!.watchSaldoMonthNow(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildText("Rp. 0", 26.37, FontWeight.w800, putih30);
+                  return _buildText("Rp0", 26.37, FontWeight.w800, putih30);
                 } else {
                   if (snapshot.hasData) {
                     if (snapshot.data != null) {
                       return _buildText(
-                          TextCurrencyFormat.format(snapshot.data!.toString()),
+                          TextCurrencyFormat.format(
+                              snapshot.data!.saldo.toString()),
                           26,
                           FontWeight.w800,
                           putih30);
@@ -73,7 +74,7 @@ class _SaldoCardState extends State<SaldoCard> {
                           "Rp. 0", 26.37, FontWeight.w800, putih30);
                     }
                   } else {
-                    return _buildText("Rp. 0", 26.37, FontWeight.w800, putih30);
+                    return _buildText("Rp0", 26.37, FontWeight.w800, putih30);
                   }
                 }
               }),

@@ -241,14 +241,29 @@ class AppDb extends _$AppDb {
   }
 
   Stream<int> watchUsedSaldo() async* {
+    DateTime now = DateTime.now();
     int sal = await getFirstSaldo().then((value) => value!.saldo);
-    final datas = await allTransactions();
+    final transactionQuery = select(transactions)
+      ..where((tbl) =>
+          tbl.transaction_date.month.equals(now.month) &
+          tbl.transaction_date.year.equals(now.year));
+    final datas = await transactionQuery.get();
+    // final datas = await allTransactions();
     int totalExpense = 0;
 
     for (final data in datas) {
       totalExpense += data.amount;
     }
     yield sal - totalExpense;
+  }
+
+  Stream<Saldo> watchSaldoMonthNow() {
+    DateTime now = DateTime.now();
+    return (select(saldos)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year)))
+        .watchSingle();
   }
 
   Stream<int> watchRemainSaldo() async* {
@@ -453,7 +468,6 @@ class AppDb extends _$AppDb {
         categoryTransactionResult.forEach((row) {
           totalTransactionInCategory += row.amount;
         });
-        print(random.nextInt(100));
         categoriesData.add(StatisticCategory(
             color: RandomColor.generate(),
             name: category.name,
@@ -471,7 +485,7 @@ class AppDb extends _$AppDb {
 
       statistic.add(StatisticData(persen: persen * 100, data: categoriesData));
     }
-
+    // print(statistic[4].data![.first].persen);
     yield statistic;
   }
 

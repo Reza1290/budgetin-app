@@ -54,28 +54,30 @@ class _StatisticBarState extends State<StatisticBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: !widget.isHomepage! ? EdgeInsets.all(8) : EdgeInsets.zero,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: !widget.isHomepage!
-            ? Border.all(color: BudgetinColors.biru20, width: 2)
-            : null,
-      ),
+      // padding: !widget.isHomepage! ? EdgeInsets.all(8) : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: Container(
-              alignment: Alignment.center,
+              alignment: Alignment.topLeft,
               width: MediaQuery.of(context).size.width,
               child: Text(
                 "Grafik Pengeluaran",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.start,
               ),
             ),
           ),
           Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: !widget.isHomepage!
+                  ? Border.all(color: BudgetinColors.biru20, width: 2)
+                  : null,
+            ),
             child: Padding(
               padding: const EdgeInsets.only(top: 20, right: 20),
               child: !isThereNoTransaction
@@ -100,7 +102,10 @@ class _StatisticBarState extends State<StatisticBar> {
                       ),
                     )
                   : Container(
-                      child: Text('Buat Dulu Transaksi'),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(child: Text('Buat Dulu Transaksi')),
+                      ),
                     ),
             ),
           ),

@@ -11,12 +11,16 @@ class InputMoney extends StatelessWidget {
     required this.fontSize,
     this.formKey,
     this.focusNode,
+    this.onEditingComplete,
+    this.errorText,
   });
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final double fontSize;
   final String? hintText;
   final Key? formKey;
+  final VoidCallback? onEditingComplete;
+  final String? errorText;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -34,6 +38,7 @@ class InputMoney extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(6.0)),
         ),
         prefixText: 'Rp. ',
+        errorText: errorText,
         hintText: hintText ?? '',
         hintStyle: TextStyle(
           fontSize: 14,
@@ -61,6 +66,7 @@ class InputMoney extends StatelessWidget {
                       ? 'Nominal Terlalu Banyak'
                       : null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      onEditingComplete: onEditingComplete,
     );
   }
 }
