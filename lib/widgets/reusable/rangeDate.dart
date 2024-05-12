@@ -19,7 +19,7 @@ class _RangeDateState extends State<RangeDate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-               
+                Text('Dari',style: TextStyle(color: BudgetinColors.hitamPutih50)),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 1,
                   child: buildCalendarDialogButton(context, _selectedDate, "",
@@ -32,7 +32,7 @@ class _RangeDateState extends State<RangeDate> {
                 SizedBox(
                   height: 5,
                 ),
-                Center(child: Text('-- Hingga --',style: TextStyle(color: BudgetinColors.hitamPutih50)),),
+                 Text('Sampai',style: TextStyle(color: BudgetinColors.hitamPutih50)),
                 SizedBox(
                   height: 5,
                 ),
