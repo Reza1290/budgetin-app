@@ -118,6 +118,8 @@ class _ShareDialogState extends State<ShareDialog> {
 
   Widget _box(final String image, bool isSelected, Function(bool) onSelect) {
     return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       onTap: () {
         onSelect(!isSelected);
       },
