@@ -20,6 +20,11 @@ dependencies:
   dropdown_search: ^5.0.6
   dropdown_button2: ^2.3.9
   fl_chart: ^0.67.0
+  csv: ^6.0.0
+  pdf: ^3.10.8
+  syncfusion_flutter_xlsio: ^25.1.42
+  open_file: ^3.2.1
+  excel: ^4.0.3
 
 dev_dependencies:
   flutter_test:

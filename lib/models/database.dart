@@ -598,6 +598,40 @@ class AppDb extends _$AppDb {
 
     return SaldoData(saldo: saldo!.saldo, teralokasi: alokasi);
   }
+
+  Future<List<Category>> searchCategoryRepo(String keyword) async {
+    return await (select(categories)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .get();
+  }
+
+  Stream<List<TransactionWithCategory>> searchTransactionRepo(String keyword) {
+    final query = (select(transactions)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
+  Future<List<TransactionWithCategory>> getTransactionInRange(
+      DateTime start, DateTime end) async {
+    final query = await (select(transactions)
+          ..where((tbl) => tbl.transaction_date.isBetweenValues(start, end)))
+        .join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]).get();
+
+    return query.map((e) {
+      return TransactionWithCategory(
+          e.readTable(transactions), e.readTable(categories));
+    }).toList();
+  }
 }
 
 class CategoryTotal {
