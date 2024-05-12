@@ -6,6 +6,7 @@ import 'package:budgetin/models/saldo.dart';
 import 'package:budgetin/models/statistic_category.dart';
 import 'package:budgetin/models/statistic_data.dart';
 import 'package:budgetin/models/transaction.dart';
+import 'package:budgetin/models/transaction_insert.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/models/variable.dart';
 import 'package:budgetin/providers/random_color.dart';
@@ -177,8 +178,12 @@ class AppDb extends _$AppDb {
   }
 
   Future<int> sumExpenseCategory(int categoryId) async {
+    DateTime now = DateTime.now();
     final datas = await (select(transactions)
-          ..where((tbl) => tbl.category_id.equals(categoryId)))
+          ..where((tbl) =>
+              tbl.category_id.equals(categoryId) &
+              tbl.transaction_date.month.equals(now.month) &
+              tbl.transaction_date.year.equals(now.year)))
         .get();
     int totalAmount = 0;
 
@@ -190,9 +195,23 @@ class AppDb extends _$AppDb {
   }
 
   Stream<List<CategoryTotal>> sumExpenseByCategory(int limit) {
+    DateTime now = DateTime.now();
     final categoriesResultStream = limit != 0
-        ? (select(categories)..limit(limit)).watch()
-        : select(categories).watch();
+        ? (select(categories)
+              ..where(
+                (tbl) =>
+                    tbl.createdAt.month.equals(now.month) &
+                    tbl.createdAt.year.equals(now.year),
+              )
+              ..limit(limit))
+            .watch()
+        : (select(categories)
+              ..where(
+                (tbl) =>
+                    tbl.createdAt.month.equals(now.month) &
+                    tbl.createdAt.year.equals(now.year),
+              ))
+            .watch();
 
     return categoriesResultStream.asyncMap((categoriesResult) async {
       final List<CategoryTotal> categoryTotals = [];
@@ -208,7 +227,13 @@ class AppDb extends _$AppDb {
 
   Future<int> sumUsedSaldo() async {
     int total = 0;
-    final rows = await select(categories).get();
+    final rowsQuery = select(categories)
+      ..where((tbl) =>
+          tbl.createdAt.month.equals(DateTime.now().month) &
+          tbl.createdAt.year.equals(DateTime.now().year))
+      ..get();
+    final rows = await rowsQuery.get();
+
     total =
         rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
     return total;
@@ -247,13 +272,26 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future<bool> isSaldoNotCretedYet() async {
+  Future<List<bool>> isSaldoNotCretedYet() async {
+    List<bool> res = [false, false];
     final query = select(saldos)..limit(1);
     final result = await query.get();
+    final a = await getBudgetinVariable('monthNow');
+    int now = DateTime.now().month;
+
     if (result.isNotEmpty) {
-      return false;
+      if (a != null && DateTime.parse(a).month != now) {
+        res = [false, true];
+        return res;
+      }
+      return res;
     } else {
-      return true;
+      if (a != null && DateTime.parse(a).month != now) {
+        res = [true, true];
+        return res;
+      }
+      res = [true, false];
+      return res;
     }
   }
 
@@ -263,7 +301,7 @@ class AppDb extends _$AppDb {
       ..where((tbl) =>
           tbl.createdAt.year.equals(now.year) &
           tbl.createdAt.month.equals(now.month))
-      ..limit(1);
+      ..getSingleOrNull();
     final result = await query.get();
 
     return result.isNotEmpty
@@ -459,21 +497,84 @@ class AppDb extends _$AppDb {
   }
 
   Future<String?> getBudgetinVariable(String key) async {
-    final res = await (select(budgetinVariables)
-          ..where((tbl) => tbl.name.equals(key))
-          ..getSingle())
-        .getSingleOrNull();
+    final existingVarQuery = select(budgetinVariables)
+      ..where((tbl) => tbl.name.equals(key))
+      ..getSingleOrNull();
 
-    if (res != null) {
-      return res.value;
+    final existingVar = await existingVarQuery.getSingleOrNull();
+
+    if (existingVar != null) {
+      return existingVar.value;
     } else {
       return null;
     }
   }
 
-  Future<int> insertBudgetinVariable(String key, String value) {
-    return into(budgetinVariables).insertOnConflictUpdate(
-        BudgetinVariablesCompanion(name: Value(key), value: Value(value)));
+  Future<bool> copyPreviousCategoryAndSaldo() async {
+    // DateTime date = DateTime.now();
+    String? val = await getBudgetinVariable('monthNow');
+    print(DateTime.parse(val!).month);
+    try {
+      final date = DateTime.parse(val);
+      final query = select(saldos)
+        ..where((tbl) =>
+            tbl.createdAt.year.equals(date.year) &
+            tbl.createdAt.month.equals(date.month))
+        ..getSingleOrNull();
+      Saldo saldo = await query.getSingle();
+
+      createOrUpdateSaldo(saldo.saldo);
+      final queryCategories = select(this.categories)
+        ..where((tbl) =>
+            tbl.createdAt.month.equals(date.month) &
+            tbl.createdAt.year.equals(date.year))
+        ..get();
+      final categories = await queryCategories.get();
+      for (var category in categories) {
+        into(this.categories).insert(CategoriesCompanion(
+            name: Value(category.name),
+            icon: Value(category.icon),
+            total: Value(category.total)));
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<int> insertBudgetinVariable(String key, String value) async {
+    final existingVar = await (select(budgetinVariables)
+          ..where((tbl) => tbl.name.equals(key)))
+        .getSingleOrNull();
+
+    if (existingVar != null) {
+      return (update(budgetinVariables)
+            ..where((tbl) => tbl.id.equals(existingVar.id)))
+          .write(BudgetinVariablesCompanion(
+              name: Value(key), value: Value(value)));
+    } else {
+      return into(budgetinVariables).insert(
+          BudgetinVariablesCompanion(name: Value(key), value: Value(value)));
+    }
+  }
+
+  Stream<List<Category>> getAllCategoryByMonthAndYear() {
+    DateTime now = DateTime.now();
+    return (select(categories)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year)))
+        .watch();
+  }
+
+  Future<TransactionInsert> streamCategoryById(int id, bool edit,
+      {int temp = 0}) async {
+    Category category = await getCategory(id);
+    int maks = await sumExpenseCategory(id);
+
+    return TransactionInsert(
+        category: category,
+        total: edit ? (category.total - maks + temp) : category.total - maks);
   }
 }
 

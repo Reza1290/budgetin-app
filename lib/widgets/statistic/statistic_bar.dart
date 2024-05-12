@@ -66,9 +66,13 @@ class _StatisticBarState extends State<StatisticBar> {
         children: [
           Padding(
             padding: EdgeInsets.only(bottom: 10),
-            child: Text(
-              "Grafik Pengeluaran",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width,
+              child: Text(
+                "Grafik Pengeluaran",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           Container(

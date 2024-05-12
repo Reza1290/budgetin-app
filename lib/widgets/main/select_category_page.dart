@@ -2,7 +2,7 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/main/select_category_card.dart';
-import 'package:budgetin/widgets/transaksi/add_transaksi.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -79,8 +79,8 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
               ),
             ),
             Expanded(
-              child: FutureBuilder<List<Category>>(
-                  future: getAllCategory(),
+              child: StreamBuilder<List<Category>>(
+                  stream: db!.getAllCategoryByMonthAndYear(),
                   builder: (context, snapshots) {
                     if (snapshots.connectionState == ConnectionState.waiting) {
                       return Center(

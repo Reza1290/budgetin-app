@@ -38,12 +38,12 @@ class MyApp extends StatelessWidget {
                 ),
               );
             } else if (snapshot.hasData) {
-              final a = db!.getBudgetinVariable('monthNow');
-
-              print(a);
-              if (snapshot.data != null && snapshot.data == false) {
-                // print(snapshot.data);
+              if (snapshot.data != null &&
+                  snapshot.data![0] == false &&
+                  snapshot.data![1] == false) {
                 return BottomNavbar();
+              } else if (snapshot.data![1] == true) {
+                return OnBoardingScreen3();
               }
             }
             return OnBoardingScreen1();
