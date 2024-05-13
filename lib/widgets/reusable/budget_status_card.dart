@@ -24,8 +24,8 @@ class BudgetStatusCard extends StatelessWidget {
         border: Border.all(width: 3, color: BudgetinColors.merah10),
         color: BudgetinColors.merah10,
       ),
-      child: FutureBuilder<TransactionInsert>(
-          future: db!.streamCategoryById(categoryId, isEditPage, temp: temp),
+      child: StreamBuilder<TransactionInsert>(
+          stream: db!.streamCategoryById(categoryId, isEditPage, temp: temp),
           builder: (context, snapshot) {
             return Column(
               children: [

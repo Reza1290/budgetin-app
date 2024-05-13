@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:budgetin/models/category.dart';
+import 'package:budgetin/models/detail_kategori.dart';
 import 'package:budgetin/models/saldo.dart';
 import 'package:budgetin/models/saldo_data.dart';
 import 'package:budgetin/models/statistic_category.dart';
@@ -615,14 +616,15 @@ class AppDb extends _$AppDb {
         .watch();
   }
 
-  Future<TransactionInsert> streamCategoryById(int id, bool edit,
-      {int temp = 0}) async {
+  Stream<TransactionInsert> streamCategoryById(int id, bool edit,
+      {int temp = 0}) async* {
     Category category = await getCategory(id);
     int maks = await sumExpenseCategory(id);
 
-    return TransactionInsert(
-        category: category,
-        total: edit ? (category.total - maks + temp) : category.total - maks);
+    yield TransactionInsert(
+      category: category,
+      total: edit ? (category.total - maks + temp) : category.total - maks,
+    );
   }
 
   Future<SaldoData> getDataSaldo() async {
@@ -670,6 +672,56 @@ class AppDb extends _$AppDb {
       return TransactionWithCategory(
           e.readTable(transactions), e.readTable(categories));
     }).toList();
+  }
+
+  Stream<DetailKategori> getDetailCategory(int id) async* {
+    try {
+      final categoryQuery = select(categories)
+        ..where((tbl) => tbl.id.equals(id));
+      final transactionQuery = select(this.transactions)
+        ..where(
+          (tbl) => tbl.category_id.equals(id),
+        );
+
+      final categoryStream = categoryQuery.watchSingle();
+      final transactions = await transactionQuery.get();
+
+      await for (final category in categoryStream) {
+        int totalAmount = 0;
+        for (var transaction in transactions) {
+          totalAmount += transaction.amount;
+        }
+        int remainAmount = category.total - totalAmount;
+        yield DetailKategori(
+            category: category,
+            totalAmount: totalAmount,
+            remainAmount: remainAmount);
+      }
+    } catch (e) {
+      yield DetailKategori(
+          category: Category(
+              createdAt: DateTime.now(),
+              icon: 'assets/icons/Lainnya.svg',
+              id: 0,
+              name: '',
+              total: 0),
+          remainAmount: 0,
+          totalAmount: 0);
+    }
+  }
+
+  Future<int> getTotalExpenseByCategory(int id) async {
+    final transactionQuery = select(this.transactions)
+      ..where(
+        (tbl) => tbl.category_id.equals(id),
+      );
+    final transactions = await transactionQuery.get();
+    int totalAmount = 0;
+    for (var transaction in transactions) {
+      totalAmount += transaction.amount;
+    }
+
+    return totalAmount;
   }
 }
 

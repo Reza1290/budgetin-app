@@ -27,14 +27,17 @@ Future<void> showModalSaldo(BuildContext context) {
         builder: (context, setState) {
           return Padding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 24,
-                right: 24,
-                top: 24),
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 24,
+              right: 24,
+            ),
             child: SingleChildScrollView(
               child: FutureBuilder<SaldoData>(
-                  future: db!.getDataSaldo(),
+                    future: db!.getDataSaldo(),
                   builder: (context, snapshot) {
+                    if (snapshot.data != null) {
+                      moneyController.text = snapshot.data!.saldo.toString();
+                    }
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,6 +47,7 @@ Future<void> showModalSaldo(BuildContext context) {
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
+                                color: BudgetinColors.merah10,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
                                 border: Border.all(
@@ -67,29 +71,32 @@ Future<void> showModalSaldo(BuildContext context) {
                                 fontSize: 13, fontWeight: FontWeight.w600),
                           ),
                         ),
-                        Form(
-                          key: formKeySaldo,
-                          child: InputMoney(
-                            key: saldoKey,
-                            formKey: formKeySaldo,
-                            fontSize: 13,
-                            controller: moneyController,
-                            focusNode: moneyFocus,
-                            errorText: 'Pastikan Diatas Teralokasi',
-                            hintText:
-                                '${snapshot.connectionState != ConnectionState.waiting ? snapshot.hasData && snapshot.data != null ? snapshot.data!.saldo : 0 : 0}',
-                            onEditingComplete: () async {
-                              if (formKeySaldo.currentState!.validate()) {
-                                bool a = await SaldoController.simpanSaldo(
-                                    int.parse(moneyController.text
-                                        .replaceAll('.', '')));
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Form(
+                            key: formKeySaldo,
+                            child: InputMoney(
+                              key: saldoKey,
+                              formKey: formKeySaldo,
+                              fontSize: 13,
+                              controller: moneyController,
+                              focusNode: moneyFocus,
+                              errorText: 'Pastikan Diatas Teralokasi',
+                              hintText:
+                                  '${snapshot.connectionState != ConnectionState.waiting ? snapshot.hasData && snapshot.data != null ? snapshot.data!.saldo : 0 : 0}',
+                              onEditingComplete: () async {
+                                if (formKeySaldo.currentState!.validate()) {
+                                  bool a = await SaldoController.simpanSaldo(
+                                      int.parse(moneyController.text
+                                          .replaceAll('.', '')));
 
-                                if (a) {
-                                  // print('a');
-                                  Navigator.pop(context);
+                                  if (a) {
+                                    // print('a');
+                                    Navigator.pop(context);
+                                  }
                                 }
-                              }
-                            },
+                              },
+                            ),
                           ),
                         ),
                       ],

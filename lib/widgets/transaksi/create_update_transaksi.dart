@@ -1,23 +1,14 @@
 import 'package:budgetin/controller/transaction_controller.dart';
-import 'package:budgetin/main.dart';
-import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
-import 'package:budgetin/providers/currency.dart';
-import 'package:budgetin/screens/homepage.dart';
-import 'package:budgetin/screens/riwayat_transaksi_page.dart';
-import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
-import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/reusable/budget_status_card.dart';
 import 'package:budgetin/widgets/reusable/information_modal.dart';
-import 'package:budgetin/widgets/succes_alert.dart';
+import 'package:budgetin/widgets/reusable/new_calender.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:budgetin/widgets/reusable/calendar.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 
 class CreateUpdateTransaksiPage extends StatefulWidget {
   final int categoryId;
@@ -95,8 +86,8 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
             icon: Icon(Icons.arrow_back_ios_new_rounded),
           ),
         ),
-        title: const Text(
-          'Tambah Transaksi',
+        title: Text(
+          widget.isEditPage! ? 'Edit Transaksi' : 'Tambah Transaksi',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
       ),
@@ -129,43 +120,12 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                                 fontSize: 13, fontWeight: FontWeight.w600),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            final DateTime? pickedDate =
-                                await selectDate(context, selectedDate);
-                            if (pickedDate != null &&
-                                pickedDate != selectedDate) {
-                              setState(() {
-                                selectedDate = pickedDate;
-                              });
-                            }
-                          },
-                          child: AbsorbPointer(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(6.0),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(6.0)),
-                                ),
-                                suffixIcon: const Icon(Icons.calendar_month),
-                                hintText:
-                                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-                                hintStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                              ),
-                              readOnly: true,
-                            ),
-                          ),
-                        ),
+                        buildCalendarDialogButton(context, selectedDate, "",
+                            (newDate) {
+                          setState(() {
+                            selectedDate;
+                          });
+                        }),
                       ],
                     ),
                   ),
@@ -226,6 +186,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                         InputText(
                           controller: deskripsiTransaksiController,
                           hintText: 'Deskripsi Transaksi ',
+                          isMandatory: false,
                         ),
                       ],
                     ),
@@ -259,14 +220,16 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                             );
                           }
                           if (res) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    BottomNavbar(initIndex: 1),
-                              ),
-                              (route) => false,
-                            );
+                            widget.isEditPage!
+                                ? Navigator.pop(context)
+                                : Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavbar(initIndex: 1),
+                                    ),
+                                    (route) => false,
+                                  );
                             showModalInformation(
                                 context,
                                 'assets/images/alertYes.svg',
@@ -277,8 +240,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                             showModalInformation(
                                 context,
                                 'assets/images/alertNo.svg',
-                                'Maksimum Pengeluaran Mencapai Batas! Sisa ' +
-                                    TextCurrencyFormat.format(sisa.toString()),
+                                'Maksimum Pengeluaran Mencapai Batas!',
                                 true);
                             // showFailedAlert(
                             //     context,

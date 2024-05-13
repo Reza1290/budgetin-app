@@ -43,7 +43,7 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
 
   void _updateVisibility() {
     setState(() {
-      isVisible2 = _searchController.text.isEmpty || !_focusNode.hasFocus;
+      isVisible2 = _searchController.text.isEmpty && !_focusNode.hasFocus;
     });
   }
 

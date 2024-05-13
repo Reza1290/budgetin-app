@@ -30,7 +30,7 @@ class _RangeDateState extends State<RangeDate> {
               _selectedDate = newDate;
             });
             widget.setTanggal!([_selectedDate, _selectedDate2]);
-          }),
+          }, isTransaksi: false),
         ),
         SizedBox(
           height: 5,
@@ -47,7 +47,7 @@ class _RangeDateState extends State<RangeDate> {
               _selectedDate2 = newDate;
             });
             widget.setTanggal!([_selectedDate, _selectedDate2]);
-          }),
+          }, isTransaksi: false),
         )
       ],
     );

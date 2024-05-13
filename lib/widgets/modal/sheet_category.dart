@@ -48,7 +48,7 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
                 Container(
                   margin: EdgeInsets.all(15.0),
                   child: Text(
-                    'Tambah Kategori',
+                    category == null ? 'Tambah Kategori' : 'Edit Kategori',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -154,7 +154,7 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
                                 showModalInformation(
                                     context,
                                     'assets/images/alertNo.svg',
-                                    'Alokasi Melebihi Saldo Kamu.',
+                                    'Alokasi Melebihi Saldo Kamu atau Dibawah Uang Terpakai.',
                                     true);
                               }
                             }

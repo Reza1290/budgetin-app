@@ -59,7 +59,7 @@ class _SaldoCardState extends State<SaldoCard> {
               stream: db!.watchSaldoMonthNow(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildText("Rp0", 26.37, FontWeight.w800, putih30);
+                  return _buildText("Rp0", 26, FontWeight.w800, putih30);
                 } else {
                   if (snapshot.hasData) {
                     if (snapshot.data != null) {
@@ -70,11 +70,10 @@ class _SaldoCardState extends State<SaldoCard> {
                           FontWeight.w800,
                           putih30);
                     } else {
-                      return _buildText(
-                          "Rp. 0", 26.37, FontWeight.w800, putih30);
+                      return _buildText("Rp0", 26, FontWeight.w800, putih30);
                     }
                   } else {
-                    return _buildText("Rp0", 26.37, FontWeight.w800, putih30);
+                    return _buildText("Rp0", 26, FontWeight.w800, putih30);
                   }
                 }
               }),

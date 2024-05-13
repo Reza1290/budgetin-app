@@ -4,12 +4,9 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
-import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/reusable/information_modal.dart';
-import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/saldo_card.dart';
-import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +27,8 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     return db!.getAllTransactionWithCategory();
   }
 
-  Stream<List<TransactionWithCategory>> searchTransaction(String keyword) {
+  Stream<List<TransactionWithCategory>> searchTransaction(String keyword,
+      {DateTime? start, DateTime? end}) {
     return db!.searchTransactionRepo(keyword);
   }
 
@@ -47,7 +45,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
 
   void _updateVisibility() {
     setState(() {
-      isVisible = searchController.text.isEmpty || !_focusNode.hasFocus;
+      isVisible = searchController.text.isEmpty && !_focusNode.hasFocus;
     });
   }
 
@@ -121,7 +119,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         child: SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: StreamBuilder<List<TransactionWithCategory>>(
-              stream: searchController.text != null
+              stream: searchController.text.isNotEmpty
                   ? searchTransaction(searchController.text)
                   : getAllTransactions(),
               builder: (context, snapshot) {

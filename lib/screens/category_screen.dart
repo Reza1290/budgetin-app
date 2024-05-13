@@ -82,7 +82,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     child: InputSearch(
                       controller: _searchController,
                       focusNode: _focusNode,
-                      showFilter: true,
+                      showFilter: false,
                     ),
                   ),
                   AnimatedSwitcher(

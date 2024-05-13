@@ -13,14 +13,15 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 // }
 
 Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,
-    String label, Function(DateTime) onDateSelected) {
-  return SizedBox(
-    height: 40,
+    String label, Function(DateTime) onDateSelected,
+    {double? height = 45, bool? isTransaksi = true}) {
+  return Container(
+    height: height,
     child: GestureDetector(
       onTap: () async {
         final values = await showCalendarDatePicker2Dialog(
           context: context,
-          config: _buildCalendarConfig(context),
+          config: _buildCalendarConfig(context, isTransaksi: isTransaksi),
           dialogSize: const Size(325, 400),
           borderRadius: BorderRadius.circular(15),
           value: [selectedDate],
@@ -60,7 +61,8 @@ Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,
 }
 
 CalendarDatePicker2WithActionButtonsConfig _buildCalendarConfig(
-    BuildContext context) {
+    BuildContext context,
+    {bool? isTransaksi = false}) {
   const dayTextStyle =
       TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
 
@@ -71,6 +73,12 @@ CalendarDatePicker2WithActionButtonsConfig _buildCalendarConfig(
     selectedDayHighlightColor: Color(0xFF1D77FF),
     closeDialogOnCancelTapped: true,
     firstDayOfWeek: 1,
+    selectableDayPredicate: isTransaksi != null && isTransaksi
+        ? (day) =>
+            day.month == DateTime.now().month &&
+            day.year == DateTime.now().year &&
+            day.isBefore(DateTime.now())
+        : (day) => true,
     weekdayLabelTextStyle: const TextStyle(
       color: Colors.black87,
       fontWeight: FontWeight.bold,

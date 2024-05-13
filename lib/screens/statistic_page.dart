@@ -16,6 +16,7 @@ class _StatisticPageState extends State<StatisticPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Container(),
         scrolledUnderElevation: 0,

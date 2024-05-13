@@ -3,6 +3,7 @@ import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
@@ -158,7 +159,16 @@ class RiwayatTransaksiList extends StatelessWidget {
                 ),
                 SlidableAction(
                   onPressed: (value) {
-                    _confirmDelete(context, transaction.transaction.id);
+                    showModalInformation(
+                        context,
+                        'assets/images/modal_gagal.svg',
+                        "Hapus Transaksi",
+                        false, onPressed: () {
+                      db!.deleteTransaction(transaction.transaction.id);
+                      Navigator.of(context).pop();
+
+                      _onDismissed(context, transaction.transaction.id, true);
+                    });
                   },
                   autoClose: true,
                   padding: EdgeInsets.all(8),
