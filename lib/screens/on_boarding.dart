@@ -70,7 +70,9 @@ class OnBoardingScreen1 extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => OnBoardingScreen2()),
+                            builder: (context) => OnBoardingScreen2(
+                                  saldo: saldo,
+                                )),
                       );
                     }
                   },
@@ -85,7 +87,8 @@ class OnBoardingScreen1 extends StatelessWidget {
 }
 
 class OnBoardingScreen2 extends StatelessWidget {
-  OnBoardingScreen2({super.key});
+  final int saldo;
+  OnBoardingScreen2({super.key, required this.saldo});
   final _formOnboard2Key = GlobalKey<FormState>();
   final FocusNode _focusDuit = FocusNode();
   final TextEditingController _alokasiController = TextEditingController();
@@ -106,7 +109,7 @@ class OnBoardingScreen2 extends StatelessWidget {
                       image: 'assets/images/onBoarding2.svg',
                       title: 'Atur Kategori Keuanganmu',
                       subtitle:
-                          'Mengategorikan pengeluaranmu akan lebih memudahkan pengelolaan keuangan.Yuk, buat kategori sesuai kebutuhanmu!',
+                          'Mengategorikan pengeluaranmu akan lebih memudahkan pengelolaan keuangan.Yuk, buat kategori sesuai kebutuhanmu dan dibawah Saldo ya!',
                     ),
                     SizedBox(height: 24),
                     Form(
@@ -122,6 +125,8 @@ class OnBoardingScreen2 extends StatelessWidget {
                             focusNode: _focusDuit,
                             controller: _alokasiController,
                             fontSize: 12,
+                            maks: saldo,
+                            errorText: 'Pastikan Tidak Melebihi Saldo',
                             hintText:
                                 'Masukkan alokasi dana untuk kategori ini',
                           ),
@@ -170,7 +175,7 @@ class OnBoardingScreen2 extends StatelessWidget {
                                 ),
                                 (route) => false,
                               );
-                            }
+                            } else {}
                           } else {
                             _focusDuit.requestFocus();
                           }

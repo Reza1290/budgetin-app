@@ -31,7 +31,7 @@ class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {
@@ -62,6 +62,12 @@ class AppDb extends _$AppDb {
         }
         if (from < 6) {
           await m.createTable($BudgetinVariablesTable(attachedDatabase));
+        }
+        if (from < 7) {
+          for (var table in allTables) {
+            await m.deleteTable(table.actualTableName);
+          }
+          await m.createAll();
         }
       },
     );
@@ -552,9 +558,8 @@ class AppDb extends _$AppDb {
   Future<bool> copyPreviousCategoryAndSaldo() async {
     // DateTime date = DateTime.now();
     String? val = await getBudgetinVariable('monthNow');
-    print(DateTime.parse(val!).month);
     try {
-      final date = DateTime.parse(val);
+      final date = DateTime.parse(val!);
       final query = select(saldos)
         ..where((tbl) =>
             tbl.createdAt.year.equals(date.year) &

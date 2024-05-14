@@ -71,7 +71,6 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final detailKategori = snapshot.data!;
-                print(detailKategori.category.name);
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(24, 15, 24, 0),
                   child: Column(
@@ -144,7 +143,6 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                         padding: const EdgeInsets.symmetric(vertical: 18.0),
                         child: Divider(height: 5.0),
                       ),
-                      SizedBox(height: 35.5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -194,11 +192,10 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                 );
               } else if (snapshot.hasError) {
                 // Handle error case
-                print(snapshot.error);
                 return Text('Tidak Ditemukan');
               } else {
                 // Handle loading case
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               }
             },
           ),

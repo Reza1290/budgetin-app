@@ -13,6 +13,8 @@ class InputMoney extends StatelessWidget {
     this.focusNode,
     this.onEditingComplete,
     this.errorText,
+    this.maks = 9999999999999999,
+    this.min = 0,
   });
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -21,11 +23,13 @@ class InputMoney extends StatelessWidget {
   final Key? formKey;
   final VoidCallback? onEditingComplete;
   final String? errorText;
+  final int? maks;
+  final int? min;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       // key: formKey,
-      
+
       controller: controller,
       focusNode: focusNode,
       keyboardType: TextInputType.number,
@@ -38,7 +42,6 @@ class InputMoney extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(6.0)),
         ),
         prefixText: 'Rp. ',
-        errorText: errorText,
         hintText: hintText ?? '',
         hintStyle: TextStyle(
           fontSize: 14,
@@ -64,7 +67,11 @@ class InputMoney extends StatelessWidget {
                   ? 'Nominal harus berupa angka'
                   : (nominal.replaceAll('.', '').length > 16)
                       ? 'Nominal Terlalu Banyak'
-                      : null,
+                      : errorText != null &&
+                              (int.parse(nominal.replaceAll('.', '')) > maks! ||
+                                  int.parse(nominal.replaceAll('.', '')) < min!)
+                          ? errorText
+                          : null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onEditingComplete: onEditingComplete,
     );

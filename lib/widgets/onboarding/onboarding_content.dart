@@ -49,7 +49,7 @@ class OnBoardingContent extends StatelessWidget {
             image,
             fit: BoxFit.fitWidth,
           ),
-          const SizedBox(height: verticalSpacing),
+          // const SizedBox(height: verticalSpacing),
           // Title
           Align(
               alignment: Alignment.center,

@@ -33,7 +33,7 @@ Future<void> showModalSaldo(BuildContext context) {
             ),
             child: SingleChildScrollView(
               child: FutureBuilder<SaldoData>(
-                    future: db!.getDataSaldo(),
+                  future: db!.getDataSaldo(),
                   builder: (context, snapshot) {
                     if (snapshot.data != null) {
                       moneyController.text = snapshot.data!.saldo.toString();
@@ -81,6 +81,9 @@ Future<void> showModalSaldo(BuildContext context) {
                               fontSize: 13,
                               controller: moneyController,
                               focusNode: moneyFocus,
+                              min: snapshot.data != null
+                                  ? snapshot.data!.teralokasi
+                                  : 0,
                               errorText: 'Pastikan Diatas Teralokasi',
                               hintText:
                                   '${snapshot.connectionState != ConnectionState.waiting ? snapshot.hasData && snapshot.data != null ? snapshot.data!.saldo : 0 : 0}',

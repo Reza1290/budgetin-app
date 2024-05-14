@@ -4,6 +4,7 @@ import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
+import 'package:budgetin/widgets/reusable/kategori_kosong.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -115,30 +116,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         children: [
                           CircularProgressIndicator(),
                           SizedBox(height: 10),
-                          Text('Loading categories...'),
+                          Text('Memuat Kategori...'),
                         ],
                       ),
                     );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: Colors.red,
-                            size: 60,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: snapshot.hasData
-                                ? Text('Muat Ulang..')
-                                : Text('Buat Kategori Terlebih Dahulu'),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
+                  } else if (snapshot.hasData) {
                     if (snapshot.data != null) {
                       final List<CategoryTotal>? categories = snapshot.data;
                       return ListView.builder(
@@ -158,10 +140,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           );
                         },
                       );
-                    } else {
-                      return Text('Memuat...');
                     }
                   }
+                  return KategoriKosong();
                 },
               ),
             ),
