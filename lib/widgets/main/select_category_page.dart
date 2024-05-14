@@ -2,6 +2,7 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/main/select_category_card.dart';
+import 'package:budgetin/widgets/reusable/kategori_kosong.dart';
 import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/cupertino.dart';
@@ -130,12 +131,10 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
                             },
                           );
                         } else {
-                          return Center(
-                              child: Text(
-                                  "Silahkan buat Kategori terlebih dahulu."));
+                          return KategoriKosong();
                         }
                       } else {
-                        return Center(child: Text("Belum ada kategori"));
+                        return KategoriKosong();
                       }
                     }
                   }),

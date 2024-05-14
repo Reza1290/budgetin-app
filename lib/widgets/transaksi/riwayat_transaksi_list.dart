@@ -4,6 +4,7 @@ import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/reusable/information_modal.dart';
+import 'package:budgetin/widgets/reusable/transaksi_kosong.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
@@ -72,7 +73,7 @@ class RiwayatTransaksiList extends StatelessWidget {
                   }).toList(),
                 );
               } else {
-                return const Center(child: Text("Belum ada transaksi"));
+                return TransaksiKosong();
               }
             }
           },

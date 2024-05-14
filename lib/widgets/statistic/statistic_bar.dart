@@ -1,4 +1,5 @@
 import 'package:budgetin/main.dart';
+import 'package:budgetin/widgets/reusable/transaksi_kosong.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/utilities/them.dart';
@@ -112,7 +113,7 @@ class _StatisticBarState extends State<StatisticBar> {
                   : Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Center(child: Text('Belum Ada Transaksi')),
+                        child: TransaksiKosong(),
                       ),
                     ),
             ),

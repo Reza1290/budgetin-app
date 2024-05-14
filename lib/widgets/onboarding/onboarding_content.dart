@@ -39,13 +39,16 @@ class OnBoardingContent extends StatelessWidget {
 
     // OnboardingPage
     return Container(
-      padding: EdgeInsets.only(top: 30),
+      // padding: EdgeInsets.only(top: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Image
-          SvgPicture.asset(image),
+          SvgPicture.asset(
+            image,
+            fit: BoxFit.fitWidth,
+          ),
           const SizedBox(height: verticalSpacing),
           // Title
           Align(

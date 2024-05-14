@@ -1,4 +1,5 @@
 import 'package:budgetin/controller/category_controller.dart';
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
@@ -18,6 +19,16 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
   String val = category != null ? category.icon : "assets/icons/Plus.svg";
   bool isValid = true;
   final _formKey = GlobalKey<FormState>();
+  Future<void> fetchCategory() async {
+    Category temp = await db!.getCategory(category!.id);
+    _nameController.text = temp.name;
+    _alokasiController.text = temp.total.toString();
+    val = temp.icon.toString();
+  }
+
+  if (category != null) {
+    fetchCategory();
+  }
 
   return showModalBottomSheet<void>(
     isScrollControlled: true,

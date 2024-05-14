@@ -674,40 +674,46 @@ class AppDb extends _$AppDb {
     }).toList();
   }
 
-  Stream<DetailKategori> getDetailCategory(int id) async* {
-    try {
-      final categoryQuery = select(categories)
-        ..where((tbl) => tbl.id.equals(id));
-      final transactionQuery = select(this.transactions)
-        ..where(
-          (tbl) => tbl.category_id.equals(id),
-        );
+  Stream<DetailKategori> getDetailCategory(int id) {
+    final categoryQuery = select(categories).join([
+      leftOuterJoin(
+          transactions, transactions.category_id.equalsExp(categories.id))
+    ])
+      ..where(categories.id.equals(id));
 
-      final categoryStream = categoryQuery.watchSingle();
-      final transactions = await transactionQuery.get();
-
-      await for (final category in categoryStream) {
-        int totalAmount = 0;
-        for (var transaction in transactions) {
-          totalAmount += transaction.amount;
-        }
-        int remainAmount = category.total - totalAmount;
-        yield DetailKategori(
-            category: category,
-            totalAmount: totalAmount,
-            remainAmount: remainAmount);
-      }
-    } catch (e) {
-      yield DetailKategori(
+    return categoryQuery.watch().map((rows) {
+      if (rows.isEmpty) {
+        return DetailKategori(
           category: Category(
-              createdAt: DateTime.now(),
-              icon: 'assets/icons/Lainnya.svg',
-              id: 0,
-              name: '',
-              total: 0),
+            createdAt: DateTime.now(),
+            icon: 'assets/icons/Lainnya.svg',
+            id: id,
+            name: '',
+            total: 0,
+          ),
+          totalAmount: 0,
           remainAmount: 0,
-          totalAmount: 0);
-    }
+        );
+      }
+
+      final category = rows.map((row) => row.readTable(categories)).first;
+
+      final transactionList = rows
+          .map((row) => row.readTableOrNull(transactions))
+          .where((transaction) => transaction != null)
+          .toList();
+
+      final totalAmount = transactionList.fold(
+          0, (sum, transaction) => sum + (transaction?.amount ?? 0));
+
+      final remainAmount = category.total - totalAmount;
+
+      return DetailKategori(
+        category: category,
+        totalAmount: totalAmount,
+        remainAmount: remainAmount,
+      );
+    });
   }
 
   Future<int> getTotalExpenseByCategory(int id) async {

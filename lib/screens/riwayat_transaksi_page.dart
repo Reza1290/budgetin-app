@@ -12,6 +12,9 @@ import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../widgets/reusable/transaksi_kosong.dart';
 
 class RiwayatTransaksiPage extends StatefulWidget {
   const RiwayatTransaksiPage({Key? key}) : super(key: key);
@@ -276,10 +279,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                         },
                       );
                     } else {
-                      return const Text("Belum ada transaksi");
+                      return TransaksiKosong();
                     }
                   } else {
-                    return const Text("Belum ada transaksi");
+                    return TransaksiKosong();
                   }
                 }
               },

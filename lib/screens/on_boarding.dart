@@ -16,6 +16,7 @@ class OnBoardingScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -24,11 +25,14 @@ class OnBoardingScreen1 extends StatelessWidget {
                 padding: EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    OnBoardingContent(
-                      image: 'assets/images/onBoarding1.svg',
-                      title: 'Kelola Uangmu',
-                      subtitle:
-                          'Yuk, mulai dengan memasukkan saldo atau pendapatanmu bulan ini!',
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: OnBoardingContent(
+                        image: 'assets/images/onBoarding1.svg',
+                        title: 'Kelola Uangmu',
+                        subtitle:
+                            'Yuk, mulai dengan memasukkan saldo atau pendapatanmu bulan ini!',
+                      ),
                     ),
                     SizedBox(height: 24),
                     Form(
@@ -89,6 +93,7 @@ class OnBoardingScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -187,6 +192,7 @@ class OnBoardingScreen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -197,8 +203,7 @@ class OnBoardingScreen3 extends StatelessWidget {
                   children: [
                     OnBoardingContent(
                       image: 'assets/images/onBoarding3.svg',
-                      title:
-                          'Yeyyy !!! Bulan lalu kamu berhasil menghemat Rp1.000.000',
+                      title: 'Yeyyy Kamu Memasuki Bulan Baru!',
                       subtitle:
                           'Saat ini memasuki bulan baru, Alokasi pada kategori akan di-reset. Apakah Kategori dan Saldo bulan ini sama dengan bulan lalu?',
                     ),
@@ -267,6 +272,7 @@ class OnBoardingScreen4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
