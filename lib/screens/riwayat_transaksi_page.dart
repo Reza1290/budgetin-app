@@ -1,13 +1,13 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
-import 'package:budgetin/widgets/transaksi/card_sisa_saldo.dart';
+import 'package:budgetin/widgets/transaksi/saldo_card.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
-import 'package:budgetin/widgets/riwayat.dart';
-import 'package:budgetin/widgets/search_bar.dart';
+import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
+import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -35,9 +35,15 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     // TODO: implement initState
     super.initState();
     _focusNode.addListener(() {
-      setState(() {
-        isVisible = !_focusNode.hasFocus;
-      });
+      if (searchController.text != '') {
+        setState(() {
+          isVisible = false;
+        });
+      } else {
+        setState(() {
+          isVisible = !_focusNode.hasFocus;
+        });
+      }
     });
     // db = AppDb();
   }
@@ -54,7 +60,9 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
+        leading: Container(),
         scrolledUnderElevation: 0,
         title: Text(
           'Riwayat Transaksi',
@@ -70,27 +78,25 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
           children: [
             AnimatedSwitcher(
               duration: Duration(milliseconds: 200),
+              switchInCurve: Curves.easeInCirc,
               child: Visibility(
                 key: Key(isVisible.toString()),
                 visible: isVisible,
-                child: const CardSisaSaldo(),
-              ),
-            ),
-            AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              child: Visibility(
-                key: Key(isVisible.toString()),
-                visible: isVisible,
-                child: const SizedBox(
-                  height: 20,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: SaldoCard(),
                 ),
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 24),
-            //   child: SearchInput(
-            //       controller: searchController, focusNode: _focusNode),
-            // ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: InputSearch(
+                controller: searchController,
+                focusNode: _focusNode,
+                showFilter: true,
+              ),
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -229,7 +235,8 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                           context, transaction);
                                     },
                                     child: Container(
-                                      child: RiwayatTransaksi(
+                                      child: RiwayatTransaksiCard(
+                                        category: transaction.category.name,
                                         title: transaction.transaction.name,
                                         tanggal: transaction
                                             .transaction.transaction_date

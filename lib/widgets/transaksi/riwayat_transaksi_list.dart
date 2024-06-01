@@ -1,12 +1,12 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
-import 'package:budgetin/widgets/riwayat.dart';
+import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -172,7 +172,8 @@ class RiwayatTransaksiList extends StatelessWidget {
                 showDetailTransaksiSheet(context, transaction);
               },
               child: Container(
-                child: RiwayatTransaksi(
+                child: RiwayatTransaksiCard(
+                  category: transaction.category.name,
                   title: transaction.transaction.name,
                   tanggal: transaction.transaction.transaction_date.toString(),
                   money: transaction.transaction.amount.toString(),

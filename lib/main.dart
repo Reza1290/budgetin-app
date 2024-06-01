@@ -1,4 +1,6 @@
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/screens/on_boarding.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +16,6 @@ void main() async {
 }
 
 Future<AppDb> initializeDb() async {
-  // Initialize your database here, e.g., connecting to it
   return AppDb();
 }
 
@@ -23,11 +24,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-        home: BottomNavbar(),
+        color: BudgetinColors.hitamPutih10,
+        home: FutureBuilder(
+          future: db!.isSaldoNotCretedYet(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                appBar: null,
+                backgroundColor: BudgetinColors.biru10,
+                body: Center(
+                  child: Image.asset('assets/images/loading.gif'),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data != null &&
+                  snapshot.data![0] == false &&
+                  snapshot.data![1] == false) {
+                return BottomNavbar();
+              } else if (snapshot.data![1] == true) {
+                return OnBoardingScreen1();
+              }
+            }
+            return OnBoardingScreen1();
+          },
+        ),
+        // BottomNavbar(),
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          bottomSheetTheme:
+              const BottomSheetThemeData(surfaceTintColor: Colors.white),
+          dialogBackgroundColor: Colors.white,
+
+          // primarySwatch: Budgetin,
           fontFamily: 'Nunito',
         ));
   }

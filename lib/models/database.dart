@@ -1,9 +1,15 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:budgetin/models/category.dart';
 import 'package:budgetin/models/saldo.dart';
+import 'package:budgetin/models/statistic_category.dart';
+import 'package:budgetin/models/statistic_data.dart';
 import 'package:budgetin/models/transaction.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/models/variable.dart';
+import 'package:budgetin/providers/random_color.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:drift/drift.dart';
 // These imports are used to open the database
 import 'package:drift/native.dart';
@@ -16,13 +22,13 @@ part 'database.g.dart';
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories, Transactions, Saldos],
+  tables: [Categories, Transactions, Saldos, BudgetinVariables],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
@@ -32,8 +38,8 @@ class AppDb extends _$AppDb {
       },
       beforeOpen: (details) async {
         if (details.wasCreated) {
-          await into(saldos)
-              .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
+          // await into(saldos)
+          //     .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
         }
       },
       onUpgrade: (Migrator m, int from, int to) async {
@@ -45,9 +51,22 @@ class AppDb extends _$AppDb {
         if (from < 3) {
           await m.createTable($SaldosTable(attachedDatabase));
         }
+        if (from < 4) {
+          await m.addColumn(saldos, saldos.createdAt);
+        }
+        if (from < 5) {
+          await m.addColumn(categories, categories.createdAt);
+        }
+        if (from < 6) {
+          await m.createTable($BudgetinVariablesTable(attachedDatabase));
+        }
       },
     );
   }
+
+  // Future<bool> insertSaldo(){
+
+  // }
 
   Future<int> insertCategory(CategoriesCompanion entry) async {
     return await into(categories).insert(entry);
@@ -62,16 +81,31 @@ class AppDb extends _$AppDb {
         .getSingle();
   }
 
+  Future<List<Category>> getAllCategoryByMonthYear(
+      int month, String year) async {
+    final categories = await (select(this.categories)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(month) &
+              tbl.createdAt.year.equals(int.parse(year))))
+        .get();
+    return categories;
+  }
+
   Future<bool> updateCategory(CategoriesCompanion entry) async {
     return await update(categories).replace(entry);
   }
 
-  Future<void> deleteCategory(int id) async {
-    await (delete(categories)..where((tbl) => tbl.id.equals(id)))
-        .go()
-        .then((value) {
-      (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
-    });
+  Future<bool> deleteCategory(int id) async {
+    try {
+      await (delete(categories)..where((tbl) => tbl.id.equals(id)))
+          .go()
+          .then((value) {
+        (delete(transactions)..where((tbl) => tbl.category_id.equals(id))).go();
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
@@ -156,9 +190,23 @@ class AppDb extends _$AppDb {
   }
 
   Stream<List<CategoryTotal>> sumExpenseByCategory(int limit) {
+    DateTime now = DateTime.now();
     final categoriesResultStream = limit != 0
-        ? (select(categories)..limit(limit)).watch()
-        : select(categories).watch();
+        ? (select(categories)
+              ..where(
+                (tbl) =>
+                    tbl.createdAt.month.equals(now.month) &
+                    tbl.createdAt.year.equals(now.year),
+              )
+              ..limit(limit))
+            .watch()
+        : (select(categories)
+              ..where(
+                (tbl) =>
+                    tbl.createdAt.month.equals(now.month) &
+                    tbl.createdAt.year.equals(now.year),
+              ))
+            .watch();
 
     return categoriesResultStream.asyncMap((categoriesResult) async {
       final List<CategoryTotal> categoryTotals = [];
@@ -174,18 +222,27 @@ class AppDb extends _$AppDb {
 
   Future<int> sumUsedSaldo() async {
     int total = 0;
-    final rows = await select(categories).get();
+    final rowsQuery = select(categories)
+      ..where((tbl) =>
+          tbl.createdAt.month.equals(DateTime.now().month) &
+          tbl.createdAt.year.equals(DateTime.now().year))
+      ..get();
+    final rows = await rowsQuery.get();
+
     total =
         rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
     return total;
   }
 
   Stream<int> watchUsedSaldo() async* {
-    int total = 0;
-    final rows = await select(categories).get();
-    total =
-        rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
-    yield total;
+    int sal = await getFirstSaldo().then((value) => value!.saldo);
+    final datas = await allTransactions();
+    int totalExpense = 0;
+
+    for (final data in datas) {
+      totalExpense += data.amount;
+    }
+    yield sal - totalExpense;
   }
 
   Stream<int> watchRemainSaldo() async* {
@@ -193,7 +250,7 @@ class AppDb extends _$AppDb {
     final rows = await select(categories).get();
     total =
         rows.map((e) => e.total).fold(0, (acc, value) => acc + (value ?? 0));
-    int sal = await getFirstSaldo().then((value) => value.saldo);
+    int sal = await getFirstSaldo().then((value) => value!.saldo);
     yield sal - total;
   }
 
@@ -210,14 +267,41 @@ class AppDb extends _$AppDb {
     return totalAmount;
   }
 
-  Future<Saldo> getFirstSaldo() async {
+  Future<List<bool>> isSaldoNotCretedYet() async {
+    List<bool> res = [false, false];
     final query = select(saldos)..limit(1);
     final result = await query.get();
+    final a = await getBudgetinVariable('monthNow');
+    int now = DateTime.now().month;
+
     if (result.isNotEmpty) {
-      return result.first;
+      if (a != null && a != now.toString()) {
+        res = [false, true];
+        return res;
+      }
+      return res;
     } else {
-      return Saldo(id: 1, saldo: 0);
+      if (a != null && a != now.toString()) {
+        res = [true, true];
+        return res;
+      }
+      res = [true, false];
+      return res;
     }
+  }
+
+  Future<Saldo?> getFirstSaldo() async {
+    final now = DateTime.now();
+    final query = select(saldos)
+      ..where((tbl) =>
+          tbl.createdAt.year.equals(now.year) &
+          tbl.createdAt.month.equals(now.month))
+      ..getSingleOrNull();
+    final result = await query.get();
+
+    return result.isNotEmpty
+        ? result.first
+        : Saldo(id: 1, saldo: 0, createdAt: DateTime.now());
   }
 
   Stream<Saldo> watchFirstSaldo() {
@@ -226,12 +310,32 @@ class AppDb extends _$AppDb {
             // (t) => OrderingTerm(expression: t.priority, mode: OrderingMode.desc)
           ])
           ..limit(1))
-        .watchSingle(); // Use watchSingle to get a stream of a single item
+        .watchSingle();
   }
 
   Future<int> createOrUpdateSaldo(int saldo) async {
-    return into(saldos).insertOnConflictUpdate(
-        SaldosCompanion.insert(id: Value(1), saldo: saldo));
+    final now = DateTime.now();
+    final existingSaldo = await (select(saldos)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year)))
+        .getSingleOrNull();
+
+    if (existingSaldo != null) {
+      return (update(saldos)..where((tbl) => tbl.id.equals(existingSaldo.id)))
+          .write(SaldosCompanion(saldo: Value(saldo)));
+    } else {
+      return into(saldos).insert(SaldosCompanion.insert(saldo: saldo));
+    }
+  }
+
+  Future<bool> isSaldoLessThanAllocation(int saldo) async {
+    int allocation = await sumUsedSaldo();
+    if (saldo < allocation) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   Stream<int> totalExpense() async* {
@@ -244,11 +348,26 @@ class AppDb extends _$AppDb {
     }
   }
 
-  Stream<Map<DateTime, Map<dynamic, dynamic>>>
+  Stream<Map<int, Map<dynamic, dynamic>>>
       sumTransactionsByMonthAndCategory() async* {
-    final transactions = await select(this.transactions).get();
-    final saldo = await getFirstSaldo().then((value) => value.saldo);
-    final Map<DateTime, Map<dynamic, dynamic>> sums = {};
+    final transactionsData = select(this.transactions)
+      ..where((tbl) => tbl.transaction_date.year.equals(DateTime.now().year))
+      ..get();
+    final transactions = await transactionsData.get();
+    final saldo = await getFirstSaldo().then((value) => value!.saldo);
+    final Map<int, Map<dynamic, dynamic>> sums = {
+      1: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      2: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      3: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      4: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      5: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      6: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      7: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      8: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      9: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      10: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+      11: {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}},
+    };
     double sum = 0;
 
     for (var transaction in transactions) {
@@ -258,18 +377,20 @@ class AppDb extends _$AppDb {
       final categoryId = transaction.category_id;
       final transactionDate = transaction.transaction_date;
       final month = DateTime(transactionDate.year, transactionDate.month);
-
       final amount = transaction.amount ?? 0;
-
-      if (!sums.containsKey(month)) {
-        sums[month] = {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}};
+      if (!sums.containsKey(transactionDate.month - 1)) {
+        sums.update(
+            transactionDate.month - 1,
+            (value) =>
+                {"total": 0, "persen": 0.5, "saldo": saldo, "daftar": {}});
       }
-      sums[month]!["total"] = sums[month]!["total"] + amount;
-      sums[month]!["persen"] =
-          double.parse((sums[month]!["total"] / saldo).toString())
-              .toStringAsFixed(3);
+      sums[transactionDate.month - 1]!["total"] =
+          sums[transactionDate.month - 1]!["total"] + amount;
+      sums[transactionDate.month - 1]!["persen"] = double.parse(
+              (sums[transactionDate.month - 1]!["total"] / saldo).toString())
+          .toStringAsFixed(3);
 
-      final monthSums = sums[month]!["daftar"];
+      final monthSums = sums[transactionDate.month - 1]!["daftar"];
 
       if (monthSums.containsKey(categoryId)) {
         monthSums[categoryId]["amount"] =
@@ -279,6 +400,124 @@ class AppDb extends _$AppDb {
       }
 
       yield Map.from(sums);
+    }
+  }
+
+  Stream<List<StatisticData>> sumTransactionsByMonthAndYear(int year) async* {
+    List<StatisticData> statistic = [];
+    Random random = Random();
+
+    for (int i = 1; i <= 12; i++) {
+      int transactionMonth = 0;
+      int saldoMonth = 0;
+      var transactionsQuery = select(transactions)
+        ..where((tbl) =>
+            tbl.transaction_date.month.equals(i) &
+            tbl.transaction_date.year.equals(year));
+
+      var transactionResult = await transactionsQuery.get();
+      transactionResult.forEach((row) {
+        transactionMonth += row.amount;
+      });
+      var saldoQuery = select(saldos)
+        ..where((tbl) =>
+            tbl.createdAt.month.equals(i) & tbl.createdAt.year.equals(year));
+
+      var saldoResult = await saldoQuery.getSingleOrNull();
+      if (saldoResult != null) {
+        saldoMonth = saldoResult.saldo;
+      }
+
+      double persen = saldoMonth != 0 ? transactionMonth / saldoMonth : 0.0;
+
+      var categoriesQuery = select(categories)
+        ..where((tbl) =>
+            tbl.createdAt.month.equals(i) & tbl.createdAt.year.equals(year));
+      var categoriesResult = await categoriesQuery.get();
+      List<StatisticCategory> categoriesData = [];
+      int totalTransactionInCategory = 0;
+      for (var category in categoriesResult) {
+        totalTransactionInCategory = 0;
+        var categoryTransactionQuery = select(transactions)
+          ..where((tbl) =>
+              tbl.transaction_date.month.equals(i) &
+              tbl.transaction_date.year.equals(year) &
+              tbl.category_id.equals(category.id));
+        var categoryTransactionResult = await categoryTransactionQuery.get();
+        categoryTransactionResult.forEach((row) {
+          totalTransactionInCategory += row.amount;
+        });
+        print(random.nextInt(100));
+        categoriesData.add(StatisticCategory(
+            color: RandomColor.generate(),
+            name: category.name,
+            persen: saldoMonth != 0 && totalTransactionInCategory != 0
+                ? totalTransactionInCategory / saldoMonth * 100
+                : 0.0));
+      }
+
+      categoriesData.add(StatisticCategory(
+          color: 0xFFD1D1D1,
+          name: "Sisa",
+          persen: saldoMonth != 0
+              ? (saldoMonth - transactionMonth) / saldoMonth * 100
+              : 0.0));
+
+      statistic.add(StatisticData(persen: persen * 100, data: categoriesData));
+    }
+
+    yield statistic;
+  }
+
+  Future<List<double>> getTransactionsByMonth() async {
+    final transactions = select(this.transactions)
+      ..where((tbl) => tbl.transaction_date.year.equals(DateTime.now().year))
+      ..get();
+
+    final saldo = await getFirstSaldo().then((value) => value!.saldo);
+    final transaksi = await transactions.get();
+    List<double> data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    List<double> persen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    double amount = 0;
+    for (var transaction in transaksi) {
+      data[transaction.transaction_date.month - 1] =
+          transaction.amount + data[transaction.transaction_date.month - 1];
+      persen[transaction.transaction_date.month - 1] =
+          data[transaction.transaction_date.month - 1] / saldo +
+              persen[transaction.transaction_date.month - 1];
+    }
+
+    print(persen);
+    return data;
+  }
+
+  Future<String?> getBudgetinVariable(String key) async {
+    final existingVarQuery = select(budgetinVariables)
+      ..where((tbl) => tbl.name.equals(key))
+      ..getSingleOrNull();
+
+    final existingVar = await existingVarQuery.getSingleOrNull();
+
+    if (existingVar != null) {
+      return existingVar.value;
+    } else {
+      return null;
+    }
+  }
+
+  Future<int> insertBudgetinVariable(String key, String value) async {
+    final existingVar = await (select(budgetinVariables)
+          ..where((tbl) => tbl.name.equals(key)))
+        .getSingleOrNull();
+
+    if (existingVar != null) {
+      return (update(budgetinVariables)
+            ..where((tbl) => tbl.id.equals(existingVar.id)))
+          .write(BudgetinVariablesCompanion(
+              name: Value(key), value: Value(value)));
+    } else {
+      return into(budgetinVariables).insert(
+          BudgetinVariablesCompanion(name: Value(key), value: Value(value)));
     }
   }
 }

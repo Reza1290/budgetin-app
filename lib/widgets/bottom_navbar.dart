@@ -1,9 +1,9 @@
-import 'package:budgetin/screens/faq_page.dart';
+import 'package:budgetin/screens/category_screen.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
-import 'package:budgetin/screens/statistic_screen.dart';
-import 'package:budgetin/them.dart';
-import 'package:budgetin/widgets/main/select_category_dialog.dart';
+import 'package:budgetin/screens/statistic_page.dart';
+import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/main/select_category_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,18 +20,20 @@ class BottomNavbar extends StatefulWidget {
 
 class _BottomNavbarState extends State<BottomNavbar>
     with SingleTickerProviderStateMixin {
+  var currentIndex = 0;
   static List<Widget> page = <Widget>[
     HomePage(),
     RiwayatTransaksiPage(),
-    Center(child: Image.asset('assets/images/maskot.png')),
-    StatisticScreen(),
-    FaqPage(),
+    Container(),
+    // FaqPage(),
+    CategoryScreen(),
+    // StatisticScreen(),
+    StatisticPage(),
   ];
 
   // static const List<Widget> nav = <Widget>[
   //   Tab(),
   // ];
-  var currentIndex = 0;
   late TabController _tabController;
 
   @override
@@ -59,9 +61,7 @@ class _BottomNavbarState extends State<BottomNavbar>
       body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           controller: _tabController,
-          children: page.map((Widget page) {
-            return page;
-          }).toList()),
+          children: page),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
         height: 60,
@@ -70,13 +70,13 @@ class _BottomNavbarState extends State<BottomNavbar>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
           ),
-          backgroundColor: PrimaryColor.shade500,
+          backgroundColor: BudgetinColors.biru50,
           elevation: 0.0,
           disabledElevation: 0,
           onPressed: () {
             Navigator.of(context).push(PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const SelectCategoryDialog(),
+                  const SelectCategoryPage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 const begin = Offset(0.0, 1.0);
@@ -222,77 +222,13 @@ class _BottomNavbarState extends State<BottomNavbar>
     );
   }
 
-  List<String> menu = ["Beranda", "Transaksi", "", "Statistik", "FAQ"];
+  List<String> menu = ["Beranda", "Transaksi", "", "Kategori", "Statistik"];
 
   List<IconData> listOfIcons = [
     Icons.home_rounded,
     Icons.receipt_rounded,
     Icons.document_scanner,
+    Icons.category_rounded,
     Icons.assessment_rounded,
-    Icons.live_help_rounded,
   ];
 }
-
-/*
-
-child: Center(
-              child: ListView.builder(
-                itemCount: 5,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => index != 2
-                    ? InkWell(
-                        onTap: () {
-                          setState(
-                            () {
-                              currentIndex = index != 2 ? index : currentIndex;
-                            },
-                          );
-                          _pageController.animateToPage(index,
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.easeIn);
-                          // _pageController.jumpToPage(index);
-                        },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.fastLinearToSlowEaseIn,
-                              margin: EdgeInsets.only(
-                                bottom: index == currentIndex
-                                    ? 0
-                                    : size.width * .029,
-                                right: size.width * .0422,
-                                left: size.width * .0422,
-                              ),
-                              width: size.width * .128,
-                              height:
-                                  index == currentIndex ? size.width * .014 : 0,
-                              decoration: BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(10),
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              listOfIcons[index],
-                              size: 28,
-                              color: index == currentIndex
-                                  ? Colors.blueAccent
-                                  : Colors.black38,
-                            ),
-                            Text(menu[index]),
-                            // SizedBox(height: size.width * .03),
-                          ],
-                        ))
-                    : Container(
-                        width: size.width * .128,
-                        height: index == currentIndex ? size.width * .014 : 0,
-                      ),
-              ),
-            ),
-*/

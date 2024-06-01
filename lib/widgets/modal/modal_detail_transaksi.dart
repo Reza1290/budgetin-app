@@ -1,17 +1,41 @@
 import 'package:budgetin/models/database.dart';
-import 'package:budgetin/models/dummy.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
-import 'package:budgetin/widgets/detail_transaksi.dart';
+import 'package:budgetin/widgets/transaksi/detail_transaksi.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 // AppDb _db = AppDb();
 
 DateFormat formatter = DateFormat('EEEE, d MMMM y', 'id_ID');
 
-class ModalDetailTransaksi extends StatelessWidget {
+class ModalDetailTransaksi extends StatefulWidget {
   final TransactionWithCategory detailTransaksi;
   const ModalDetailTransaksi({super.key, required this.detailTransaksi});
+
+  @override
+  State<ModalDetailTransaksi> createState() => _ModalDetailTransaksiState();
+}
+
+class _ModalDetailTransaksiState extends State<ModalDetailTransaksi> {
+  late String _selectedIcon;
+  late Widget svg;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      _selectedIcon = 'assets/icons/Plus.svg';
+      svg = SvgPicture.asset(_selectedIcon);
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,20 +89,14 @@ class ModalDetailTransaksi extends StatelessWidget {
                       color: Color.fromRGBO(201, 218, 255, 1),
                     ),
                     child: Center(
-                      child: ClipOval(
-                        child: Image.asset(
-                          detailTransaksi.category.icon,
-                          width: 50,
-                          height: 50,
-                        ),
-                      ),
+                      child: ClipOval(),
                     ),
                   ),
                   const SizedBox(height: 5.0), // Jarak antara gambar dan teks
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Text(
-                      detailTransaksi.category.name,
+                      widget.detailTransaksi.category.name,
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
@@ -96,27 +114,29 @@ class ModalDetailTransaksi extends StatelessWidget {
                 _buildTitleText('Nama'),
                 const SizedBox(
                     height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(detailTransaksi.transaction.name),
+                _buildTextFormField(widget.detailTransaksi.transaction.name),
                 const SizedBox(
                     height: 10.0), // Jarak antara field dan judul berikutnya
                 _buildTitleText('Nominal'),
                 const SizedBox(
                     height: 6.0), // Jarak antara judul dan form field
                 _buildTextFormField(
-                    detailTransaksi.transaction.amount.toString()),
+                    widget.detailTransaksi.transaction.amount.toString()),
                 const SizedBox(
                     height: 10.0), // Jarak antara field dan judul berikutnya
                 _buildTitleText('Deskripsi'),
                 const SizedBox(
                     height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(detailTransaksi.transaction.description),
+                _buildTextFormField(
+                    widget.detailTransaksi.transaction.description),
                 const SizedBox(
                     height: 10.0), // Jarak antara field dan judul berikutnya
                 _buildTitleText('Tanggal'),
                 const SizedBox(
                     height: 6.0), // Jarak antara judul dan form field
-                _buildTextFormField(
-                    detailTransaksi.transaction.transaction_date.toString()),
+                _buildTextFormField(widget
+                    .detailTransaksi.transaction.transaction_date
+                    .toString()),
               ],
             ), // Jarak antara gambar dan teks
           ],

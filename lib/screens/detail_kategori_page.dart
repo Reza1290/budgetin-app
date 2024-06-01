@@ -2,13 +2,9 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/providers/currency.dart';
-import 'package:budgetin/widgets/_pemanggilan_alert.dart';
-import 'package:budgetin/widgets/card_kategori_transaksi.dart';
-import 'package:budgetin/widgets/delete_alert.dart';
-import 'package:budgetin/widgets/failed_alert.dart';
-import 'package:budgetin/widgets/riwayat.dart';
-import 'package:budgetin/widgets/riwayat_transaksi.dart';
-import 'package:budgetin/widgets/succes_alert.dart';
+import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/category/detail/card_kategori_transaksi.dart';
+import 'package:budgetin/widgets/category/detail_category_actions.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -49,6 +45,7 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: Container(
@@ -63,12 +60,7 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () => deleteAlert(context, widget.category.id,
-                  "Apakah anda yakin untuk menghapus?"),
-              icon: Icon(Icons.delete_forever_rounded)),
-        ],
+        actions: [DetailCategoryActions(category: widget.category)],
       ),
       body: ListView(
         children: [
@@ -91,7 +83,7 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                     Text(
                       'Uang Terpakai',
                       style: TextStyle(
-                          fontSize: 12.0, fontWeight: FontWeight.bold),
+                          fontSize: 13.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       TextCurrencyFormat.format(widget.totalAmount.toString()),
@@ -113,9 +105,34 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'Uang Max',
+                      'Uang Sisa',
+                      style: TextStyle(
+                          fontSize: 13.0, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      TextCurrencyFormat.format(
+                          widget.category.total.toString()),
                       style: TextStyle(
                           fontSize: 12.0, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 18.0,
+                ),
+                Divider(
+                  height: 5.0,
+                ),
+                SizedBox(
+                  height: 17.5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Uang Max',
+                      style: TextStyle(
+                          fontSize: 13.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       TextCurrencyFormat.format(

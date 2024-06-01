@@ -1,4 +1,4 @@
-import 'package:budgetin/them.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/statistic/statistic_content.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

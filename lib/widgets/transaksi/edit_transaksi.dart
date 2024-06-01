@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
-import 'package:budgetin/widgets/calendar.dart';
+import 'package:budgetin/widgets/forms/input_dropdown.dart';
+import 'package:budgetin/widgets/reusable/budget_status_card.dart';
+import 'package:budgetin/widgets/reusable/calendar.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
@@ -17,6 +21,15 @@ class EditTransaksi extends StatefulWidget {
 
 class _EditTransaksiState extends State<EditTransaksi>
     with SingleTickerProviderStateMixin {
+  final dropdownItems = [
+    "Makanan & Minuman",
+    "Transportasi",
+    "Belanja",
+    "Hiburan",
+    "Tagihan",
+    "Lainnya",
+  ];
+
   final _formKey = GlobalKey<FormState>();
 
   late AnimationController _controller;
@@ -90,37 +103,8 @@ class _EditTransaksiState extends State<EditTransaksi>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Nama",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 6.0),
-                  InputText(
-                    controller: nameTransaksiController,
-                    hintText: "Nama Transaksi",
-                  ),
-                  const SizedBox(height: 15.0),
-                  const Text(
-                    "Nominal",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 6.0),
-                  InputMoney(
-                    // formKey: _formKey,
-                    controller: _moneyController,
-                    fontSize: 12,
-                  ),
-                  const SizedBox(height: 15.0),
-                  const Text(
-                    "Deskripsi",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 6.0),
-                  InputText(
-                    controller: deskripsiTransaksiController,
-                    hintText: 'Deskripsi Transaksi ',
-                  ),
-                  const SizedBox(height: 15.0),
+                  const BudgetStatusCard(
+                      category: "Makanan", remainingAmount: "50000"),
                   const Text(
                     "Tanggal",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -161,6 +145,44 @@ class _EditTransaksiState extends State<EditTransaksi>
                         readOnly: true,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 6.0),
+                  const Text(
+                    "Kategori Transaksi",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 6.0),
+                  DropdownInput(dropdownItems: dropdownItems),
+                  const SizedBox(height: 6.0),
+                  const Text(
+                    "Nama",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 6.0),
+                  InputText(
+                    controller: nameTransaksiController,
+                    hintText: "Nama Transaksi",
+                  ),
+                  const SizedBox(height: 15.0),
+                  const Text(
+                    "Nominal",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 6.0),
+                  InputMoney(
+                    // formKey: _formKey,
+                    controller: _moneyController,
+                    fontSize: 12,
+                  ),
+                  const SizedBox(height: 15.0),
+                  const Text(
+                    "Deskripsi",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 6.0),
+                  InputText(
+                    controller: deskripsiTransaksiController,
+                    hintText: 'Deskripsi Transaksi ',
                   ),
                   const SizedBox(height: 40.0),
                   SizedBox(

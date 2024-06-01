@@ -1,22 +1,26 @@
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputMoney extends StatelessWidget {
   const InputMoney(
       {super.key,
-      required this.controller,
+      this.controller,
+      this.hintText,
       required this.fontSize,
       this.formKey,
       this.focusNode});
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final FocusNode? focusNode;
   final double fontSize;
+  final String? hintText;
   final Key? formKey;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       // key: formKey,
+
       controller: controller,
       focusNode: focusNode,
       keyboardType: TextInputType.number,
@@ -28,7 +32,13 @@ class InputMoney extends StatelessWidget {
           borderSide: BorderSide(color: Colors.blue),
           borderRadius: BorderRadius.all(Radius.circular(6.0)),
         ),
-        prefix: const Text("Rp "),
+        prefixText: 'Rp. ',
+        hintText: hintText ?? '',
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: BudgetinColors.hitamPutih40,
+          fontWeight: FontWeight.w400,
+        ),
         prefixStyle: TextStyle(
           color: Colors.grey,
           fontSize: fontSize,
@@ -43,7 +53,7 @@ class InputMoney extends StatelessWidget {
       ],
       validator: (nominal) =>
           (nominal == null || nominal.isEmpty || nominal == '0')
-              ? 'Harap masukkan nominal transaksi'
+              ? 'Harap masukkan nominal'
               : (!RegExp(r'^[0-9]+$').hasMatch(nominal.replaceAll('.', '')))
                   ? 'Nominal harus berupa angka'
                   : (nominal.replaceAll('.', '').length > 16)

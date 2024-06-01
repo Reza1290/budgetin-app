@@ -1,3 +1,4 @@
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/faq/faq_content.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,14 @@ class FaqPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
+        leading: InkWell(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(Icons.arrow_back_ios_rounded),
+        ),
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: const TextStyle(
@@ -16,7 +24,6 @@ class FaqPage extends StatelessWidget {
           color: Colors.black,
           fontFamily: 'Nunito',
         ),
-        leadingWidth: 100,
         title: Text("FAQ"),
       ),
       body: SafeArea(
