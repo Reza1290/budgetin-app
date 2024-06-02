@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/utilities/export_excel.dart';
@@ -43,14 +45,14 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     return BudgetinModal(
-        title: TitleModal(title: 'Bagikan'),
+        title: const TitleModal(title: 'Bagikan'),
         content: SizedBox(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 30, bottom: 6),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(top: 30, bottom: 6),
+              child: Text(
                 "Opsi",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
@@ -75,9 +77,9 @@ class _ShareDialogState extends State<ShareDialog> {
                 // ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, bottom: 6),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(top: 30, bottom: 6),
+              child: Text(
                 "Tanggal",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
@@ -90,7 +92,7 @@ class _ShareDialogState extends State<ShareDialog> {
           ],
         )),
         actions: Container(
-            margin: EdgeInsets.symmetric(vertical: 20),
+            margin: const EdgeInsets.symmetric(vertical: 20),
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
@@ -139,11 +141,11 @@ class _ShareDialogState extends State<ShareDialog> {
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
-                      side: BorderSide(color: Colors.transparent),
+                      side: const BorderSide(color: Colors.transparent),
                     ),
                   ),
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    EdgeInsets.all(
+                    const EdgeInsets.all(
                         2), // Atur padding di sini sesuai kebutuhan Anda
                   ),
                 ),
@@ -175,7 +177,7 @@ class _ShareDialogState extends State<ShareDialog> {
               height: 55,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(7.86),
-                color: isSelected ? BudgetinColors.biru50 : Color(0xFFF2F2F2),
+                color: isSelected ? BudgetinColors.biru50 : const Color(0xFFF2F2F2),
               ),
             ),
             // Layer kedua: Icon
@@ -183,7 +185,7 @@ class _ShareDialogState extends State<ShareDialog> {
               image,
               // ignore: deprecated_member_use
               color:
-                  isSelected ? Color(0xFFF2F2F2) : BudgetinColors.hitamPutih50,
+                  isSelected ? const Color(0xFFF2F2F2) : BudgetinColors.hitamPutih50,
             ),
           ],
         ),
@@ -192,11 +194,42 @@ class _ShareDialogState extends State<ShareDialog> {
   }
 }
 
-Future<void> showModalBagikan(BuildContext context) async {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return ShareDialog();
+Future<Object?> showModalBagikan(BuildContext context) async {
+  return Navigator.of(context).push(PageRouteBuilder(
+    opaque: false,
+    barrierDismissible: false,
+    transitionDuration: const Duration(milliseconds: 250),
+    reverseTransitionDuration: const Duration(milliseconds: 250),
+    pageBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      return FadeTransition(
+        opacity: animation,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+            ),
+            Center(
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+                child: const ShareDialog(),
+              ),
+            ),
+          ],
+        ),
+      );
     },
-  );
+    transitionsBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation, Widget child) {
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(animation),
+        child: child,
+      );
+    },
+  ));
 }
