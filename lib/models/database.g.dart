@@ -1075,6 +1075,179 @@ class BudgetinVariablesCompanion extends UpdateCompanion<BudgetinVariable> {
   }
 }
 
+class $AppVersionsTable extends AppVersions
+    with TableInfo<$AppVersionsTable, AppVersion> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AppVersionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _versionMeta =
+      const VerificationMeta('version');
+  @override
+  late final GeneratedColumn<String> version = GeneratedColumn<String>(
+      'version', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, version];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'app_versions';
+  @override
+  VerificationContext validateIntegrity(Insertable<AppVersion> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('version')) {
+      context.handle(_versionMeta,
+          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AppVersion map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AppVersion(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      version: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}version'])!,
+    );
+  }
+
+  @override
+  $AppVersionsTable createAlias(String alias) {
+    return $AppVersionsTable(attachedDatabase, alias);
+  }
+}
+
+class AppVersion extends DataClass implements Insertable<AppVersion> {
+  final int id;
+  final String version;
+  const AppVersion({required this.id, required this.version});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['version'] = Variable<String>(version);
+    return map;
+  }
+
+  AppVersionsCompanion toCompanion(bool nullToAbsent) {
+    return AppVersionsCompanion(
+      id: Value(id),
+      version: Value(version),
+    );
+  }
+
+  factory AppVersion.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AppVersion(
+      id: serializer.fromJson<int>(json['id']),
+      version: serializer.fromJson<String>(json['version']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'version': serializer.toJson<String>(version),
+    };
+  }
+
+  AppVersion copyWith({int? id, String? version}) => AppVersion(
+        id: id ?? this.id,
+        version: version ?? this.version,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('AppVersion(')
+          ..write('id: $id, ')
+          ..write('version: $version')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, version);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppVersion &&
+          other.id == this.id &&
+          other.version == this.version);
+}
+
+class AppVersionsCompanion extends UpdateCompanion<AppVersion> {
+  final Value<int> id;
+  final Value<String> version;
+  const AppVersionsCompanion({
+    this.id = const Value.absent(),
+    this.version = const Value.absent(),
+  });
+  AppVersionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String version,
+  }) : version = Value(version);
+  static Insertable<AppVersion> custom({
+    Expression<int>? id,
+    Expression<String>? version,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (version != null) 'version': version,
+    });
+  }
+
+  AppVersionsCompanion copyWith({Value<int>? id, Value<String>? version}) {
+    return AppVersionsCompanion(
+      id: id ?? this.id,
+      version: version ?? this.version,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<String>(version.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppVersionsCompanion(')
+          ..write('id: $id, ')
+          ..write('version: $version')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDb extends GeneratedDatabase {
   _$AppDb(QueryExecutor e) : super(e);
   late final $CategoriesTable categories = $CategoriesTable(this);
@@ -1082,10 +1255,11 @@ abstract class _$AppDb extends GeneratedDatabase {
   late final $SaldosTable saldos = $SaldosTable(this);
   late final $BudgetinVariablesTable budgetinVariables =
       $BudgetinVariablesTable(this);
+  late final $AppVersionsTable appVersions = $AppVersionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [categories, transactions, saldos, budgetinVariables];
+      [categories, transactions, saldos, budgetinVariables, appVersions];
 }

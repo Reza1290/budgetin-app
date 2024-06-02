@@ -7,6 +7,7 @@ import 'package:budgetin/models/saldo.dart';
 import 'package:budgetin/models/saldo_data.dart';
 import 'package:budgetin/models/statistic_category.dart';
 import 'package:budgetin/models/statistic_data.dart';
+import 'package:budgetin/models/app_version.dart';
 import 'package:budgetin/models/transaction.dart';
 import 'package:budgetin/models/transaction_insert.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
@@ -25,24 +26,37 @@ part 'database.g.dart';
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories, Transactions, Saldos, BudgetinVariables],
+  tables: [Categories, Transactions, Saldos, BudgetinVariables, AppVersions],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+        String currentVersion = '1.0.0'; // Change this as needed
+        await into(appVersions)
+            .insert(AppVersionsCompanion.insert(version: currentVersion));
       },
       beforeOpen: (details) async {
-        if (details.wasCreated) {
-          // await into(saldos)
-          //     .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
+        final currentVersion = '1.0.0'; // Change this as needed
+        final version = await select(appVersions).getSingleOrNull();
+        if (version == null || version.version != currentVersion) {
+          // Clear data if version is different or not found
+          await clearAllTables();
+          // Insert or update the version
+          if (version == null) {
+            await into(appVersions)
+                .insert(AppVersionsCompanion.insert(version: currentVersion));
+          } else {
+            await update(appVersions)
+                .replace(AppVersion(id: version.id, version: currentVersion));
+          }
         }
       },
       onUpgrade: (Migrator m, int from, int to) async {
@@ -63,11 +77,9 @@ class AppDb extends _$AppDb {
         if (from < 6) {
           await m.createTable($BudgetinVariablesTable(attachedDatabase));
         }
-        if (from < 7) {
-          for (var table in allTables) {
-            await m.deleteTable(table.actualTableName);
-          }
-          await m.createAll();
+        if (from < 7) {}
+        if (from < 8) {
+          await m.createTable($AppVersionsTable(attachedDatabase));
         }
       },
     );
@@ -76,6 +88,11 @@ class AppDb extends _$AppDb {
   // Future<bool> insertSaldo(){
 
   // }
+
+  Future<void> clearAllTables() async {
+    final tables = allTables.map((t) => delete(t).go());
+    await Future.wait(tables);
+  }
 
   Future<int> insertCategory(CategoriesCompanion entry) async {
     return await into(categories).insert(entry);

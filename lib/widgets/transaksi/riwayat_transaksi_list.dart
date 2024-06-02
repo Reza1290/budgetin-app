@@ -205,9 +205,13 @@ class RiwayatTransaksiList extends StatelessWidget {
 
   void _onDismissed(BuildContext context, int index, bool delete) {
     if (delete) {
-      showSuccessAlert(context, "Berhasil Dihapus");
+      showModalInformation(
+          context, 'assets/images/alertYes.svg', "Berhasil Dihapus", true);
+      // showSuccessAlert(context, "Berhasil Dihapus");
     } else {
-      showFailedAlert(context, "Gagal Terhapus");
+      // showFailedAlert(context, "Gagal Terhapus");
+      showModalInformation(
+          context, 'assets/images/alertNo.svg', "Gagal Terhapus", true);
     }
   }
 
