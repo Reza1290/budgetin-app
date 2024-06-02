@@ -1,10 +1,12 @@
 import 'package:budgetin/controller/category_controller.dart';
+import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/modal/budgetin_sheet.dart';
 import 'package:budgetin/widgets/modal/modal_icon_kategori.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,6 +19,16 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
   String val = category != null ? category.icon : "assets/icons/Plus.svg";
   bool isValid = true;
   final _formKey = GlobalKey<FormState>();
+  Future<void> fetchCategory() async {
+    Category temp = await db!.getCategory(category!.id);
+    _nameController.text = temp.name;
+    _alokasiController.text = temp.total.toString();
+    val = temp.icon.toString();
+  }
+
+  if (category != null) {
+    fetchCategory();
+  }
 
   return showModalBottomSheet<void>(
     isScrollControlled: true,
@@ -47,7 +59,7 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
                 Container(
                   margin: EdgeInsets.all(15.0),
                   child: Text(
-                    'Tambah Kategori',
+                    category == null ? 'Tambah Kategori' : 'Edit Kategori',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -121,20 +133,40 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 30),
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (val == 'assets/icons/Plus.svg') {
                               setState(() {
                                 isValid = false;
                               });
                             }
-
+                            bool res = false;
                             if (_formKey.currentState!.validate() && isValid) {
                               if (category != null) {
-                                CategoryController.insert(_nameController.text,
-                                    val, _alokasiController.text, category.id);
+                                res = await CategoryController.insert(
+                                    _nameController.text,
+                                    val,
+                                    _alokasiController.text,
+                                    category.id);
                               } else {
-                                CategoryController.insert(_nameController.text,
-                                    val, _alokasiController.text);
+                                res = await CategoryController.insert(
+                                    _nameController.text,
+                                    val,
+                                    _alokasiController.text);
+                              }
+                              // print('res' + res.toString());
+                              if (res) {
+                                Navigator.pop(context);
+                                showModalInformation(
+                                    context,
+                                    'assets/images/alertYes.svg',
+                                    'Kategori Berhasil Ditambahkan.',
+                                    true);
+                              } else {
+                                showModalInformation(
+                                    context,
+                                    'assets/images/alertNo.svg',
+                                    'Alokasi Melebihi Saldo Kamu atau Dibawah Uang Terpakai.',
+                                    true);
                               }
                             }
                           },

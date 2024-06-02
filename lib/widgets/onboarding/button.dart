@@ -36,10 +36,10 @@ class ButtonCustom extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: blok ? Colors.white : BudgetinColors.biru50,
-          ),
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: blok ? Colors.white : BudgetinColors.biru50,
+              overflow: TextOverflow.ellipsis),
         ),
       ),
     );

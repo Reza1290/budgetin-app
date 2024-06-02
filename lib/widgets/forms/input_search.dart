@@ -6,10 +6,15 @@ import 'package:flutter/widgets.dart';
 class InputSearch extends StatefulWidget {
   final bool showFilter;
   const InputSearch(
-      {super.key, this.controller, this.focusNode, required this.showFilter});
+      {super.key,
+      this.controller,
+      this.focusNode,
+      required this.showFilter,
+      this.onEditingComplete});
 
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final VoidCallback? onEditingComplete;
 
   @override
   State<InputSearch> createState() => _InputSearchState();
@@ -83,9 +88,12 @@ class _InputSearchState extends State<InputSearch> {
                   width: 12,
                   child: Icon(Icons.search, color: hitam80),
                 ),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16.0), // Hilangkan padding
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                // Hilangkan padding
               ),
+              onEditingComplete: () {
+                widget.onEditingComplete;
+              },
             ),
           ),
         ),

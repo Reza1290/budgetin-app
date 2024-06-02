@@ -4,18 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputMoney extends StatelessWidget {
-  const InputMoney(
-      {super.key,
-      this.controller,
-      this.hintText,
-      required this.fontSize,
-      this.formKey,
-      this.focusNode});
+  const InputMoney({
+    super.key,
+    this.controller,
+    this.hintText,
+    required this.fontSize,
+    this.formKey,
+    this.focusNode,
+    this.onEditingComplete,
+    this.errorText,
+    this.maks = 9999999999999999,
+    this.min = 0,
+  });
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final double fontSize;
   final String? hintText;
   final Key? formKey;
+  final VoidCallback? onEditingComplete;
+  final String? errorText;
+  final int? maks;
+  final int? min;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -58,8 +67,13 @@ class InputMoney extends StatelessWidget {
                   ? 'Nominal harus berupa angka'
                   : (nominal.replaceAll('.', '').length > 16)
                       ? 'Nominal Terlalu Banyak'
-                      : null,
+                      : errorText != null &&
+                              (int.parse(nominal.replaceAll('.', '')) > maks! ||
+                                  int.parse(nominal.replaceAll('.', '')) < min!)
+                          ? errorText
+                          : null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      onEditingComplete: onEditingComplete,
     );
   }
 }

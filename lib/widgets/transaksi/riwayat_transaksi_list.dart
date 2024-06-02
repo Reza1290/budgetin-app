@@ -3,7 +3,10 @@ import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
+import 'package:budgetin/widgets/reusable/transaksi_kosong.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/modal/modal_detail_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
@@ -70,7 +73,7 @@ class RiwayatTransaksiList extends StatelessWidget {
                   }).toList(),
                 );
               } else {
-                return const Center(child: Text("Belum ada transaksi"));
+                return TransaksiKosong();
               }
             }
           },
@@ -125,7 +128,11 @@ class RiwayatTransaksiList extends StatelessWidget {
                   onPressed: (BuildContext context) {
                     Navigator.of(context).push(PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          EditTransaksi(transaction: transaction),
+                          CreateUpdateTransaksiPage(
+                        categoryId: transaction.category.id,
+                        dataTransaction: transaction,
+                        isEditPage: true,
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);
@@ -153,7 +160,16 @@ class RiwayatTransaksiList extends StatelessWidget {
                 ),
                 SlidableAction(
                   onPressed: (value) {
-                    _confirmDelete(context, transaction.transaction.id);
+                    showModalInformation(
+                        context,
+                        'assets/images/modal_gagal.svg',
+                        "Hapus Transaksi",
+                        false, onPressed: () {
+                      db!.deleteTransaction(transaction.transaction.id);
+                      Navigator.of(context).pop();
+
+                      _onDismissed(context, transaction.transaction.id, true);
+                    });
                   },
                   autoClose: true,
                   padding: EdgeInsets.all(8),
@@ -189,9 +205,13 @@ class RiwayatTransaksiList extends StatelessWidget {
 
   void _onDismissed(BuildContext context, int index, bool delete) {
     if (delete) {
-      showSuccessAlert(context, "Berhasil Dihapus");
+      showModalInformation(
+          context, 'assets/images/alertYes.svg', "Berhasil Dihapus", true);
+      // showSuccessAlert(context, "Berhasil Dihapus");
     } else {
-      showFailedAlert(context, "Gagal Terhapus");
+      // showFailedAlert(context, "Gagal Terhapus");
+      showModalInformation(
+          context, 'assets/images/alertNo.svg', "Gagal Terhapus", true);
     }
   }
 

@@ -1,16 +1,20 @@
+import 'dart:async';
+
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
 import 'package:budgetin/utilities/them.dart';
-import 'package:budgetin/widgets/failed_alert.dart';
-import 'package:budgetin/widgets/succes_alert.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/saldo_card.dart';
-import 'package:budgetin/widgets/transaksi/edit_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../widgets/reusable/transaksi_kosong.dart';
 
 class RiwayatTransaksiPage extends StatefulWidget {
   const RiwayatTransaksiPage({Key? key}) : super(key: key);
@@ -26,32 +30,32 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     return db!.getAllTransactionWithCategory();
   }
 
+  Stream<List<TransactionWithCategory>> searchTransaction(String keyword,
+      {DateTime? start, DateTime? end}) {
+    return db!.searchTransactionRepo(keyword);
+  }
+
   final TextEditingController searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   bool isVisible = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _focusNode.addListener(() {
-      if (searchController.text != '') {
-        setState(() {
-          isVisible = false;
-        });
-      } else {
-        setState(() {
-          isVisible = !_focusNode.hasFocus;
-        });
-      }
+    _focusNode.addListener(_updateVisibility);
+    searchController.addListener(_updateVisibility);
+  }
+
+  void _updateVisibility() {
+    setState(() {
+      isVisible = searchController.text.isEmpty && !_focusNode.hasFocus;
     });
-    // db = AppDb();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    // db.close();
+    searchController.removeListener(_updateVisibility);
+    _focusNode.removeListener(_updateVisibility);
     searchController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -94,7 +98,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               child: InputSearch(
                 controller: searchController,
                 focusNode: _focusNode,
-                showFilter: true,
+                showFilter: false,
               ),
             ),
             const SizedBox(
@@ -118,7 +122,9 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         child: SlidableAutoCloseBehavior(
             closeWhenOpened: true,
             child: StreamBuilder<List<TransactionWithCategory>>(
-              stream: getAllTransactions(),
+              stream: searchController.text.isNotEmpty
+                  ? searchTransaction(searchController.text)
+                  : getAllTransactions(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -178,8 +184,12 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                               .push(PageRouteBuilder(
                                             pageBuilder: (context, animation,
                                                     secondaryAnimation) =>
-                                                EditTransaksi(
-                                                    transaction: transaction),
+                                                CreateUpdateTransaksiPage(
+                                              categoryId:
+                                                  transaction.category.id,
+                                              dataTransaction: transaction,
+                                              isEditPage: true,
+                                            ),
                                             transitionsBuilder: (context,
                                                 animation,
                                                 secondaryAnimation,
@@ -213,10 +223,25 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                                       ),
                                       SlidableAction(
                                         onPressed: (value) {
-                                          _confirmDelete(
+                                          showModalInformation(
                                               context,
-                                              transaction.transaction
-                                                  .id); // Tampilkan dialog konfirmasi sebelum menghapus
+                                              'assets/images/modal_gagal.svg',
+                                              "Hapus Transaksi",
+                                              false, onPressed: () {
+                                            db!.deleteTransaction(
+                                                transaction.transaction.id);
+                                            Navigator.of(context).pop();
+
+                                            _onDismissed(
+                                                context,
+                                                transaction.transaction.id,
+                                                true);
+                                          });
+
+                                          // _confirmDelete(
+                                          //     context,
+                                          //     transaction.transaction
+                                          //         .id); // Tampilkan dialog konfirmasi sebelum menghapus
                                         },
                                         autoClose: true,
                                         backgroundColor: merah50,
@@ -254,10 +279,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                         },
                       );
                     } else {
-                      return const Text("Belum ada transaksi");
+                      return TransaksiKosong();
                     }
                   } else {
-                    return const Text("Belum ada transaksi");
+                    return TransaksiKosong();
                   }
                 }
               },
@@ -268,9 +293,13 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
 
   void _onDismissed(BuildContext context, int index, bool delete) {
     if (delete) {
-      showSuccessAlert(context, "Berhasil Dihapus");
+      showModalInformation(
+          context, 'assets/images/alertYes.svg', "Berhasil Dihapus", true);
+      // showSuccessAlert(context, "Berhasil Dihapus");
     } else {
-      showFailedAlert(context, "Gagal Terhapus");
+      // showFailedAlert(context, "Gagal Terhapus");
+      showModalInformation(
+          context, 'assets/images/alertNo.svg', "Gagal Terhapus", true);
     }
   }
 

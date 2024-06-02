@@ -6,6 +6,7 @@ import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/main/select_category_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({
@@ -24,7 +25,9 @@ class _BottomNavbarState extends State<BottomNavbar>
   static List<Widget> page = <Widget>[
     HomePage(),
     RiwayatTransaksiPage(),
-    Container(),
+    Scaffold(
+      backgroundColor: Colors.white,
+    ),
     // FaqPage(),
     CategoryScreen(),
     // StatisticScreen(),

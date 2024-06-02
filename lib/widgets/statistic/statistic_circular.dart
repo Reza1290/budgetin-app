@@ -15,6 +15,8 @@ class StatisticCircular extends StatefulWidget {
 class _StatisticCircularState extends State<StatisticCircular> {
   @override
   Widget build(BuildContext context) {
+    // print(widget.bulan);
+
     return Center(
       child: StreamBuilder<List<StatisticData>>(
           stream: db!.sumTransactionsByMonthAndYear(DateTime.now().year),
@@ -22,9 +24,12 @@ class _StatisticCircularState extends State<StatisticCircular> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator(); // or any other loading widget
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return Text('');
+            } else if (snapshot.hasData &&
+                snapshot.data!.isNotEmpty &&
+                snapshot.data != null) {
               double total = snapshot.data![widget.bulan].persen;
+              // print(total);
               List<StatisticData>? dataPerCategory =
                   List.from(snapshot.data ?? []);
               List<StatisticData>? dataTotal = List.from(snapshot.data ?? []);
@@ -104,8 +109,7 @@ class _StatisticCircularState extends State<StatisticCircular> {
                                                   .persen >
                                               0)
                                           ? (100 -
-                                              dataPerCategory[
-                                                      DateTime.now().month - 1]
+                                              dataPerCategory[widget.bulan]
                                                   .data![index]
                                                   .persen)
                                           : 100),

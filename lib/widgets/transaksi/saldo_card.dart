@@ -3,7 +3,14 @@ import 'dart:async';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/forms/input_money.dart';
+import 'package:budgetin/widgets/modal/modal_bagikan.dart';
+import 'package:budgetin/widgets/modal/modal_saldo.dart';
+import 'package:budgetin/widgets/modal/show_modal.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
 class SaldoCard extends StatefulWidget {
@@ -14,6 +21,9 @@ class SaldoCard extends StatefulWidget {
 }
 
 class _SaldoCardState extends State<SaldoCard> {
+  late TextEditingController _moneyController =
+      TextEditingController(text: '0');
+
   @override
   void initState() {
     // TODO: implement initState
@@ -43,27 +53,27 @@ class _SaldoCardState extends State<SaldoCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildText("Sisa Saldo", 16, FontWeight.w700, putih30),
+          _buildText("Saldo Bulan Ini", 16, FontWeight.w700, putih30),
           SizedBox(height: 10),
-          StreamBuilder<int>(
-              stream: db!.watchUsedSaldo(),
+          StreamBuilder<Saldo>(
+              stream: db!.watchSaldoMonthNow(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildText("Rp. 0", 26.37, FontWeight.w800, putih30);
+                  return _buildText("Rp0", 26, FontWeight.w800, putih30);
                 } else {
                   if (snapshot.hasData) {
                     if (snapshot.data != null) {
                       return _buildText(
-                          TextCurrencyFormat.format(snapshot.data!.toString()),
+                          TextCurrencyFormat.format(
+                              snapshot.data!.saldo.toString()),
                           26,
                           FontWeight.w800,
                           putih30);
                     } else {
-                      return _buildText(
-                          "Rp. 0", 26.37, FontWeight.w800, putih30);
+                      return _buildText("Rp0", 26, FontWeight.w800, putih30);
                     }
                   } else {
-                    return _buildText("Rp. 0", 26.37, FontWeight.w800, putih30);
+                    return _buildText("Rp0", 26, FontWeight.w800, putih30);
                   }
                 }
               }),
@@ -82,9 +92,7 @@ class _SaldoCardState extends State<SaldoCard> {
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed: () {
-                    // Tindakan saat tombol pertama ditekan
-                  },
+                  onPressed: () => showModalSaldo(context),
                   style: TextButton.styleFrom(
                     backgroundColor: BudgetinColors.hitamPutih10,
                     shape: RoundedRectangleBorder(
@@ -120,7 +128,7 @@ class _SaldoCardState extends State<SaldoCard> {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    // Tindakan saat tombol pertama ditekan
+                    showModalBagikan(context);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: BudgetinColors.hitamPutih10,
@@ -178,6 +186,20 @@ class _SaldoCardState extends State<SaldoCard> {
         ],
       ),
     );
+  }
+
+  void simpanSaldo(int sal, BuildContext context) async {
+    int sum = await db!.sumUsedSaldo();
+    if (sum > sal) {
+      // debugPrint("teteh" + await db!.sumUsedSaldo().toString());
+      String alokasi = TextCurrencyFormat.format(sum.toString());
+      showFailedAlert(context,
+          "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
+    } else {
+      await db!.createOrUpdateSaldo(sal);
+      Navigator.pop(context);
+      showSuccessAlert(context, "Berhasil");
+    }
   }
 }
 

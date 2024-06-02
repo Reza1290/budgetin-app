@@ -1,5 +1,6 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
@@ -99,8 +100,13 @@ void deleteAlert(BuildContext context, int index, String message) {
 
 void _onDismissed(BuildContext context, int index, bool delete) {
   if (delete) {
-    showSuccessAlert(context, "Berhasil Dihapus");
-  } else {
-    showFailedAlert(context, "Gagal Terhapus");
-  }
+      
+      showModalInformation(
+          context, 'assets/images/alertYes.svg', "Berhasil Dihapus", true);
+      // showSuccessAlert(context, "Berhasil Dihapus");
+    } else {
+      // showFailedAlert(context, "Gagal Terhapus");
+      showModalInformation(
+          context, 'assets/images/alertNo.svg', "Gagal Terhapus", true);
+    }
 }

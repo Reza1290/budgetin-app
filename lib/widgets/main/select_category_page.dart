@@ -2,7 +2,8 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/main/select_category_card.dart';
-import 'package:budgetin/widgets/transaksi/add_transaksi.dart';
+import 'package:budgetin/widgets/reusable/kategori_kosong.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +21,39 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
-  Future<List<Category>> getAllCategory() {
-    return db!.select(db!.categories).get();
+  Stream<List<CategoryTotal>> getAllCategory() {
+    return db!.sumExpenseByCategory(0);
+  }
+
+  Stream<List<CategoryTotal>> searchCategory(String keyword) {
+    return db!.sumExpenseByCategorySearch(keyword);
   }
 
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  bool isVisible2 = true;
 
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(_updateVisibility);
+    _searchController.addListener(_updateVisibility);
     _controller = AnimationController(vsync: this);
+  }
+
+  void _updateVisibility() {
+    setState(() {
+      isVisible2 = _searchController.text.isEmpty && !_focusNode.hasFocus;
+    });
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_updateVisibility);
+    _searchController.removeListener(_updateVisibility);
+    _searchController.dispose();
+    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -67,20 +87,32 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: InputSearch(
                       controller: _searchController,
+                      focusNode: _focusNode,
                       showFilter: false,
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    child: AddCategoryButton(),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeInCirc,
+                    child: Visibility(
+                      key: Key(isVisible2.toString()),
+                      visible: isVisible2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 8),
+                        child: AddCategoryButton(),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: FutureBuilder<List<Category>>(
-                  future: getAllCategory(),
+              child: StreamBuilder<List<Category>>(
+                  stream: _searchController.text.isEmpty
+                      ? db!.getAllCategoryByMonthAndYear()
+                      : db!.getAllCategoryByMonthAndYearSearch(
+                          _searchController.text),
                   builder: (context, snapshots) {
                     if (snapshots.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -99,12 +131,10 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
                             },
                           );
                         } else {
-                          return Center(
-                              child: Text(
-                                  "Belum ada Kategori, Silahkan buat terlebih dahulu."));
+                          return KategoriKosong();
                         }
                       } else {
-                        return Center(child: Text("Belum ada kategori"));
+                        return KategoriKosong();
                       }
                     }
                   }),
