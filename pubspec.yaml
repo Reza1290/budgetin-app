@@ -24,6 +24,7 @@ dependencies:
   pdf: ^3.10.8
   syncfusion_flutter_xlsio: ^25.1.42
   open_file: ^3.2.1
+  readmore: ^3.0.0
 
 dev_dependencies:
   flutter_test:
