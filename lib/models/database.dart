@@ -136,8 +136,11 @@ class AppDb extends _$AppDb {
 
   Stream<List<TransactionWithCategory>> getAllTransactionWithCategory(
       int month) {
+    final int firstDay = DateTime(DateTime.now().year, month + 1, 0).day;
     final query = (select(transactions)
-          ..where((tbl) => tbl.transaction_date.month.equals(month))
+          ..where((tbl) => tbl.transaction_date.month.equals(month)
+              // tbl.transaction_date.day.isBetweenValues(0, firstDay)
+              )
           ..orderBy([
             (tbl) => OrderingTerm(
                 expression: tbl.transaction_date, mode: OrderingMode.asc)

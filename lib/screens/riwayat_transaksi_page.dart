@@ -145,7 +145,6 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               } else {
                 if (snapshot.hasData) {
                   var transactions = snapshot.data!;
-
                   if (transactions.isNotEmpty) {
                     var groupedTransactions =
                         _groupTransactionsByDate(transactions);
