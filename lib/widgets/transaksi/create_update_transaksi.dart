@@ -13,11 +13,13 @@ import 'package:flutter/widgets.dart';
 class CreateUpdateTransaksiPage extends StatefulWidget {
   final int categoryId;
   final bool? isEditPage;
+  final bool? isOnCategory;
   final TransactionWithCategory? dataTransaction;
   const CreateUpdateTransaksiPage(
       {super.key,
       required this.categoryId,
       this.isEditPage = false,
+      this.isOnCategory = false,
       this.dataTransaction});
 
   @override
@@ -222,14 +224,16 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                           if (res) {
                             widget.isEditPage!
                                 ? Navigator.pop(context)
-                                : Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavbar(initIndex: 1),
-                                    ),
-                                    (route) => false,
-                                  );
+                                : widget.isOnCategory!
+                                    ? Navigator.pop(context)
+                                    : Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavbar(initIndex: 1),
+                                        ),
+                                        (route) => false,
+                                      );
                             showModalInformation(
                                 context,
                                 'assets/images/alertYes.svg',

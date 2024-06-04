@@ -7,6 +7,7 @@ import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/detail/card_kategori_transaksi.dart';
 import 'package:budgetin/widgets/category/detail_category_actions.dart';
 import 'package:budgetin/widgets/main/select_category_page.dart';
+import 'package:budgetin/widgets/transaksi/create_update_transaksi.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -156,7 +157,11 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                               Navigator.of(context).push(PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        const SelectCategoryPage(),
+                                        CreateUpdateTransaksiPage(
+                                  isEditPage: false,
+                                  isOnCategory: true,
+                                  categoryId: widget.category.id,
+                                ),
                                 transitionsBuilder: (context, animation,
                                     secondaryAnimation, child) {
                                   const begin = Offset(0.0, 1.0);

@@ -46,6 +46,7 @@ class _FaqContentState extends State<FaqContent> {
                 : const Icon(Icons.arrow_drop_down),
             children: [
               Container(
+                width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.blue[50],
