@@ -134,8 +134,15 @@ class AppDb extends _$AppDb {
     }
   }
 
-  Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
-    final query = (select(transactions)).join([
+  Stream<List<TransactionWithCategory>> getAllTransactionWithCategory(
+      int month) {
+    final query = (select(transactions)
+          ..where((tbl) => tbl.transaction_date.month.equals(month))
+          ..orderBy([
+            (tbl) => OrderingTerm(
+                expression: tbl.transaction_date, mode: OrderingMode.asc)
+          ]))
+        .join([
       innerJoin(categories, categories.id.equalsExp(transactions.category_id))
     ]);
     return query.watch().map((rows) {

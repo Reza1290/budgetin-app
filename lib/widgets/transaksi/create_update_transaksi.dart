@@ -123,7 +123,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                         buildCalendarDialogButton(context, selectedDate, "",
                             (newDate) {
                           setState(() {
-                            selectedDate;
+                            selectedDate = newDate;
                           });
                         }),
                       ],
