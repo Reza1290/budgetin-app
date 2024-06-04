@@ -65,7 +65,7 @@ class _StatisticCircularState extends State<StatisticCircular> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 40),
                           ),
-                          Text('Total Used'),
+                          Text('Terpakai'),
                         ],
                       ),
                     ),
@@ -93,10 +93,15 @@ class _StatisticCircularState extends State<StatisticCircular> {
                                       0)
                                     PieChartData(
                                       Color(
-                                        dataPerCategory[
-                                                DateTime.now().month - 1]
-                                            .data![index]
-                                            .color,
+                                        dataPerCategory[widget.bulan]
+                                                    .data![index]
+                                                    .name
+                                                    .toLowerCase() ==
+                                                'sisa'
+                                            ? 0xFFD400FF
+                                            : dataPerCategory[widget.bulan]
+                                                .data![index]
+                                                .color,
                                       ),
                                       dataPerCategory[widget.bulan]
                                           .data![index]

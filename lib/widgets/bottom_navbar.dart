@@ -63,20 +63,10 @@ class _BottomNavbarState extends State<BottomNavbar>
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvoked: (didPop) {
-        if (didPop) {
-          return;
-        }
+        tracker.track('on-close-app', withDeviceInfo: true);
 
-        showModalInformation(
-            context, 'assets/images/modal_gagal.svg', 'Keluar Aplikasi?', false,
-            onPressed: () {
-          tracker.track('on-close-app', withDeviceInfo: true);
-
-          didPop = false;
-          SystemNavigator.pop();
-        });
         true;
       },
       child: Scaffold(
