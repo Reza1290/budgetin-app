@@ -2,6 +2,7 @@ import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/modal/budgetin_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'dart:ui';
 
 class InformationModal extends StatelessWidget {
   final String content;
@@ -20,8 +21,8 @@ class InformationModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BudgetinModal(
-      padding: EdgeInsets.all(24),
-      title: Text(""),
+      padding: const EdgeInsets.all(24),
+      title: const Text(""),
       content: SizedBox(
         width: double.infinity,
         child: Column(
@@ -29,14 +30,7 @@ class InformationModal extends StatelessWidget {
           children: <Widget>[
             SvgPicture.asset(
               content,
-              // width: 173.0,
-              // height: 159.0,
             ),
-            // Image.asset(
-            //   content,
-            //   // width: 173.0,
-            //   // height: 159.0,
-            // ),
             const SizedBox(
               height: 12.0,
             ),
@@ -68,7 +62,7 @@ class InformationModal extends StatelessWidget {
                     child: Container(
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Color(0xFFF2F2F2),
+                        color: const Color(0xFFF2F2F2),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Center(
@@ -81,7 +75,7 @@ class InformationModal extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12,
                 ),
                 Expanded(
@@ -95,8 +89,8 @@ class InformationModal extends StatelessWidget {
                         color: BudgetinColors.merah50,
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      child: Center(
-                        child: const Text(
+                      child: const Center(
+                        child: Text(
                           'Ya',
                           style: TextStyle(
                               color: Colors.white,
@@ -113,30 +107,56 @@ class InformationModal extends StatelessWidget {
   }
 }
 
-Future<void> showModalInformation(
+Future<Object?> showModalInformation(
   BuildContext context,
   String content,
   String message,
   bool isFailed, {
-  Function? onPressed, // Tambahkan tanda tanya (?) untuk parameter opsional
+  Function? onPressed,
 }) async {
-  return showDialog<void>(
-    context: context,
+  return Navigator.of(context).push(PageRouteBuilder(
+    opaque: false,
     barrierDismissible: false,
-    builder: (BuildContext context) {
-      if (isFailed)
-        Future.delayed(const Duration(seconds: 2), () {
+    transitionDuration: const Duration(milliseconds: 250),
+    reverseTransitionDuration: const Duration(milliseconds: 250),
+    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+      if (isFailed) {
+        Future.delayed(const Duration(milliseconds: 1500), () {
           Navigator.of(context).pop();
         });
-      return PopScope(
-        canPop: false,
-        child: InformationModal(
-          message: message,
-          isFailed: isFailed,
-          content: content,
-          onPressed: onPressed,
+      }
+      return FadeTransition(
+        opacity: animation,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+            ),
+            Center(
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+                child: InformationModal(
+                  message: message,
+                  isFailed: isFailed,
+                  content: content,
+                  onPressed: onPressed,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     },
-  );
+    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(animation),
+        child: child,
+      );
+    },
+  ));
 }

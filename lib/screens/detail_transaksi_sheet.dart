@@ -7,6 +7,7 @@ import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:readmore/readmore.dart';
 
 void showDetailTransaksiSheet(
     BuildContext context, TransactionWithCategory transaksi) {
@@ -179,12 +180,17 @@ class _DetailTransaksiSheetContent extends StatelessWidget {
                           const SizedBox(height: 10),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: ReadMoreText(
                               transaction.transaction.description == ''
                                   ? 'Deskripsi Tidak ada.'
                                   : transaction.transaction.description,
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w400),
+                              trimMode: TrimMode.Line,
+                              trimLines: 2,
+                              colorClickableText: Color(0xFF83B4FF),
+                              trimCollapsedText: 'Selengkapnya',
+                              trimExpandedText: ' Sembunyikan',
+                              moreStyle: const TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF83B4FF)),
                             ),
                           )
                         ],

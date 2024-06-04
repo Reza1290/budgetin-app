@@ -19,11 +19,11 @@ class TransaksiKosong extends StatelessWidget {
           ),
           Text(
             'Transaksi Tidak Tersedia',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
           ),
           Text(
             'Buat Transaksi Terlebih Dahulu',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 8),
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
           )
         ],
       ),
