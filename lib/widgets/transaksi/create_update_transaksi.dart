@@ -1,5 +1,6 @@
 import 'package:budgetin/controller/transaction_controller.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/widgets/bottom_navbar.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
@@ -29,7 +30,7 @@ class CreateUpdateTransaksiPage extends StatefulWidget {
 
 class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
   final _formKey = GlobalKey<FormState>();
-
+  final TrackerService tracker = TrackerService();
   DateTime selectedDate = DateTime.now();
   String? nama;
   String? nominal;
@@ -243,6 +244,9 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                                 "Berhasil Tersimpan",
                                 true);
                             // showSuccessAlert(context, "Berhasil!");
+                            tracker.track(
+                                'on-${widget.isEditPage! ? 'edit' : 'create'}-transaksi',
+                                withDeviceInfo: true);
                           } else {
                             showModalInformation(
                                 context,

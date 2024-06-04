@@ -25,6 +25,11 @@ dependencies:
   syncfusion_flutter_xlsio: ^25.1.42
   open_file: ^3.2.1
   readmore: ^3.0.0
+  flutter_dotenv: ^5.1.0
+  package_info_plus: ^8.0.0
+  dio: ^5.4.3+1
+  device_info_plus: ^10.1.0
+  uuid: ^4.4.0
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +45,7 @@ flutter:
     - assets/images/
     - assets/images/handling/
     - assets/fonts/
+    - .env
 
   fonts:
     - family: Nunito

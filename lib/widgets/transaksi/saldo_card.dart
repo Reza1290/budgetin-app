@@ -4,6 +4,7 @@ import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
 import 'package:budgetin/providers/date_formatter.dart';
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/failed_alert.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
@@ -21,6 +22,7 @@ class SaldoCard extends StatefulWidget {
 }
 
 class _SaldoCardState extends State<SaldoCard> {
+  final TrackerService tracker = TrackerService();
   late TextEditingController _moneyController =
       TextEditingController(text: '0');
 

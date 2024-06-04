@@ -11,6 +11,7 @@ import 'package:budgetin/models/app_version.dart';
 import 'package:budgetin/models/transaction.dart';
 import 'package:budgetin/models/transaction_insert.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/models/user_tracker.dart';
 import 'package:budgetin/models/variable.dart';
 import 'package:budgetin/providers/random_color.dart';
 import 'package:budgetin/utilities/them.dart';
@@ -20,19 +21,28 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
+import 'package:uuid/v4.dart';
+import 'package:uuid/v5.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories, Transactions, Saldos, BudgetinVariables, AppVersions],
+  tables: [
+    Categories,
+    Transactions,
+    Saldos,
+    BudgetinVariables,
+    AppVersions,
+    UserTrackers
+  ],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
@@ -42,12 +52,16 @@ class AppDb extends _$AppDb {
         String currentVersion = '1.0.0'; // Change this as needed
         await into(appVersions)
             .insert(AppVersionsCompanion.insert(version: currentVersion));
+        print("ttest");
       },
       beforeOpen: (details) async {
         final currentVersion = '1.0.0'; // Change this as needed
         final version = await select(appVersions).getSingleOrNull();
+        print(version);
         if (version == null || version.version != currentVersion) {
           // Clear data if version is different or not found
+          print("ttest" + version.toString());
+
           await clearAllTables();
           // Insert or update the version
           if (version == null) {
@@ -81,6 +95,11 @@ class AppDb extends _$AppDb {
         if (from < 8) {
           await m.createTable($AppVersionsTable(attachedDatabase));
         }
+        if (from < 9) {
+          await m.createTable($UserTrackersTable(attachedDatabase));
+          await into(userTrackers)
+              .insert(UserTrackersCompanion.insert(uuid: UuidV4().generate()));
+        }
       },
     );
   }
@@ -88,6 +107,14 @@ class AppDb extends _$AppDb {
   // Future<bool> insertSaldo(){
 
   // }
+
+  Future<UserTracker?> getUser() async {
+    return await select(userTrackers).getSingleOrNull();
+  }
+
+  Future<UserTracker> storeUser(UserTrackersCompanion user) async {
+    return await into(userTrackers).insertReturning(user);
+  }
 
   Future<void> clearAllTables() async {
     final tables = allTables.map((t) => delete(t).go());

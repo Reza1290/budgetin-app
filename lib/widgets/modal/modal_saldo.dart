@@ -2,6 +2,7 @@ import 'package:budgetin/controller/saldo_controller.dart';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/saldo_data.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ Future<void> showModalSaldo(BuildContext context) {
   FocusNode keyboardFocus = FocusNode(canRequestFocus: true);
   final formKeySaldo = GlobalKey<FormState>();
   final saldoKey = GlobalKey<FormState>();
+  final TrackerService tracker = TrackerService();
 
   moneyFocus.requestFocus();
   return showModalBottomSheet<void>(
@@ -97,6 +99,8 @@ Future<void> showModalSaldo(BuildContext context) {
                                     // print('a');
                                     Navigator.pop(context);
                                   }
+                                  tracker.track('on-update-saldo',
+                                      withDeviceInfo: true);
                                 }
                               },
                             ),

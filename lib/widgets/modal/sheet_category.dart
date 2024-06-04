@@ -1,6 +1,7 @@
 import 'package:budgetin/controller/category_controller.dart';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/forms/input_money.dart';
 import 'package:budgetin/widgets/forms/input_text.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 Future<void> showSheetCategory(BuildContext context, [Category? category]) {
+  final TrackerService tracker = TrackerService();
+
   final TextEditingController _nameController =
       TextEditingController(text: category != null ? category.name : '');
   final TextEditingController _alokasiController = TextEditingController(
@@ -161,6 +164,9 @@ Future<void> showSheetCategory(BuildContext context, [Category? category]) {
                                     'assets/images/alertYes.svg',
                                     'Kategori Berhasil Ditambahkan.',
                                     true);
+                                tracker.track(
+                                    'on-${category != null ? 'edit' : 'create'}-kategori',
+                                    withDeviceInfo: true);
                               } else {
                                 showModalInformation(
                                     context,
