@@ -22,8 +22,8 @@ class RiwayatTransaksiPage extends StatefulWidget {
 }
 
 class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
-  Stream<List<TransactionWithCategory>> getAllTransactions() {
-    return db!.getAllTransactionWithCategory();
+  Stream<List<TransactionWithCategory>> getAllTransactions(int month) {
+    return db!.getAllTransactionWithCategory(month);
   }
 
   Stream<List<TransactionWithCategory>> searchTransaction(String keyword,
@@ -35,6 +35,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
   final FocusNode _focusNode = FocusNode();
 
   bool isVisible = true;
+  bool isToggleSearch = true;
   int selectedMonth = DateTime.now().month;
 
   @override
@@ -107,9 +108,17 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             const SizedBox(
               height: 10,
             ),
-            Filter(
-              selectedMonth: selectedMonth,
-              onMonthSelected: onMonthSelected,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 100),
+              switchInCurve: Curves.easeInCirc,
+              child: Visibility(
+                key: Key(isVisible.toString()),
+                visible: isVisible,
+                child: Filter(
+                  selectedMonth: selectedMonth,
+                  onMonthSelected: onMonthSelected,
+                ),
+              ),
             ),
             _riwayatTransaksi(context),
           ],
@@ -127,7 +136,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
           child: StreamBuilder<List<TransactionWithCategory>>(
             stream: searchController.text.isNotEmpty
                 ? searchTransaction(searchController.text)
-                : getAllTransactions(),
+                : getAllTransactions(selectedMonth),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -136,7 +145,6 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
               } else {
                 if (snapshot.hasData) {
                   var transactions = snapshot.data!;
-                  transactions = _filterTransactions(transactions);
 
                   if (transactions.isNotEmpty) {
                     var groupedTransactions =

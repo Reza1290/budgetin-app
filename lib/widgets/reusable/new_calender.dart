@@ -28,7 +28,9 @@ Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,
           dialogBackgroundColor: Colors.white,
         );
         // onDateSelected(selectedDate);
-        onDateSelected(values?[0] ?? DateTime.now());
+        onDateSelected(
+            values?[0]?.add(Duration(minutes: 360)) ?? DateTime.now());
+        print(values);
       },
       child: AbsorbPointer(
         child: TextFormField(

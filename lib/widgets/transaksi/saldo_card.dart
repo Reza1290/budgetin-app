@@ -160,29 +160,6 @@ class _SaldoCardState extends State<SaldoCard> {
               )
             ],
           )
-
-          // StreamBuilder<int>(
-          //     stream: db!.watchUsedSaldo(),
-          //     builder: (context, snapshot) {
-          //       String saldo = "Rp. 0";
-          //       if (snapshot.connectionState == ConnectionState.waiting) {
-          //         saldo = "Rp. 0";
-          //       } else {
-          //         if (snapshot.hasData) {
-          //           if (snapshot.data != null) {
-          //             saldo =
-          //                 TextCurrencyFormat.format(snapshot.data.toString());
-          //           }
-          //         } else {
-          //           saldo = "Rp. 0";
-          //         }
-          //       }
-          //       return ContainerSaldo(
-          //           saldo: saldo,
-          //           textColour: merah60,
-          //           bgColour: merah10,
-          //           icon: Icons.arrow_upward_rounded);
-          //     }),
         ],
       ),
     );
@@ -191,7 +168,6 @@ class _SaldoCardState extends State<SaldoCard> {
   void simpanSaldo(int sal, BuildContext context) async {
     int sum = await db!.sumUsedSaldo();
     if (sum > sal) {
-      // debugPrint("teteh" + await db!.sumUsedSaldo().toString());
       String alokasi = TextCurrencyFormat.format(sum.toString());
       showFailedAlert(context,
           "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
