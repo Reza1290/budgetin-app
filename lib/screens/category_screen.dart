@@ -1,13 +1,10 @@
-import 'dart:async';
-
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/category/add_category_button.dart';
 import 'package:budgetin/widgets/category/category_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
-import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
-import 'package:budgetin/widgets/modal/sheet_category.dart';
+import 'package:budgetin/widgets/reusable/kategori_kosong.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,15 +18,38 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  late TextEditingController _searchController;
+  Stream<List<CategoryTotal>> getAllCategory() {
+    return db!.sumExpenseByCategory(0);
+  }
+
+  Stream<List<CategoryTotal>> searchCategory(String keyword) {
+    return db!.sumExpenseByCategorySearch(keyword);
+  }
+
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  bool isVisible2 = true;
+
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController();
+    _focusNode.addListener(_updateVisibility);
+    _searchController.addListener(_updateVisibility);
+  }
+
+  void _updateVisibility() {
+    setState(() {
+      isVisible2 = _searchController.text.isEmpty || !_focusNode.hasFocus;
+    });
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_updateVisibility);
+    _searchController.removeListener(_updateVisibility);
+    _searchController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -62,22 +82,32 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: InputSearch(
                       controller: _searchController,
-                      showFilter: true,
+                      focusNode: _focusNode,
+                      showFilter: false,
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    child: AddCategoryButton(),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeInCirc,
+                    child: Visibility(
+                      key: Key(isVisible2.toString()),
+                      visible: isVisible2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 8),
+                        child: AddCategoryButton(),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
             Expanded(
               child: StreamBuilder<List<CategoryTotal>>(
-                stream: db!.sumExpenseByCategory(0),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<CategoryTotal>> snapshot) {
+                stream: _searchController.text.isEmpty
+                    ? getAllCategory()
+                    : searchCategory(_searchController.text),
+                builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a more explicit loading indicator
                     return Center(
@@ -86,49 +116,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         children: [
                           CircularProgressIndicator(),
                           SizedBox(height: 10),
-                          Text('Loading categories...'),
+                          Text('Memuat Kategori...'),
                         ],
                       ),
                     );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: Colors.red,
-                            size: 60,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: snapshot.hasData
-                                ? Text('Muat Ulang..')
-                                : Text('Buat Kategori Terlebih Dahulu'),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    final List<CategoryTotal>? categories = snapshot.data;
-                    return ListView.builder(
-                      itemCount: categories?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        Category category = categories![index].category;
-                        return CategoryCard(
-                          category: Category(
-                            id: category.id,
-                            name: category.name.toString(),
-                            icon: category.icon.toString(),
-                            total: category.total,
-                          ),
-                          totalAmount: categories[index].totalAmount,
-                          isHome: false,
-                          // isReminder: true,
-                        );
-                      },
-                    );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      final List<CategoryTotal>? categories = snapshot.data;
+                      return ListView.builder(
+                        itemCount: categories?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          Category category = categories![index].category;
+                          return CategoryCard(
+                            category: Category(
+                                id: category.id,
+                                name: category.name.toString(),
+                                icon: category.icon.toString(),
+                                total: category.total,
+                                createdAt: category.createdAt),
+                            totalAmount: categories[index].totalAmount,
+                            isHome: false,
+                            // isReminder: true,
+                          );
+                        },
+                      );
+                    }
                   }
+                  return KategoriKosong();
                 },
               ),
             ),

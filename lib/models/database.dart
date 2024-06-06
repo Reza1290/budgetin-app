@@ -105,9 +105,18 @@ class AppDb extends _$AppDb {
     );
   }
 
-  // Future<bool> insertSaldo(){
+  Future<UserTracker?> getUser() async {
+    return await select(userTrackers).getSingleOrNull();
+  }
 
-  // }
+  Future<UserTracker> storeUser(UserTrackersCompanion user) async {
+    return await into(userTrackers).insertReturning(user);
+  }
+
+  Future<void> clearAllTables() async {
+    final tables = allTables.map((t) => delete(t).go());
+    await Future.wait(tables);
+  }
 
 
   Future<int> getTotalAmountForMonth(int year, int month) async {
@@ -780,19 +789,7 @@ Future<double> prsentaseExpense() async {
         .get();
   }
 
-  Stream<List<TransactionWithCategory>> searchTransactionRepo(String keyword) {
-    final query = (select(transactions)
-          ..where((tbl) => tbl.name.like("%$keyword%")))
-        .join([
-      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
-    ]);
-    return query.watch().map((rows) {
-      return rows.map((row) {
-        return TransactionWithCategory(
-            row.readTable(transactions), row.readTable(categories));
-      }).toList();
-    });
-  }
+  
 
   Future<List<TransactionWithCategory>> getTransactionInRange(
       DateTime start, DateTime end) async {

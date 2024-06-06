@@ -4,11 +4,11 @@ import 'package:budgetin/widgets/statistic/statistic_bar.dart';
 import 'package:budgetin/widgets/statistic/statistic_circular.dart';
 import 'package:flutter/material.dart';
 
-class StatisticScreen extends StatefulWidget {
-  const StatisticScreen({Key? key});
+class StatisticPage extends StatefulWidget {
+  const StatisticPage({Key? key});
 
   @override
-  State<StatisticScreen> createState() => _StatisticScreenState();
+  State<StatisticPage> createState() => _StatisticPageState();
 }
 
 const List<String> financialAdvices = [
@@ -19,21 +19,21 @@ const List<String> financialAdvices = [
   'Pengeluaranmu sangat tinggi. Disarankan untuk membuat anggaran dan meninjau kembali pengeluaran rutin.',
 ];
 
-String getAdvice(double persen){
-  if(persen >= 90){
+String getAdvice(double persen) {
+  if (persen >= 90) {
     return financialAdvices[4];
-  }else if(persen >= 80){
+  } else if (persen >= 80) {
     return financialAdvices[3];
-  }else if(persen >= 70 ){
+  } else if (persen >= 70) {
     return financialAdvices[2];
-  }else if(persen >= 60){
+  } else if (persen >= 60) {
     return financialAdvices[1];
-  }else{
+  } else {
     return financialAdvices[0];
   }
 }
 
-class _StatisticScreenState extends State<StatisticScreen> {
+class _StatisticPageState extends State<StatisticPage> {
   int _selectedIndex = DateTime.now().month - 1;
 
   @override
@@ -87,13 +87,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     future: db!.prsentaseExpense(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Scaffold(
-                          appBar: null,
-                          backgroundColor: BudgetinColors.biru10,
-                          body: Center(
-                            child: Image.asset('assets/images/loading.gif'),
-                          ),
-                        );
+                        return CircularProgressIndicator();
                       } else if (snapshot.hasData) {
                         double persen = snapshot.data!;
                         return Container(
@@ -114,7 +108,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              advice,
+                              getAdvice(persen),
                               style: TextStyle(
                                 fontSize: 18.0, // Ukuran font
                                 fontWeight: FontWeight.bold, // Ketebalan font
@@ -125,6 +119,8 @@ class _StatisticScreenState extends State<StatisticScreen> {
                             ),
                           ),
                         );
+                      } else {
+                        return Text('');
                       }
                     })
               ],

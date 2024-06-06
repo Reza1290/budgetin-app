@@ -18,9 +18,6 @@ void main() async {
   runApp(MyApp());
 }
 
-Stream<List<TransactionWithCategory>> getAllTransactions() {
-  return db!.getAllTransactionWithCategory(); 
-}
 
 Future<AppDb> initializeDb() async {
   return AppDb();
@@ -72,5 +69,4 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Nunito',
         ));
   }
-}
 }
