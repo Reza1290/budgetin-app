@@ -249,6 +249,8 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Slidable(
+            enabled: DateTime.now().month ==
+                transaction.transaction.transaction_date.month,
             key: UniqueKey(),
             endActionPane: ActionPane(
               extentRatio: 0.35,

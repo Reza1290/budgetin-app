@@ -15,8 +15,6 @@ class CategoryHome extends StatefulWidget {
 }
 
 class _CategoryHomeState extends State<CategoryHome> {
-  final Widget svg = SvgPicture.asset('assets/images/handling/empty.svg');
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<CategoryTotal>>(

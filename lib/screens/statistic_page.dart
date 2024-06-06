@@ -28,8 +28,10 @@ String getAdvice(double persen) {
     return financialAdvices[2];
   } else if (persen >= 60) {
     return financialAdvices[1];
-  } else {
+  } else if (persen >= 1) {
     return financialAdvices[0];
+  } else {
+    return '';
   }
 }
 

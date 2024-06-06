@@ -193,7 +193,6 @@ class OnBoardingScreen2 extends StatelessWidget {
   }
 }
 
-
 // Definisikan pesan-pesan yang mungkin
 const List<String> savingsMessages = [
   'Yeyyy !!! Bulan lalu kamu berhasil menghemat {amount}',
@@ -214,7 +213,8 @@ class _OnBoardingScreen3State extends State<OnBoardingScreen3> {
   String getRandomMessage(int amount) {
     final random = Random();
     final randomIndex = random.nextInt(savingsMessages.length);
-    return savingsMessages[randomIndex].replaceFirst('{amount}', amount.toString());
+    return savingsMessages[randomIndex]
+        .replaceFirst('{amount}', amount.toString());
   }
 
   @override
@@ -231,16 +231,14 @@ class _OnBoardingScreen3State extends State<OnBoardingScreen3> {
                     FutureBuilder(
                       future: db!.remainingMoney(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Scaffold(
-                            appBar: null,
-                            backgroundColor: BudgetinColors.biru10,
-                            body: Center(
-                              child: Image.asset('assets/images/loading.gif'),
-                            ),
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: Image.asset('assets/images/loading.gif'),
                           );
                         } else if (snapshot.hasData) {
-                          final randomMessage = getRandomMessage(snapshot.data!);
+                          final randomMessage =
+                              getRandomMessage(snapshot.data!);
                           return OnBoardingContent(
                             image: 'assets/images/onBoarding3.svg',
                             title: randomMessage,
