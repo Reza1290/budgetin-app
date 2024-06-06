@@ -17,39 +17,42 @@ class TrackerService {
     Map content = const {},
     bool withDeviceInfo = false,
   }) async {
-    final environment = dotenv.get('APP_ENV');
-    final user = await getUser();
+    try {
+      final environment = dotenv.get('APP_ENV');
+      final user = await getUser();
 
-    final productId = dotenv.get('PRODUCT_ID');
-    final endpoint = trackerEndpoint.replaceFirst('{PRODUCT_ID}', productId);
-    final url = getUrl(endpoint);
+      final productId = dotenv.get('PRODUCT_ID');
+      final endpoint = trackerEndpoint.replaceFirst('{PRODUCT_ID}', productId);
+      final url = getUrl(endpoint);
 
-    if (withDeviceInfo) {
+      if (withDeviceInfo) {
+        content = {}
+          ..addAll(content)
+          ..addAll({
+            'device_info': await getDeviceInfo(),
+          });
+      }
+
       content = {}
         ..addAll(content)
         ..addAll({
-          'device_info': await getDeviceInfo(),
+          "app_info": await getAppInfo(),
         });
+
+      final response = await (Dio()).post(
+        url,
+        data: {
+          'environment': environment,
+          'target': target,
+          'content': jsonEncode(content),
+          'user': jsonEncode(user),
+        },
+      );
+      print(response.data);
+      print(response.statusCode);
+    } catch (e) {
+      print(e);
     }
-
-    content = {}
-      ..addAll(content)
-      ..addAll({
-        "app_info": await getAppInfo(),
-      });
-
-    final response = await (Dio()).post(
-      url,
-      data: {
-        'environment': environment,
-        'target': target,
-        'content': jsonEncode(content),
-        'user': jsonEncode(user),
-      },
-    );
-
-    print(response.data);
-    print(response.statusCode);
   }
 
   Future<Map> getUser() async {
