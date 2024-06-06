@@ -4,11 +4,11 @@ import 'package:budgetin/widgets/statistic/statistic_bar.dart';
 import 'package:budgetin/widgets/statistic/statistic_circular.dart';
 import 'package:flutter/material.dart';
 
-class StatisticPage extends StatefulWidget {
-  const StatisticPage({Key? key});
+class StatisticScreen extends StatefulWidget {
+  const StatisticScreen({Key? key});
 
   @override
-  State<StatisticPage> createState() => _StatisticPageState();
+  State<StatisticScreen> createState() => _StatisticScreenState();
 }
 
 const List<String> financialAdvices = [
@@ -33,7 +33,7 @@ String getAdvice(double persen){
   }
 }
 
-class _StatisticPageState extends State<StatisticPage> {
+class _StatisticScreenState extends State<StatisticScreen> {
   int _selectedIndex = DateTime.now().month - 1;
 
   @override

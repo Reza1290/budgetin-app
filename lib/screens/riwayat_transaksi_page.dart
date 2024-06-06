@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:budgetin/main.dart';
-import 'package:budgetin/models/database.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
 import 'package:budgetin/providers/date_formatter.dart';
 import 'package:budgetin/screens/detail_transaksi_sheet.dart';
@@ -34,6 +33,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
 
   final TextEditingController searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
   bool isVisible = true;
   bool isToggleSearch = true;
   int selectedMonth = DateTime.now().month;

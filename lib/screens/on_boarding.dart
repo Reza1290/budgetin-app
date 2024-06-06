@@ -1,7 +1,4 @@
 import 'dart:math';
-
-=======
->>>>>>> main
 import 'package:budgetin/controller/category_controller.dart';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
@@ -18,17 +15,10 @@ class OnBoardingScreen1 extends StatelessWidget {
   OnBoardingScreen1({Key? key});
   final _formOnboardKey = GlobalKey<FormState>();
   final TextEditingController _saldoController = TextEditingController();
-<<<<<<< HEAD
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-=======
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
->>>>>>> main
       body: SafeArea(
         child: Column(
           children: [
@@ -37,11 +27,14 @@ class OnBoardingScreen1 extends StatelessWidget {
                 padding: EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    OnBoardingContent(
-                      image: 'assets/images/onBoarding1.svg',
-                      title: 'Kelola Uangmu',
-                      subtitle:
-                          'Yuk, mulai dengan memasukkan saldo atau pendapatanmu bulan ini!',
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: OnBoardingContent(
+                        image: 'assets/images/onBoarding1.svg',
+                        title: 'Kelola Uangmu',
+                        subtitle:
+                            'Yuk, mulai dengan memasukkan saldo atau pendapatanmu bulan ini!',
+                      ),
                     ),
                     SizedBox(height: 24),
                     Form(
@@ -79,7 +72,9 @@ class OnBoardingScreen1 extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => OnBoardingScreen2()),
+                            builder: (context) => OnBoardingScreen2(
+                                  saldo: saldo,
+                                )),
                       );
                     }
                   },
@@ -94,7 +89,8 @@ class OnBoardingScreen1 extends StatelessWidget {
 }
 
 class OnBoardingScreen2 extends StatelessWidget {
-  OnBoardingScreen2({super.key});
+  final int saldo;
+  OnBoardingScreen2({super.key, required this.saldo});
   final _formOnboard2Key = GlobalKey<FormState>();
   final FocusNode _focusDuit = FocusNode();
   final TextEditingController _alokasiController = TextEditingController();
@@ -102,6 +98,7 @@ class OnBoardingScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -114,7 +111,7 @@ class OnBoardingScreen2 extends StatelessWidget {
                       image: 'assets/images/onBoarding2.svg',
                       title: 'Atur Kategori Keuanganmu',
                       subtitle:
-                          'Mengategorikan pengeluaranmu akan lebih memudahkan pengelolaan keuangan.Yuk, buat kategori sesuai kebutuhanmu!',
+                          'Mengategorikan pengeluaranmu akan lebih memudahkan pengelolaan keuangan.Yuk, buat kategori sesuai kebutuhanmu dan dibawah Saldo ya!',
                     ),
                     SizedBox(height: 24),
                     Form(
@@ -130,6 +127,8 @@ class OnBoardingScreen2 extends StatelessWidget {
                             focusNode: _focusDuit,
                             controller: _alokasiController,
                             fontSize: 12,
+                            maks: saldo,
+                            errorText: 'Pastikan Tidak Melebihi Saldo',
                             hintText:
                                 'Masukkan alokasi dana untuk kategori ini',
                           ),
@@ -178,7 +177,7 @@ class OnBoardingScreen2 extends StatelessWidget {
                                 ),
                                 (route) => false,
                               );
-                            }
+                            } else {}
                           } else {
                             _focusDuit.requestFocus();
                           }
@@ -320,6 +319,7 @@ class OnBoardingScreen4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
