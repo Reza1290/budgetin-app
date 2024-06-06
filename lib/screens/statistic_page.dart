@@ -12,10 +12,10 @@ class StatisticPage extends StatefulWidget {
 }
 
 const List<String> financialAdvices = [
-  'Pengeluaranmu sangat rendah bulan lalu. Pertahankan kebiasaan baik ini dan terus tabung lebih banyak!',
+  'Pengeluaranmu sangat rendah bulan ini. Pertahankan kebiasaan baik ini dan terus tabung lebih banyak!',
   'Pengeluaranmu cukup rendah. Bagus! Usahakan untuk menyimpan sebagian dari tabungan untuk investasi.',
   'Pengeluaranmu sedang. Cobalah untuk mengidentifikasi area di mana kamu bisa mengurangi pengeluaran.',
-  'Pengeluaranmu agak tinggi bulan lalu. Pertimbangkan untuk mengurangi pengeluaran yang tidak perlu.',
+  'Pengeluaranmu agak tinggi bulan ini. Pertimbangkan untuk mengurangi pengeluaran yang tidak perlu.',
   'Pengeluaranmu sangat tinggi. Disarankan untuk membuat anggaran dan meninjau kembali pengeluaran rutin.',
 ];
 
@@ -31,7 +31,7 @@ String getAdvice(double persen) {
   } else if (persen >= 1) {
     return financialAdvices[0];
   } else {
-    return '';
+    return 'Bulan ini tidak ada transaksi tercatat :(';
   }
 }
 
@@ -85,46 +85,52 @@ class _StatisticPageState extends State<StatisticPage> {
                     bulan: _selectedIndex,
                   ),
                 ),
-                FutureBuilder(
-                    future: db!.prsentaseExpense(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasData) {
-                        double persen = snapshot.data!;
-                        return Container(
-                          padding: EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.blue[100], // Warna latar belakang
-                            borderRadius: BorderRadius.circular(
-                                10.0), // Bentuk rounded corners
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey
-                                    .withOpacity(0.5), // Warna shadow
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(0, 3), // Offset dari shadow
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              getAdvice(persen),
-                              style: TextStyle(
-                                fontSize: 18.0, // Ukuran font
-                                fontWeight: FontWeight.bold, // Ketebalan font
-                                color: Colors.black, // Warna font
-                              ),
-                              textAlign:
-                                  TextAlign.center, // Posisi teks di tengah
+                SizedBox(
+                  height: 10,
+                ),
+                if (DateTime.now().month > _selectedIndex + 1)
+                  Text("Kesimpulan",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  height: 10,
+                ),
+                if (DateTime.now().month > _selectedIndex + 1)
+                  FutureBuilder(
+                      future: db!.prsentaseExpense(
+                          DateTime(DateTime.now().year, _selectedIndex + 1)),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: Image.asset(
+                                'assets/images/handling/white_loading.gif'),
+                          );
+                        } else if (snapshot.hasData && snapshot.data != null) {
+                          double persen = snapshot.data!;
+                          return Container(
+                            padding: EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: BudgetinColors.biru20, width: 2),
                             ),
-                          ),
-                        );
-                      } else {
+                            child: Center(
+                              child: Text(
+                                getAdvice(persen),
+                                style: TextStyle(
+                                  fontSize: 18.0, // Ukuran font
+                                  fontWeight: FontWeight.bold, // Ketebalan font
+                                  color: Colors.black, // Warna font
+                                ),
+                                textAlign:
+                                    TextAlign.center, // Posisi teks di tengah
+                              ),
+                            ),
+                          );
+                        }
                         return Text('');
-                      }
-                    })
+                      })
               ],
             ),
           ),

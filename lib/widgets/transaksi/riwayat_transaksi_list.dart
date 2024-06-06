@@ -73,7 +73,9 @@ class RiwayatTransaksiList extends StatelessWidget {
                   }).toList(),
                 );
               } else {
-                return TransaksiKosong();
+                return TransaksiKosong(
+                  isHomepage: true,
+                );
               }
             }
           },
@@ -118,6 +120,10 @@ class RiwayatTransaksiList extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Slidable(
+            enabled: transaction.transaction.transaction_date.month ==
+                    DateTime.now().month &&
+                transaction.transaction.transaction_date.year ==
+                    DateTime.now().year,
             key: UniqueKey(),
             endActionPane: ActionPane(
               extentRatio: 0.35,

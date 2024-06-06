@@ -119,7 +119,8 @@ class _ShareDialogState extends State<ShareDialog> {
                       59,
                       59);
                   if (_selectedIndex == 0) {
-                    final bytes = await pdf.generatePdf(ts);
+                    final bytes =
+                        await pdf.generatePdf(ts, adjustedStart, adjustedEnd);
                     pdf.savedPdfFile(
                         'BudgetIn  $adjustedStart - $adjustedEnd Laporan.pdf',
                         bytes);
@@ -177,15 +178,18 @@ class _ShareDialogState extends State<ShareDialog> {
               height: 55,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(7.86),
-                color: isSelected ? BudgetinColors.biru50 : const Color(0xFFF2F2F2),
+                color: isSelected
+                    ? BudgetinColors.biru50
+                    : const Color(0xFFF2F2F2),
               ),
             ),
             // Layer kedua: Icon
             SvgPicture.asset(
               image,
               // ignore: deprecated_member_use
-              color:
-                  isSelected ? const Color(0xFFF2F2F2) : BudgetinColors.hitamPutih50,
+              color: isSelected
+                  ? const Color(0xFFF2F2F2)
+                  : BudgetinColors.hitamPutih50,
             ),
           ],
         ),

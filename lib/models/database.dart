@@ -118,60 +118,51 @@ class AppDb extends _$AppDb {
     await Future.wait(tables);
   }
 
+  Future<int> getTotalAmountForMonth(DateTime date) async {
+    final query = select(transactions)
+      ..where((t) =>
+          t.transaction_date.year.equals(date.year) &
+          t.transaction_date.month.equals(date.month));
 
-  Future<int> getTotalAmountForMonth(int year, int month) async {
-  final startOfMonth = DateTime(year, month -1, 1);
-  final endOfMonth = DateTime(year, month , 0); // 0th day of the next month gives the last day of the current month
-
-  final query = select(transactions)
-    ..where((t) => t.transaction_date.isBetweenValues(startOfMonth, endOfMonth));
-
-  final rows = await query.get();
-  final totalAmount = rows.fold<int>(0, (total, row) => total + row.amount);
-
-  return totalAmount;
-}
-
-Future<double> prsentaseExpense() async {
-  final currentYear = DateTime.now().year;
-  final currentMonth = DateTime.now().month;
- 
-  final totalAmount = await getTotalAmountForMonth(currentYear, currentMonth);
-
-  // Get the latest saldo entry
-  final latestSaldoEntry = await (select(saldos)
-        ..orderBy([(s) => OrderingTerm.desc(s.createdAt)])
-        ..limit(1))
-      .getSingleOrNull();
-
-  if (latestSaldoEntry != null) {
-    final remainingSaldo = totalAmount / latestSaldoEntry.saldo.toDouble(); // Ubah saldo ke double untuk menghindari integer division
-    return remainingSaldo;
-  } else {
-    print("No saldo entries found.");
-    return 0; // Handle the case when there is no saldo entry as needed
+    final rows = await query.get();
+    print(rows);
+    final totalAmount = rows.fold<int>(0, (total, row) => total + row.amount);
+    return totalAmount;
   }
-}
 
-
-  Future<int> remainingMoney() async {
-    final currentYear = DateTime.now().year;
-    final currentMonth = DateTime.now().month;
-
-    final totalAmount = await getTotalAmountForMonth(currentYear, currentMonth);
-
-    // Get the latest saldo entry
-    final latestSaldoEntry = await (select(saldos)
-          ..orderBy([(s) => OrderingTerm.desc(s.createdAt)])
-          ..limit(1))
+  Future<double> prsentaseExpense(DateTime selectedDate) async {
+    final totalAmount = await getTotalAmountForMonth(selectedDate);
+    final saldo = await (select(saldos)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(selectedDate.month) &
+              tbl.createdAt.year.equals(selectedDate.year)))
         .getSingleOrNull();
 
-    if (latestSaldoEntry != null) {
-      final remainingSaldo = latestSaldoEntry.saldo - totalAmount;
-      return remainingSaldo;
+    if (saldo != null) {
+      final remainingSaldo = totalAmount / saldo.saldo.toDouble();
+      return remainingSaldo * 100;
     } else {
       print("No saldo entries found.");
-      return 0; // Or handle the case when there is no saldo entry as needed
+      return 0; // Handle the case when there is no saldo entry as needed
+    }
+  }
+
+  Future<int> remainingMoney() async {
+    String? val = await getBudgetinVariable('monthNow');
+    final totalAmount = await getTotalAmountForMonth(DateTime.parse(val!));
+    try {
+      final date = DateTime.parse(val);
+      final query = select(saldos)
+        ..where((tbl) =>
+            tbl.createdAt.year.equals(date.year) &
+            tbl.createdAt.month.equals(date.month))
+        ..getSingleOrNull();
+      Saldo saldo = await query.getSingle();
+
+      final remainingSaldo = saldo.saldo - totalAmount;
+      return remainingSaldo;
+    } catch (e) {
+      return 0;
     }
   }
 
@@ -229,30 +220,28 @@ Future<double> prsentaseExpense() async {
         .join([
       innerJoin(categories, categories.id.equalsExp(transactions.category_id))
     ]);
-     return query.watch().map((rows) {
-      return rows.map((row){
-        return TransactionWithCategory(
-          row.readTable(transactions), row.readTable(categories)
-        );
-      } ).toList();
-    });
-  }
-
-
-
-  Stream<List<TransactionWithCategory>> searchTransactionRepo (
-      String keyword)  {
-      final query =  (select(transactions)
-          ..where((tbl) => tbl.name.like("%$keyword%")))
-        .join([innerJoin(categories, categories.id.equalsExp(transactions.category_id))]);
     return query.watch().map((rows) {
-      return rows.map((row){
+      return rows.map((row) {
         return TransactionWithCategory(
-          row.readTable(transactions), row.readTable(categories)
-        );
-      } ).toList();
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
     });
   }
+
+  Stream<List<TransactionWithCategory>> searchTransactionRepo(String keyword) {
+    final query = (select(transactions)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
   Stream<List<TransactionWithCategory>> getTransactionWithCategoryLimit(
       int limit) {
     final query = select(transactions).join([
@@ -524,25 +513,28 @@ Future<double> prsentaseExpense() async {
     }
   }
 
- Stream<int> totalExpenseMonth() async* {
-  // Mendapatkan semua transaksi
-  final datas = await allTransactions();
+  Stream<int> totalExpenseMonth() async* {
+    // Mendapatkan semua transaksi
+    final datas = await allTransactions();
 
-  // Mendapatkan tanggal awal dan akhir bulan ini
-  DateTime now = DateTime.now();
-  DateTime startOfMonth = DateTime(now.year, now.month, 1);
-  DateTime endOfMonth = DateTime(now.year, now.month + 1, 0); // Hari terakhir bulan ini
+    // Mendapatkan tanggal awal dan akhir bulan ini
+    DateTime now = DateTime.now();
+    DateTime startOfMonth = DateTime(now.year, now.month, 1);
+    DateTime endOfMonth =
+        DateTime(now.year, now.month + 1, 0); // Hari terakhir bulan ini
 
-  // Menghitung total pengeluaran bulan ini
-  int totalExpense = 0;
-  for (final data in datas) {
-    if (data.transaction_date.isAfter(startOfMonth.subtract(const Duration(days: 1))) && data.transaction_date.isBefore(endOfMonth.add(const Duration(days: 1)))) {
-      totalExpense += data.amount;
-      yield totalExpense;
+    // Menghitung total pengeluaran bulan ini
+    int totalExpense = 0;
+    for (final data in datas) {
+      if (data.transaction_date
+              .isAfter(startOfMonth.subtract(const Duration(days: 1))) &&
+          data.transaction_date
+              .isBefore(endOfMonth.add(const Duration(days: 1)))) {
+        totalExpense += data.amount;
+        yield totalExpense;
+      }
     }
   }
-}
-
 
   Stream<Map<int, Map<dynamic, dynamic>>>
       sumTransactionsByMonthAndCategory() async* {
@@ -785,11 +777,12 @@ Future<double> prsentaseExpense() async {
 
   Future<List<Category>> searchCategoryRepo(String keyword) async {
     return await (select(categories)
-          ..where((tbl) => tbl.name.like("%$keyword%")))
+          ..where((tbl) =>
+              tbl.name.like("%$keyword%") &
+              tbl.createdAt.month.equals(DateTime.now().month) &
+              tbl.createdAt.year.equals(DateTime.now().year)))
         .get();
   }
-
-  
 
   Future<List<TransactionWithCategory>> getTransactionInRange(
       DateTime start, DateTime end) async {

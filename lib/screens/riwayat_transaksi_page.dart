@@ -12,6 +12,7 @@ import 'package:budgetin/widgets/transaksi/riwayat_transaksi_card.dart';
 import 'package:budgetin/widgets/forms/input_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/reusable/transaksi_kosong.dart';
 
 class RiwayatTransaksiPage extends StatefulWidget {
@@ -100,6 +101,7 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: InputSearch(
+                hintText: 'Cari transaksi',
                 controller: searchController,
                 focusNode: _focusNode,
                 showFilter: false,
@@ -139,8 +141,9 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                 : getAllTransactions(selectedMonth),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child:
+                      Image.asset('assets/images/handling/white_loading.gif'),
                 );
               } else {
                 if (snapshot.hasData) {
@@ -174,12 +177,23 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
                         );
                       },
                     );
-                  } else {
-                    return const TransaksiKosong();
                   }
-                } else {
-                  return const TransaksiKosong();
+                  if (!_focusNode.hasFocus &&
+                      searchController.text.isNotEmpty &&
+                      snapshot.data!.isEmpty)
+                    return Center(
+                      child: SvgPicture.asset(
+                          height: MediaQuery.of(context).size.width * 0.4,
+                          'assets/images/handling/not_found.svg'),
+                    );
+                  if (_focusNode.hasFocus && snapshot.data!.isEmpty) {
+                    return Center(
+                      child: Image.asset(
+                          'assets/images/handling/white_loading.gif'),
+                    );
+                  }
                 }
+                return const TransaksiKosong();
               }
             },
           ),
@@ -249,8 +263,10 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Slidable(
-            enabled: DateTime.now().month ==
-                transaction.transaction.transaction_date.month,
+            enabled: transaction.transaction.transaction_date.month ==
+                    DateTime.now().month &&
+                transaction.transaction.transaction_date.year ==
+                    DateTime.now().year,
             key: UniqueKey(),
             endActionPane: ActionPane(
               extentRatio: 0.35,

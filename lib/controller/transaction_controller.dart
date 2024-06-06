@@ -4,7 +4,9 @@ import 'package:budgetin/models/database.dart';
 class TransactionController {
   static insert<bool>(String name, String description, int amount,
       DateTime date, int categoryId) async {
+    print('tanggal' + date.toString());
     try {
+      DateTime newDate = DateTime(date.year, date.month, date.day, 12, 0);
       int maks = await db!.sumExpenseCategory(categoryId);
       Category category = await db!.getCategory(categoryId);
 
@@ -18,7 +20,7 @@ class TransactionController {
                 description: description,
                 category_id: categoryId,
                 amount: amount,
-                transaction_date: date),
+                transaction_date: newDate),
           );
       return true;
     } catch (e) {
@@ -29,11 +31,13 @@ class TransactionController {
   static update<bool>(int prevAmount, String name, String description,
       int amount, DateTime date, int transactionId, int categoryId) async {
     try {
+      DateTime newDate = DateTime(date.year, date.month, date.day, 12, 0);
+      // date = date
       int maks = await db!.sumExpenseCategory(categoryId);
       Category category = await db!.getCategory(categoryId);
       if (maks + amount - prevAmount <= category.total) {
         db!.updateTransactionRepo(
-            transactionId, name, amount, categoryId, description, date);
+            transactionId, name, amount, categoryId, description, newDate);
         return true;
       }
 

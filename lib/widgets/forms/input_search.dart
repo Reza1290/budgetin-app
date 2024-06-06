@@ -5,12 +5,14 @@ import 'package:flutter/widgets.dart';
 
 class InputSearch extends StatefulWidget {
   final bool showFilter;
+  final String? hintText;
   const InputSearch(
       {super.key,
       this.controller,
       this.focusNode,
       required this.showFilter,
-      this.onEditingComplete});
+      this.onEditingComplete,
+      this.hintText});
 
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -81,7 +83,7 @@ class _InputSearchState extends State<InputSearch> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                hintText: 'Search',
+                hintText: widget.hintText ?? 'Search',
                 hintStyle: const TextStyle(
                     color: putih40, fontSize: 12, fontWeight: FontWeight.w600),
                 suffixIcon: const SizedBox(

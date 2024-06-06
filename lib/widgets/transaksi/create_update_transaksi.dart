@@ -125,9 +125,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                         buildCalendarDialogButton(context, selectedDate, "",
                             (newDate) {
                           setState(() {
-                            selectedDate = widget.isEditPage!
-                                ? newDate
-                                : newDate.add(Duration(hours: 12));
+                            selectedDate = newDate;
                           });
                           print(selectedDate);
                         }),
@@ -210,7 +208,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                               deskripsiTransaksiController.text,
                               int.parse(
                                   _moneyController.text.replaceAll('.', '')),
-                              selectedDate.add(Duration(minutes: 20)),
+                              selectedDate,
                               widget.dataTransaction!.transaction.id,
                               widget.categoryId,
                             );
@@ -220,7 +218,7 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
                               deskripsiTransaksiController.text,
                               int.parse(
                                   _moneyController.text.replaceAll('.', '')),
-                              selectedDate.add(Duration(minutes: 20)),
+                              selectedDate,
                               widget.categoryId,
                             );
                           }

@@ -200,7 +200,9 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
                 return Text('Tidak Ditemukan');
               } else {
                 // Handle loading case
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                    child: Image.asset(
+                        'assets/images/handling/white_loading.gif'));
               }
             },
           ),

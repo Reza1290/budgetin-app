@@ -28,7 +28,8 @@ Widget buildCalendarDialogButton(BuildContext context, DateTime selectedDate,
           dialogBackgroundColor: Colors.white,
         );
         // onDateSelected(selectedDate);
-        onDateSelected(values?[0] ?? DateTime.now());
+        onDateSelected(values?[0] ?? selectedDate);
+        print('tanggal' + values.toString());
         // print(values);
       },
       child: AbsorbPointer(

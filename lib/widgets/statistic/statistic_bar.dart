@@ -113,7 +113,9 @@ class _StatisticBarState extends State<StatisticBar> {
                   : Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TransaksiKosong(),
+                        child: TransaksiKosong(
+                          isHomepage: true,
+                        ),
                       ),
                     ),
             ),

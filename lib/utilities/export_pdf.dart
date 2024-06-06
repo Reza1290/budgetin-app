@@ -2,15 +2,20 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/providers/currency.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PdfService {
-  Future<Uint8List> generatePdf(
-      List<TransactionWithCategory> transactions) async {
+  Future<Uint8List> generatePdf(List<TransactionWithCategory> transactions,
+      DateTime startDate, DateTime endDate) async {
     final pdf = pw.Document();
+    int totalAmount = 0;
+    transactions.forEach((transaction) {
+      totalAmount += transaction.transaction.amount;
+    });
 
     pdf.addPage(
       pw.MultiPage(
@@ -42,6 +47,27 @@ class PdfService {
             ),
           ];
         },
+        footer: (pw.Context context) => pw.Container(
+          alignment: pw.Alignment.centerRight,
+          margin: pw.EdgeInsets.only(top: 20.0),
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.end,
+            children: [
+              pw.Text(
+                'Tanggal Awal: ${startDate.toString()}',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              ),
+              pw.Text(
+                'Tanggal Akhir: ${endDate.toString()}',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              ),
+              pw.Text(
+                'Total Transaksi: Rp. ${TextCurrencyFormat.format(totalAmount)}',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 

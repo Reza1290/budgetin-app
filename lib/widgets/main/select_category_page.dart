@@ -64,6 +64,7 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
       appBar: AppBar(
         scrolledUnderElevation: 0,
         leading: InkWell(
+          borderRadius: BorderRadius.circular(100),
           onTap: () {
             Navigator.of(context).pop();
           },
@@ -116,7 +117,8 @@ class _SelectCategoryPageState extends State<SelectCategoryPage>
                   builder: (context, snapshots) {
                     if (snapshots.connectionState == ConnectionState.waiting) {
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: Image.asset(
+                            'assets/images/handling/white_loading.gif'),
                       );
                     } else {
                       if (snapshots.hasData) {

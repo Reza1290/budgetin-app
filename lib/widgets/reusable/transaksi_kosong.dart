@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TransaksiKosong extends StatelessWidget {
-  const TransaksiKosong({
-    super.key,
-  });
+  final bool? isHomepage;
+  const TransaksiKosong({super.key, this.isHomepage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +13,9 @@ class TransaksiKosong extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 85,
-            child: SvgPicture.asset('assets/images/handling/kosong.svg'),
+            height: isHomepage! ? 85 : 150,
+            child: SvgPicture.asset(
+                'assets/images/handling/${isHomepage! ? 'kosong' : 'not_found'}.svg'),
           ),
           Text(
             'Transaksi Tidak Tersedia',

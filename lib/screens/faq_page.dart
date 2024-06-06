@@ -7,6 +7,34 @@ class FaqPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, String>> faqList = [
+      {
+        "question": "Apa itu Saldo dan apa kegunaannya?",
+        "answer":
+            "Saldo adalah jumlah maksimum uang yang bisa Anda alokasikan ke berbagai kategori pengeluaran. Ini membantu Anda tetap teratur dan memastikan setiap kategori memiliki batasan yang jelas, sehingga memudahkan pengelolaan keuangan Anda."
+      },
+      {
+        "question": "Bagaimana cara membuat alokasi berdasarkan kategori?",
+        "answer":
+            "Untuk membuat alokasi berdasarkan kategori, buka halaman Kategori dengan mengklik menu Kategori. Di sana, Anda bisa menambahkan dan mengatur alokasi dana untuk setiap kategori sesuai dengan kebutuhan Anda."
+      },
+      {
+        "question": "Bagaimana cara membuat transaksi baru?",
+        "answer":
+            "Untuk membuat transaksi baru, cukup tekan tombol cepat (ADD) yang berada di tengah halaman utama. Tombol ini memungkinkan Anda menambahkan transaksi baru dengan mudah dan cepat."
+      },
+      {
+        "question": "Apakah saya bisa mengubah transaksi yang sudah dilakukan?",
+        "answer":
+            "Ya, Anda bisa mengubah transaksi yang sudah dilakukan. Caranya, geser kartu Riwayat Transaksi ke kiri untuk menampilkan menu Edit dan Delete. Dengan ini, Anda bisa mengedit detail transaksi atau menghapusnya jika diperlukan."
+      },
+      {
+        "question": "Apakah transaksi bulan lalu masih dapat terlihat?",
+        "answer":
+            "Ya, Anda masih dapat melihat transaksi dari bulan lalu. Riwayat transaksi bisa diakses hingga satu tahun ke belakang, sehingga Anda dapat dengan mudah memeriksa dan melacak pengeluaran sebelumnya."
+      }
+    ];
+
     return Scaffold(
       backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
@@ -28,39 +56,25 @@ class FaqPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView(
-          children: const [
+          children: [
             Column(
               children: [
                 Padding(
                   padding: EdgeInsets.fromLTRB(24.0, 39.0, 24.0, 0),
                   child: Column(
                     children: [
-                      FaqContent(
-                        question: 'Apa Guna Saldo?',
-                        answer:
-                            'Saldo adalah jumlah Maksimum yang dapat dialokasikan ke beberapa kategori.',
+                      ...List.generate(
+                        faqList.length,
+                        (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: FaqContent(
+                              question: faqList[index]['question']!,
+                              answer: faqList[index]['answer']!,
+                            ),
+                          );
+                        },
                       ),
-                      SizedBox(height: 15),
-                      FaqContent(
-                        question:
-                            'Bagaimana Cara untuk membuat alokasi berdasarkan Kategori?',
-                        answer:
-                            'Buatlah melalui halaman Kategori, anda dapat mengakesnya pada halaman utama Kategori, klik Lainnya.',
-                      ),
-                      SizedBox(height: 15),
-                      FaqContent(
-                        question: 'Bagaimana Cara untuk membuat Transaksi?',
-                        answer:
-                            'Tekan Quick Button (ADD) pada tengah Halaman. ',
-                      ),
-                      SizedBox(height: 15),
-                      FaqContent(
-                        question:
-                            'Apakah saya bisa mengubah Transaksi yang sudah saya Lakukan?',
-                        answer:
-                            'Slide ke kiri kartu Riwayat Transaksi untuk menampilkan menu Edit dan Delete.',
-                      ),
-                      SizedBox(height: 15),
                     ],
                   ),
                 ),

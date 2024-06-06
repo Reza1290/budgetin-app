@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -81,6 +82,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: InputSearch(
+                      hintText: 'Cari Kategori bulan ini',
                       controller: _searchController,
                       focusNode: _focusNode,
                       showFilter: false,
@@ -110,17 +112,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a more explicit loading indicator
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 10),
-                          Text('Memuat Kategori...'),
-                        ],
-                      ),
-                    );
+                    return Image.asset(
+                        'assets/images/handling/white_loading.gif');
                   } else if (snapshot.hasData) {
+                    if (_focusNode.hasFocus && snapshot.data!.isEmpty) {
+                      return Image.asset(
+                          'assets/images/handling/white_loading.gif');
+                    }
+                    if (snapshot.data!.isEmpty)
+                      return Center(
+                        child: SvgPicture.asset(
+                            height: MediaQuery.of(context).size.width * 0.4,
+                            'assets/images/handling/not_found.svg'),
+                      );
+
                     if (snapshot.data != null) {
                       final List<CategoryTotal>? categories = snapshot.data;
                       return ListView.builder(
@@ -142,7 +147,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       );
                     }
                   }
-                  return KategoriKosong();
+
+                  return Image.asset(
+                      'assets/images/handling/white_loading.gif');
                 },
               ),
             ),

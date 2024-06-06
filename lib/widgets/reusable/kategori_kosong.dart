@@ -15,7 +15,7 @@ class KategoriKosong extends StatelessWidget {
         children: [
           SizedBox(
             height: 85,
-            child: SvgPicture.asset('assets/images/handling/empty.svg'),
+            child: SvgPicture.asset('assets/images/handling/not_found.svg'),
           ),
           Text(
             'Kategori Kosong',

@@ -1,8 +1,10 @@
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/statistic_data.dart';
+import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/statistic/chart/pie_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class StatisticCircular extends StatefulWidget {
   final int bulan;
@@ -22,7 +24,13 @@ class _StatisticCircularState extends State<StatisticCircular> {
           stream: db!.sumTransactionsByMonthAndYear(DateTime.now().year),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // or any other loading widget
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child:
+                      Image.asset('assets/images/handling/white_loading.gif'),
+                ),
+              ); // or any other loading widget
             } else if (snapshot.hasError) {
               return Text('');
             } else if (snapshot.hasData &&
@@ -55,7 +63,9 @@ class _StatisticCircularState extends State<StatisticCircular> {
                     padding: const EdgeInsets.all(32.0),
                     child: BudgetinPieChart(
                       strokeWidth: 32,
-                      data: pieChartData,
+                      data: total > 95
+                          ? [PieChartData(BudgetinColors.merah50, total)]
+                          : pieChartData,
                       radius: 90,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +108,7 @@ class _StatisticCircularState extends State<StatisticCircular> {
                                                     .name
                                                     .toLowerCase() ==
                                                 'sisa'
-                                            ? 0xFFD400FF
+                                            ? 0xFFFF00FF
                                             : dataPerCategory[widget.bulan]
                                                 .data![index]
                                                 .color,
@@ -107,17 +117,21 @@ class _StatisticCircularState extends State<StatisticCircular> {
                                           .data![index]
                                           .persen,
                                     ),
-                                  PieChartData(
-                                      Color(0xFFD1D1D1),
-                                      (dataPerCategory[widget.bulan]
-                                                  .data![index]
-                                                  .persen >
-                                              0)
-                                          ? (100 -
-                                              dataPerCategory[widget.bulan]
-                                                  .data![index]
-                                                  .persen)
-                                          : 100),
+                                  if (dataPerCategory[widget.bulan]
+                                          .data![index]
+                                          .persen <
+                                      95)
+                                    PieChartData(
+                                        Color(0xFFD1D1D1),
+                                        (dataPerCategory[widget.bulan]
+                                                    .data![index]
+                                                    .persen >
+                                                0)
+                                            ? (100 -
+                                                dataPerCategory[widget.bulan]
+                                                    .data![index]
+                                                    .persen)
+                                            : 100),
                                 ],
                                 radius: 24,
                                 child: Text(

@@ -10,6 +10,7 @@ import 'package:budgetin/widgets/forms/input_text.dart';
 import 'package:budgetin/widgets/onboarding/button.dart';
 import 'package:budgetin/widgets/onboarding/onboarding_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnBoardingScreen1 extends StatelessWidget {
   OnBoardingScreen1({Key? key});
@@ -213,98 +214,98 @@ class _OnBoardingScreen3State extends State<OnBoardingScreen3> {
   String getRandomMessage(int amount) {
     final random = Random();
     final randomIndex = random.nextInt(savingsMessages.length);
+    if (amount <= 1) {
+      return 'Kamu bulan lalu menghabiskan tabunganmu :(';
+    }
     return savingsMessages[randomIndex]
-        .replaceFirst('{amount}', amount.toString());
+        .replaceFirst('{amount}', TextCurrencyFormat.format(amount.toString()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    FutureBuilder(
-                      future: db!.remainingMoney(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: Image.asset('assets/images/loading.gif'),
-                          );
-                        } else if (snapshot.hasData) {
-                          final randomMessage =
-                              getRandomMessage(snapshot.data!);
-                          return OnBoardingContent(
-                            image: 'assets/images/onBoarding3.svg',
-                            title: randomMessage,
-                            subtitle:
-                                'Saat ini memaski bulan baru, Alokasi pada kategori akan di-reset. Apakah Kategori dan Saldo bulan ini sama dengan bulan lalu?',
-                          );
-                        } else {
-                          return const SizedBox(
-                            height: 12,
-                          );
-                        }
-                      },
+        body: FutureBuilder(
+      future: db!.remainingMoney(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: Image.asset('assets/images/handling/white_loading.gif'),
+          );
+        } else if (snapshot.hasData && snapshot.data != null) {
+          final randomMessage = getRandomMessage(snapshot.data!);
+
+          return SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        OnBoardingContent(
+                          image: 'assets/images/onBoarding3.svg',
+                          title: randomMessage,
+                          subtitle:
+                              'Saat ini memaski bulan baru, Alokasi pada kategori akan di-reset. Apakah Kategori dan Saldo bulan ini sama dengan bulan lalu?',
+                        ),
+                        SizedBox(height: 24),
+                      ],
                     ),
-                    SizedBox(height: 24),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ButtonCustom(
-                      width: MediaQuery.of(context).size.width / 2.8,
-                      title: "Tidak",
-                      blok: false,
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OnBoardingScreen4()),
-                          (route) => false,
-                        );
-                      },
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ButtonCustom(
+                          width: MediaQuery.of(context).size.width / 2.8,
+                          title: "Tidak",
+                          blok: false,
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OnBoardingScreen4()),
+                              (route) => false,
+                            );
+                          },
+                        ),
+                        ButtonCustom(
+                          width: MediaQuery.of(context).size.width / 4 * 2,
+                          title: "Ya",
+                          blok: true,
+                          onPressed: () async {
+                            bool res = await db!.copyPreviousCategoryAndSaldo();
+                            if (res) {
+                              await db!.insertBudgetinVariable(
+                                  'monthNow', DateTime.now().toString());
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BottomNavbar(
+                                          initIndex: 0,
+                                        )),
+                                (route) => false,
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                    ButtonCustom(
-                      width: MediaQuery.of(context).size.width / 4 * 2,
-                      title: "Ya",
-                      blok: true,
-                      onPressed: () async {
-                        bool res = await db!.copyPreviousCategoryAndSaldo();
-                        if (res) {
-                          await db!.insertBudgetinVariable(
-                              'monthNow', DateTime.now().toString());
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BottomNavbar(
-                                      initIndex: 0,
-                                    )),
-                            (route) => false,
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        }
+        return Center(
+          child: Image.asset('assets/images/handling/white_loading.gif'),
+        );
+      },
+    ));
   }
 }
 
