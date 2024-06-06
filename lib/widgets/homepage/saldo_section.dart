@@ -100,7 +100,7 @@ class _SaldoSectionState extends State<SaldoSection> {
                 ),
                 SizedBox(height: 7),
                 StreamBuilder<int>(
-                  stream: db!.totalExpense(),
+                  stream: db!.totalExpenseMonth(),
                   builder: (context, snapshot) {
                     int expense = snapshot.data ?? 0;
 

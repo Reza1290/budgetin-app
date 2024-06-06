@@ -18,6 +18,7 @@ void main() async {
   runApp(MyApp());
 }
 
+
 Future<AppDb> initializeDb() async {
   return AppDb();
 }
