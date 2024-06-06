@@ -15,8 +15,7 @@ class SelectCategoryCard extends StatelessWidget {
     Widget icon = SvgPicture.asset(
         category.icon == '' ? 'assets/icons/Lainnya.svg' : category.icon);
     return InkWell(
-      onTap: () => Navigator.push(
-        context,
+      onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>
               CreateUpdateTransaksiPage(categoryId: category.id),

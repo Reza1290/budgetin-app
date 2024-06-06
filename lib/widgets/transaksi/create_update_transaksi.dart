@@ -99,7 +99,6 @@ class _CreateUpdateTransaksiPageState extends State<CreateUpdateTransaksiPage> {
         child: Form(
           key: _formKey,
           child: Container(
-            height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
