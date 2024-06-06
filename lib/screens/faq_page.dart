@@ -61,18 +61,6 @@ class FaqPage extends StatelessWidget {
                             'Slide ke kiri kartu Riwayat Transaksi untuk menampilkan menu Edit dan Delete.',
                       ),
                       SizedBox(height: 15),
-                      // FaqContent(
-                      //   question: 'How to manage budget?',
-                      //   answer:
-                      //       'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
-                      // ),
-                      // SizedBox(height: 15),
-                      // FaqContent(
-                      //   question: 'How to manage budget?',
-                      //   answer:
-                      //       'Budget management involves planning, tracking, and controlling expenses to meet financial goals.',
-                      // ),
-                      // SizedBox(height: 15),
                     ],
                   ),
                 ),

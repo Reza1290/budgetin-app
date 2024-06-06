@@ -6,6 +6,8 @@ import 'package:budgetin/widgets/modal/modal_tambah_kategori.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../reusable/kategori_kosong.dart';
+
 class CategoryHome extends StatefulWidget {
   const CategoryHome({super.key});
   @override
@@ -40,26 +42,7 @@ class _CategoryHomeState extends State<CategoryHome> {
         }
         final List<CategoryTotal>? categories = snapshot.data;
         if (categories == null || categories.isEmpty) {
-          return Center(
-              child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 85,
-                  child: svg,
-                ),
-                Text(
-                  'Kategori Kosong',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
-                ),
-                Text(
-                  'Buat Kategori terlebih dahulu',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 8),
-                )
-              ],
-            ),
-          ));
+          return KategoriKosong();
         }
         return Container(
           width: MediaQuery.of(context).size.width,
@@ -71,11 +54,11 @@ class _CategoryHomeState extends State<CategoryHome> {
                 Center(
                   child: CategoryCard(
                     category: Category(
-                      id: categories[index].category.id,
-                      name: categories[index].category.name.toString(),
-                      icon: categories[index].category.icon.toString(),
-                      total: categories[index].category.total,
-                    ),
+                        id: categories[index].category.id,
+                        name: categories[index].category.name.toString(),
+                        icon: categories[index].category.icon.toString(),
+                        total: categories[index].category.total,
+                        createdAt: categories[index].category.createdAt),
                     totalAmount: categories[index].totalAmount,
                     isHome: true,
                     // isReminder: true,

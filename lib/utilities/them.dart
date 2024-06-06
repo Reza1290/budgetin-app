@@ -46,6 +46,19 @@ class PrimaryColor {
   static Color get shade1000 => _colors['shade1000']!;
 }
 
+const List<Color> biruChart = [
+  Color(0xFF002255),
+  Color(0xFF002F77),
+  Color(0xFF003D99),
+  Color(0xFF004BBB),
+  Color(0xFF0C5FDD),
+  Color(0xFF1D77FF),
+  Color(0xFF1D77FF),
+  Color(0xFF83B4FF),
+  Color(0xFFD4E5FF),
+  Color(0xFFEBF3FF),
+];
+
 class BudgetinColors {
   // Biru
   static const Map<String, Color> _biru = {

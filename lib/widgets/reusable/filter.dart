@@ -1,52 +1,58 @@
-import 'package:budgetin/utilities/them.dart';
 import 'package:flutter/material.dart';
-
-var selectedService = 0;
-
-class Service {
-  static String semua = "Semua";
-  static String hariIni = "Hari ini";
-  static String mingguIni = "Minggu ini";
-  static String bulanIni = "Bulan ini";
-  static String tahunIni = "Tahun ini";
-
-  static List<String> all() {
-    return [semua, mingguIni, bulanIni, tahunIni];
-  }
-}
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Filter extends StatelessWidget {
-  const Filter({Key? key});
+  final int selectedMonth;
+  final ValueChanged<int> onMonthSelected;
+
+  Filter({
+    super.key,
+    required this.selectedMonth,
+    required this.onMonthSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Initialize date formatting
+    ScrollController filterController = ScrollController(
+        initialScrollOffset: selectedMonth * 30, keepScrollOffset: true);
+
+    initializeDateFormatting('id', null);
+    final months = List.generate(12, (index) {
+      DateTime date = DateTime(0, index + 1);
+      return DateFormat.MMMM('id').format(date);
+    });
+
     return SizedBox(
       height: 36,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         scrollDirection: Axis.horizontal,
+        controller: filterController,
         itemBuilder: (context, index) => GestureDetector(
           onTap: () {
-            selectedService = index;
-            (context as Element).markNeedsBuild();
+            onMonthSelected(index + 1);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              color: selectedService == index ? biruPrimary : null,
-              border: selectedService == index
+              color: selectedMonth == index + 1 ? Colors.blue : null,
+              border: selectedMonth == index + 1
                   ? null
                   : Border.all(
-                      color: const Color.fromRGBO(209, 209, 209, 1), width: 1),
-              borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromRGBO(209, 209, 209, 1),
+                      width: 1,
+                    ),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
               child: _buildText(
-                Service.all()[index],
+                months[index],
                 12,
-                selectedService == index ? FontWeight.bold : FontWeight.w600,
-                selectedService == index
-                    ? putih30
+                selectedMonth == index + 1 ? FontWeight.bold : FontWeight.w600,
+                selectedMonth == index + 1
+                    ? Colors.white
                     : const Color.fromRGBO(209, 209, 209, 1),
               ),
             ),
@@ -55,24 +61,24 @@ class Filter extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(
           width: 10,
         ),
-        itemCount: Service.all().length,
+        itemCount: months.length,
       ),
     );
   }
-}
 
-Widget _buildText(
-  String text,
-  double size,
-  FontWeight weight,
-  Color color,
-) {
-  return Text(
-    text, // Teks kosong karena TextStyle hanya bisa digunakan sebagai parameter dalam Widget Text
-    style: TextStyle(
-      fontSize: size,
-      fontWeight: weight,
-      color: color,
-    ),
-  );
+  Widget _buildText(
+    String text,
+    double size,
+    FontWeight weight,
+    Color color,
+  ) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+      ),
+    );
+  }
 }

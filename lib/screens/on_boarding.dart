@@ -1,5 +1,7 @@
 import 'dart:math';
 
+=======
+>>>>>>> main
 import 'package:budgetin/controller/category_controller.dart';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
@@ -16,10 +18,17 @@ class OnBoardingScreen1 extends StatelessWidget {
   OnBoardingScreen1({Key? key});
   final _formOnboardKey = GlobalKey<FormState>();
   final TextEditingController _saldoController = TextEditingController();
+<<<<<<< HEAD
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+=======
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+>>>>>>> main
       body: SafeArea(
         child: Column(
           children: [

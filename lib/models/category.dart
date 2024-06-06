@@ -7,4 +7,5 @@ class Categories extends Table {
   TextColumn get icon =>
       text().withDefault(Constant('assets/icons/Lainnya.svg'))();
   IntColumn get total => integer()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }

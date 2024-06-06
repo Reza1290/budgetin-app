@@ -3,19 +3,27 @@ import 'package:flutter/material.dart';
 
 class InputText extends StatelessWidget {
   const InputText(
-      {super.key,  this.controller, this.hintText, this.focusNode});
+      {super.key,
+      this.controller,
+      this.hintText,
+      this.focusNode,
+      this.isMandatory = true});
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final String? hintText;
+  final bool? isMandatory;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value) =>
-          (value == null || value.isEmpty || value.trim().isEmpty)
+      validator: (value) => isMandatory!
+          ? (value == null || value.isEmpty || value.trim().isEmpty)
               ? '$hintText tidak boleh kosong'
               : (value.length > 92)
                   ? 'Masukkan $hintText Singkat'
-                  : null,
+                  : null
+          : (value != null && value.length > 92)
+              ? 'Masukkan $hintText Singkat'
+              : null,
       controller: controller,
       focusNode: focusNode,
       decoration: InputDecoration(

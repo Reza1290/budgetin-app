@@ -39,29 +39,35 @@ class OnBoardingContent extends StatelessWidget {
 
     // OnboardingPage
     return Container(
-      padding: EdgeInsets.only(top: 30),
+      // padding: EdgeInsets.only(top: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Image
-          SvgPicture.asset(image),
-          const SizedBox(height: verticalSpacing),
+          SvgPicture.asset(
+            image,
+            fit: BoxFit.fitWidth,
+          ),
+          // const SizedBox(height: verticalSpacing),
           // Title
-          Center(
+          Align(
+              alignment: Alignment.center,
               child: RichText(
-            text: TextSpan(
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Nunito'),
-              children: generateTextSpans(),
-            ),
-          )),
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: 'Nunito'),
+                  children: generateTextSpans(),
+                ),
+              )),
           const SizedBox(height: 10),
           // Subtitle
           Center(
+              child: Center(
             child: Text(
               subtitle,
               textAlign: TextAlign.center,
@@ -71,7 +77,7 @@ class OnBoardingContent extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-          ),
+          )),
         ],
       ),
     );

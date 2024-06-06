@@ -1,3 +1,4 @@
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/screens/faq_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,15 +8,19 @@ class Reminder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TrackerService tracker = TrackerService();
     final Widget svg = SvgPicture.asset('assets/images/ORY.svg');
 
     return InkWell(
       borderRadius: BorderRadius.circular(10),
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const FaqPage(),
-          )),
+      onTap: () {
+        tracker.track('on-view-faq', withDeviceInfo: true);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FaqPage(),
+            ));
+      },
       child: Stack(
         children: [
           Container(
@@ -61,8 +66,9 @@ class Reminder extends StatelessWidget {
           ),
           Positioned(
             child: svg,
+            width: 140,
             right: -35,
-            top: -35,
+            top: -30,
           ),
         ],
       ),

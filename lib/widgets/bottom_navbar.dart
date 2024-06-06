@@ -1,11 +1,15 @@
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/screens/category_screen.dart';
 import 'package:budgetin/screens/homepage.dart';
 import 'package:budgetin/screens/riwayat_transaksi_page.dart';
-import 'package:budgetin/screens/statistic_screen.dart';
+import 'package:budgetin/screens/statistic_page.dart';
 import 'package:budgetin/utilities/them.dart';
 import 'package:budgetin/widgets/main/select_category_page.dart';
+import 'package:budgetin/widgets/reusable/information_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({
@@ -24,16 +28,20 @@ class _BottomNavbarState extends State<BottomNavbar>
   static List<Widget> page = <Widget>[
     HomePage(),
     RiwayatTransaksiPage(),
-    Container(),
+    Scaffold(
+      backgroundColor: Colors.white,
+    ),
     // FaqPage(),
     CategoryScreen(),
-    StatisticScreen(),
+    // StatisticScreen(),
+    StatisticPage(),
   ];
 
   // static const List<Widget> nav = <Widget>[
   //   Tab(),
   // ];
   late TabController _tabController;
+  final TrackerService tracker = TrackerService();
 
   @override
   void initState() {
@@ -54,169 +62,179 @@ class _BottomNavbarState extends State<BottomNavbar>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      extendBody: true,
-      resizeToAvoidBottomInset: false,
-      body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _tabController,
-          children: page),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        height: 60,
-        width: 60,
-        child: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ),
-          backgroundColor: BudgetinColors.biru50,
-          elevation: 0.0,
-          disabledElevation: 0,
-          onPressed: () {
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  const SelectCategoryPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.easeIn;
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        tracker.track('on-close-app', withDeviceInfo: true);
 
-                final tween = Tween(begin: begin, end: end);
-                final curvedAnimation = CurvedAnimation(
-                  parent: animation,
-                  curve: curve,
-                );
+        true;
+      },
+      child: Scaffold(
+        extendBody: true,
+        resizeToAvoidBottomInset: false,
+        body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
+            controller: _tabController,
+            children: page),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          height: 60,
+          width: 60,
+          child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            backgroundColor: BudgetinColors.biru50,
+            elevation: 0.0,
+            disabledElevation: 0,
+            onPressed: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const SelectCategoryPage(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(0.0, 1.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeIn;
 
-                return SlideTransition(
-                  position: tween.animate(curvedAnimation),
-                  child: child,
-                );
-              },
-            ));
-          },
-          child: const Icon(
-            Icons.add_rounded,
-            color: Colors.white,
-            size: 32,
-            weight: 10,
+                  final tween = Tween(begin: begin, end: end);
+                  final curvedAnimation = CurvedAnimation(
+                    parent: animation,
+                    curve: curve,
+                  );
+
+                  return SlideTransition(
+                    position: tween.animate(curvedAnimation),
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: const Icon(
+              Icons.add_rounded,
+              color: Colors.white,
+              size: 32,
+              weight: 10,
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            bottom: 28,
-            child: Container(
+        bottomNavigationBar: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              bottom: 28,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.15),
+                      blurRadius: 100,
+                      offset: Offset(0, 10),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.white,
+                ),
+                height: 74,
+                width: 74,
+              ),
+            ),
+            Container(
+              height: 64,
               decoration: BoxDecoration(
+                color: Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(.15),
-                    blurRadius: 100,
+                    blurRadius: 30,
                     offset: Offset(0, 10),
                   ),
                 ],
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.white,
               ),
-              height: 74,
-              width: 74,
-            ),
-          ),
-          Container(
-            height: 64,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(.15),
-                  blurRadius: 30,
-                  offset: Offset(0, 10),
-                ),
-              ],
-            ),
-            child: TabBar(
-              labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
-              tabAlignment: TabAlignment.fill,
-              physics: NeverScrollableScrollPhysics(),
-              controller: _tabController,
-              onTap: (index) {
-                setState(
-                  () {
-                    currentIndex = index != 2 ? index : currentIndex;
-                  },
-                );
-              },
-              indicator: UnderlineTabIndicator(borderSide: BorderSide.none),
-              tabs: page.map((Widget test) {
-                final List list = Set.from(page).toList();
-                final int index = list.indexOf(test);
-                return index != 2
-                    ? InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 1500),
-                              curve: Curves.fastLinearToSlowEaseIn,
-                              margin: EdgeInsets.only(
-                                bottom: index == currentIndex
-                                    ? 0
-                                    : size.width * .029,
-                                right: size.width * .0422,
-                                left: size.width * .0422,
-                              ),
-                              width: size.width * .128,
-                              height:
-                                  index == currentIndex ? size.width * .014 : 0,
-                              decoration: const BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(10),
+              child: TabBar(
+                labelPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                tabAlignment: TabAlignment.fill,
+                physics: NeverScrollableScrollPhysics(),
+                controller: _tabController,
+                onTap: (index) {
+                  tracker.track('view-menu-${menu[index].toLowerCase()}');
+                  setState(
+                    () {
+                      currentIndex = index != 2 ? index : currentIndex;
+                    },
+                  );
+                },
+                indicator: UnderlineTabIndicator(borderSide: BorderSide.none),
+                tabs: page.map((Widget test) {
+                  final List list = Set.from(page).toList();
+                  final int index = list.indexOf(test);
+                  return index != 2
+                      ? InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 1500),
+                                curve: Curves.fastLinearToSlowEaseIn,
+                                margin: EdgeInsets.only(
+                                  bottom: index == currentIndex
+                                      ? 0
+                                      : size.width * .029,
+                                  right: size.width * .0422,
+                                  left: size.width * .0422,
+                                ),
+                                width: size.width * .128,
+                                height: index == currentIndex
+                                    ? size.width * .014
+                                    : 0,
+                                decoration: const BoxDecoration(
+                                  color: Colors.blueAccent,
+                                  borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(10),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Icon(
-                              listOfIcons[index],
-                              size: 28,
-                              color: index == currentIndex
-                                  ? Colors.blueAccent
-                                  : Colors.black38,
-                            ),
-                            Text(
-                              menu[index],
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: index == currentIndex
-                                      ? FontWeight.bold
-                                      : FontWeight.w500),
-                            ),
-                            // SizedBox(height: size.width * .03),
-                          ],
-                        ))
-                    : Container(
-                        width: size.width * .128,
-                        height: index == currentIndex ? size.width * .014 : 0,
-                      );
-              }).toList(),
-            ),
-          ),
-          Positioned(
-            bottom: 28,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.white,
+                              Icon(
+                                listOfIcons[index],
+                                size: 28,
+                                color: index == currentIndex
+                                    ? Colors.blueAccent
+                                    : Colors.black38,
+                              ),
+                              Text(
+                                menu[index],
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: index == currentIndex
+                                        ? FontWeight.bold
+                                        : FontWeight.w500),
+                              ),
+                              // SizedBox(height: size.width * .03),
+                            ],
+                          ))
+                      : Container(
+                          width: size.width * .128,
+                          height: index == currentIndex ? size.width * .014 : 0,
+                        );
+                }).toList(),
               ),
-              height: 74,
-              width: 74,
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 28,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.white,
+                ),
+                height: 74,
+                width: 74,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:budgetin/widgets/homepage/kategori_transaksi/category_home.dart'
 import 'package:budgetin/widgets/homepage/saldo.dart';
 import 'package:budgetin/widgets/homepage/reminder.dart';
 import 'package:budgetin/widgets/homepage/saldo_section.dart';
+import 'package:budgetin/widgets/statistic/statistic_bar.dart';
 import 'package:budgetin/widgets/transaksi/riwayat_transaksi_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -54,15 +55,15 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         "Selamat Datang!",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 28,
                           fontWeight: FontWeight.w800,
-                          color: BudgetinColors.biru40,
+                          color: BudgetinColors.biru80,
                         ),
                       ),
                       Text(
-                        "Waktunya Catat Keuangan Kamu Hari Ini.",
+                        "Waktunya Catat Keuanganmu Hari Ini.",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           color: BudgetinColors.hitamPutih100,
                         ),
                       ),
@@ -78,6 +79,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: StatisticBar(
+                    isHomepage: true,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

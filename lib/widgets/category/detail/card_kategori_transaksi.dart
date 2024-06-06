@@ -5,9 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CardKategoriTransaksi extends StatefulWidget {
   const CardKategoriTransaksi(
-      {super.key, required this.data, required this.total});
+      {super.key, required this.data});
   final Category data;
-  final int total;
+  
 
   @override
   State<CardKategoriTransaksi> createState() => _CardKategoriTransaksiState();

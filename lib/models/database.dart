@@ -3,13 +3,16 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:budgetin/models/category.dart';
+import 'package:budgetin/models/detail_kategori.dart';
 import 'package:budgetin/models/saldo.dart';
 import 'package:budgetin/models/saldo_data.dart';
 import 'package:budgetin/models/statistic_category.dart';
 import 'package:budgetin/models/statistic_data.dart';
+import 'package:budgetin/models/app_version.dart';
 import 'package:budgetin/models/transaction.dart';
 import 'package:budgetin/models/transaction_insert.dart';
 import 'package:budgetin/models/transaction_with_category.dart';
+import 'package:budgetin/models/user_tracker.dart';
 import 'package:budgetin/models/variable.dart';
 import 'package:budgetin/providers/random_color.dart';
 import 'package:budgetin/utilities/them.dart';
@@ -19,30 +22,56 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
+import 'package:uuid/v4.dart';
+import 'package:uuid/v5.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(
   // relative import for the drift file. Drift also supports `package:`
   // imports
-  tables: [Categories, Transactions, Saldos, BudgetinVariables],
+  tables: [
+    Categories,
+    Transactions,
+    Saldos,
+    BudgetinVariables,
+    AppVersions,
+    UserTrackers
+  ],
 )
 class AppDb extends _$AppDb {
   AppDb() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+        String currentVersion = '1.0.0'; // Change this as needed
+        await into(appVersions)
+            .insert(AppVersionsCompanion.insert(version: currentVersion));
+        print("ttest");
       },
       beforeOpen: (details) async {
-        if (details.wasCreated) {
-          // await into(saldos)
-          //     .insert(SaldosCompanion.insert(id: Value(1), saldo: 5000000));
+        final currentVersion = '1.0.0'; // Change this as needed
+        final version = await select(appVersions).getSingleOrNull();
+        print(version);
+        if (version == null || version.version != currentVersion) {
+          // Clear data if version is different or not found
+          print("ttest" + version.toString());
+
+          await clearAllTables();
+          // Insert or update the version
+          if (version == null) {
+            await into(appVersions)
+                .insert(AppVersionsCompanion.insert(version: currentVersion));
+          } else {
+            await update(appVersions)
+                .replace(AppVersion(id: version.id, version: currentVersion));
+          }
         }
       },
       onUpgrade: (Migrator m, int from, int to) async {
@@ -62,6 +91,15 @@ class AppDb extends _$AppDb {
         }
         if (from < 6) {
           await m.createTable($BudgetinVariablesTable(attachedDatabase));
+        }
+        if (from < 7) {}
+        if (from < 8) {
+          await m.createTable($AppVersionsTable(attachedDatabase));
+        }
+        if (from < 9) {
+          await m.createTable($UserTrackersTable(attachedDatabase));
+          await into(userTrackers)
+              .insert(UserTrackersCompanion.insert(uuid: UuidV4().generate()));
         }
       },
     );
@@ -127,7 +165,7 @@ Future<double> prsentaseExpense() async {
       return 0; // Or handle the case when there is no saldo entry as needed
     }
   }
-  
+
   Future<int> insertCategory(CategoriesCompanion entry) async {
     return await into(categories).insert(entry);
   }
@@ -168,9 +206,18 @@ Future<double> prsentaseExpense() async {
     }
   }
 
-
-  Stream<List<TransactionWithCategory>> getAllTransactionWithCategory() {
-    final query = (select(transactions)).join([
+  Stream<List<TransactionWithCategory>> getAllTransactionWithCategory(
+      int month) {
+    final int firstDay = DateTime(DateTime.now().year, month + 1, 0).day;
+    final query = (select(transactions)
+          ..where((tbl) => tbl.transaction_date.month.equals(month)
+              // tbl.transaction_date.day.isBetweenValues(0, firstDay)
+              )
+          ..orderBy([
+            (tbl) => OrderingTerm(
+                expression: tbl.transaction_date, mode: OrderingMode.asc)
+          ]))
+        .join([
       innerJoin(categories, categories.id.equalsExp(transactions.category_id))
     ]);
      return query.watch().map((rows) {
@@ -301,6 +348,30 @@ Future<double> prsentaseExpense() async {
     });
   }
 
+  Stream<List<CategoryTotal>> sumExpenseByCategorySearch(String keyword) {
+    // print(keyword);
+    DateTime now = DateTime.now();
+    final categoriesResultStream = (select(categories)
+          ..where(
+            (tbl) =>
+                tbl.createdAt.month.equals(now.month) &
+                tbl.createdAt.year.equals(now.year) &
+                tbl.name.like('%$keyword%'),
+          ))
+        .watch();
+
+    return categoriesResultStream.asyncMap((categoriesResult) async {
+      final List<CategoryTotal> categoryTotals = [];
+
+      for (final category in categoriesResult) {
+        final totalAmount = await _calculateTotalAmountForCategory(category.id);
+        categoryTotals.add(CategoryTotal(category, totalAmount));
+      }
+
+      return categoryTotals;
+    });
+  }
+
   Future<int> sumUsedSaldo() async {
     int total = 0;
     final rowsQuery = select(categories)
@@ -316,14 +387,29 @@ Future<double> prsentaseExpense() async {
   }
 
   Stream<int> watchUsedSaldo() async* {
+    DateTime now = DateTime.now();
     int sal = await getFirstSaldo().then((value) => value!.saldo);
-    final datas = await allTransactions();
+    final transactionQuery = select(transactions)
+      ..where((tbl) =>
+          tbl.transaction_date.month.equals(now.month) &
+          tbl.transaction_date.year.equals(now.year));
+    final datas = await transactionQuery.get();
+    // final datas = await allTransactions();
     int totalExpense = 0;
 
     for (final data in datas) {
       totalExpense += data.amount;
     }
     yield sal - totalExpense;
+  }
+
+  Stream<Saldo> watchSaldoMonthNow() {
+    DateTime now = DateTime.now();
+    return (select(saldos)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year)))
+        .watchSingle();
   }
 
   Stream<int> watchRemainSaldo() async* {
@@ -548,7 +634,6 @@ Future<double> prsentaseExpense() async {
         categoryTransactionResult.forEach((row) {
           totalTransactionInCategory += row.amount;
         });
-        print(random.nextInt(100));
         categoriesData.add(StatisticCategory(
             color: RandomColor.generate(),
             name: category.name,
@@ -566,7 +651,7 @@ Future<double> prsentaseExpense() async {
 
       statistic.add(StatisticData(persen: persen * 100, data: categoriesData));
     }
-
+    // print(statistic[4].data![.first].persen);
     yield statistic;
   }
 
@@ -588,7 +673,6 @@ Future<double> prsentaseExpense() async {
               persen[transaction.transaction_date.month - 1];
     }
 
-    print(persen);
     return data;
   }
 
@@ -609,9 +693,8 @@ Future<double> prsentaseExpense() async {
   Future<bool> copyPreviousCategoryAndSaldo() async {
     // DateTime date = DateTime.now();
     String? val = await getBudgetinVariable('monthNow');
-    print(DateTime.parse(val!).month);
     try {
-      final date = DateTime.parse(val);
+      final date = DateTime.parse(val!);
       final query = select(saldos)
         ..where((tbl) =>
             tbl.createdAt.year.equals(date.year) &
@@ -663,14 +746,25 @@ Future<double> prsentaseExpense() async {
         .watch();
   }
 
-  Future<TransactionInsert> streamCategoryById(int id, bool edit,
-      {int temp = 0}) async {
+  Stream<List<Category>> getAllCategoryByMonthAndYearSearch(String keyword) {
+    DateTime now = DateTime.now();
+    return (select(categories)
+          ..where((tbl) =>
+              tbl.createdAt.month.equals(now.month) &
+              tbl.createdAt.year.equals(now.year) &
+              tbl.name.like(keyword)))
+        .watch();
+  }
+
+  Stream<TransactionInsert> streamCategoryById(int id, bool edit,
+      {int temp = 0}) async* {
     Category category = await getCategory(id);
     int maks = await sumExpenseCategory(id);
 
-    return TransactionInsert(
-        category: category,
-        total: edit ? (category.total - maks + temp) : category.total - maks);
+    yield TransactionInsert(
+      category: category,
+      total: edit ? (category.total - maks + temp) : category.total - maks,
+    );
   }
 
   Future<SaldoData> getDataSaldo() async {
@@ -678,6 +772,102 @@ Future<double> prsentaseExpense() async {
     int alokasi = await sumUsedSaldo();
 
     return SaldoData(saldo: saldo!.saldo, teralokasi: alokasi);
+  }
+
+  Future<List<Category>> searchCategoryRepo(String keyword) async {
+    return await (select(categories)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .get();
+  }
+
+  Stream<List<TransactionWithCategory>> searchTransactionRepo(String keyword) {
+    final query = (select(transactions)
+          ..where((tbl) => tbl.name.like("%$keyword%")))
+        .join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]);
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategory(
+            row.readTable(transactions), row.readTable(categories));
+      }).toList();
+    });
+  }
+
+  Future<List<TransactionWithCategory>> getTransactionInRange(
+      DateTime start, DateTime end) async {
+    DateTime adjustedStart =
+        DateTime(start.year, start.month, start.day, 0, 0, 0);
+
+    DateTime adjustedEnd = DateTime(end.year, end.month, end.day, 23, 59, 59);
+
+    final query = await (select(transactions)
+          ..where((tbl) =>
+              tbl.transaction_date.isBetweenValues(adjustedStart, adjustedEnd)))
+        .join([
+      innerJoin(categories, categories.id.equalsExp(transactions.category_id))
+    ]).get();
+
+    return query.map((e) {
+      return TransactionWithCategory(
+          e.readTable(transactions), e.readTable(categories));
+    }).toList();
+  }
+
+  Stream<DetailKategori> getDetailCategory(int id) {
+    final categoryQuery = select(categories).join([
+      leftOuterJoin(
+          transactions, transactions.category_id.equalsExp(categories.id))
+    ])
+      ..where(categories.id.equals(id));
+
+    return categoryQuery.watch().map((rows) {
+      if (rows.isEmpty) {
+        return DetailKategori(
+          category: Category(
+            createdAt: DateTime.now(),
+            icon: 'assets/icons/Lainnya.svg',
+            id: id,
+            name: '',
+            total: 0,
+          ),
+          totalAmount: 0,
+          remainAmount: 0,
+        );
+      }
+
+      final category = rows.map((row) => row.readTable(categories)).first;
+
+      final transactionList = rows
+          .map((row) => row.readTableOrNull(transactions))
+          .where((transaction) => transaction != null)
+          .toList();
+
+      final totalAmount = transactionList.fold(
+          0, (sum, transaction) => sum + (transaction?.amount ?? 0));
+
+      final remainAmount = category.total - totalAmount;
+
+      return DetailKategori(
+        category: category,
+        totalAmount: totalAmount,
+        remainAmount: remainAmount,
+      );
+    });
+  }
+
+  Future<int> getTotalExpenseByCategory(int id) async {
+    final transactionQuery = select(this.transactions)
+      ..where(
+        (tbl) => tbl.category_id.equals(id),
+      );
+    final transactions = await transactionQuery.get();
+    int totalAmount = 0;
+    for (var transaction in transactions) {
+      totalAmount += transaction.amount;
+    }
+
+    return totalAmount;
   }
 }
 

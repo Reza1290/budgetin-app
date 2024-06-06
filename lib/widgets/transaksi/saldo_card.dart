@@ -3,7 +3,15 @@ import 'dart:async';
 import 'package:budgetin/main.dart';
 import 'package:budgetin/models/database.dart';
 import 'package:budgetin/providers/currency.dart';
+import 'package:budgetin/providers/date_formatter.dart';
+import 'package:budgetin/providers/tracker_service.dart';
 import 'package:budgetin/utilities/them.dart';
+import 'package:budgetin/widgets/failed_alert.dart';
+import 'package:budgetin/widgets/forms/input_money.dart';
+import 'package:budgetin/widgets/modal/modal_bagikan.dart';
+import 'package:budgetin/widgets/modal/modal_saldo.dart';
+import 'package:budgetin/widgets/modal/show_modal.dart';
+import 'package:budgetin/widgets/succes_alert.dart';
 import 'package:flutter/material.dart';
 
 class SaldoCard extends StatefulWidget {
@@ -14,6 +22,10 @@ class SaldoCard extends StatefulWidget {
 }
 
 class _SaldoCardState extends State<SaldoCard> {
+  final TrackerService tracker = TrackerService();
+  late TextEditingController _moneyController =
+      TextEditingController(text: '0');
+
   @override
   void initState() {
     // TODO: implement initState
@@ -23,7 +35,8 @@ class _SaldoCardState extends State<SaldoCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 293.0,
+      margin: EdgeInsets.symmetric(horizontal: 24),
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         gradient: const LinearGradient(
@@ -42,95 +55,129 @@ class _SaldoCardState extends State<SaldoCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width:
-                    20, // Ukuran lingkaran, disesuaikan dengan kebutuhan Anda
-                height:
-                    20, // Ukuran lingkaran, disesuaikan dengan kebutuhan Anda
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle, // Mengatur bentuk menjadi lingkaran
-                  color:
-                      biru10, // Warna latar belakang lingkaran, sesuaikan dengan kebutuhan Anda
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.attach_money_rounded,
-                    color: Color.fromARGB(255, 0, 0,
-                        0), // Warna ikon, sesuaikan dengan kebutuhan Anda
-                    size: 20, // Ukuran ikon, sesuaikan dengan kebutuhan Anda
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              _buildText("Saldo Tidak Teralokasi", 15, FontWeight.w600, putih30)
-            ],
-          ),
-          StreamBuilder<int>(
-              stream: db!.watchRemainSaldo(),
+          _buildText("Saldo Bulan Ini", 16, FontWeight.w700, putih30),
+          SizedBox(height: 10),
+          StreamBuilder<Saldo>(
+              stream: db!.watchSaldoMonthNow(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                  return _buildText("Rp0", 26, FontWeight.w800, putih30);
                 } else {
                   if (snapshot.hasData) {
                     if (snapshot.data != null) {
                       return _buildText(
-                          TextCurrencyFormat.format(snapshot.data!.toString()),
-                          24,
+                          TextCurrencyFormat.format(
+                              snapshot.data!.saldo.toString()),
+                          26,
                           FontWeight.w800,
                           putih30);
                     } else {
-                      return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                      return _buildText("Rp0", 26, FontWeight.w800, putih30);
                     }
                   } else {
-                    return _buildText("Rp. 0", 24, FontWeight.w800, putih30);
+                    return _buildText("Rp0", 26, FontWeight.w800, putih30);
                   }
                 }
               }),
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: 10.0,
           ),
-          StreamBuilder<int>(
-              stream: db!.watchUsedSaldo(),
-              builder: (context, snapshot) {
-                String saldo = "Rp. 0";
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  saldo = "Rp. 0";
-                } else {
-                  if (snapshot.hasData) {
-                    if (snapshot.data != null) {
-                      saldo =
-                          TextCurrencyFormat.format(snapshot.data.toString());
-                    }
-                  } else {
-                    saldo = "Rp. 0";
-                  }
-                }
-                return ContainerSaldo(
-                    saldo: saldo,
-                    textColour: merah60,
-                    bgColour: merah10,
-                    icon: Icons.arrow_upward_rounded);
-              }),
-          // const Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     SizedBox(
-          //       width: 10,
-          //     ),
-          //     // ContainerSaldo(
-          //     //     saldo: "Rp 3.500.00",
-          //     //     textColour: hijau80,
-          //     //     bgColour: hijau10,
-          //     //     icon: Icons.arrow_downward_rounded)
-          //   ],
-          // )
+          Divider(
+            height: 5.0,
+            color: putih30,
+          ),
+          SizedBox(
+            height: 10.5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () => showModalSaldo(context),
+                  style: TextButton.styleFrom(
+                    backgroundColor: BudgetinColors.hitamPutih10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(5), // Mengatur radius menjadi 5
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.edit,
+                        color: BudgetinColors.biru90,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Ubah Saldo",
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: BudgetinColors.biru90),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    showModalBagikan(context);
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: BudgetinColors.hitamPutih10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(5), // Mengatur radius menjadi 5
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 10), // Mengatur padding menjadi 0
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.share,
+                        color: BudgetinColors.biru90,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Bagikan",
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: BudgetinColors.biru90))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
+  }
+
+  void simpanSaldo(int sal, BuildContext context) async {
+    int sum = await db!.sumUsedSaldo();
+    if (sum > sal) {
+      String alokasi = TextCurrencyFormat.format(sum.toString());
+      showFailedAlert(context,
+          "Perbaiki Alokasi, karena Saldo teralokasi lebih besar dari saldo yang dimasukkan. $alokasi");
+    } else {
+      await db!.createOrUpdateSaldo(sal);
+      Navigator.pop(context);
+      showSuccessAlert(context, "Berhasil");
+    }
   }
 }
 
