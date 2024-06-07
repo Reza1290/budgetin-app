@@ -72,6 +72,8 @@ class _RiwayatTransaksiPageState extends State<RiwayatTransaksiPage> {
     return Scaffold(
       backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: null,
         leading: Container(),
         scrolledUnderElevation: 0,
         title: const Text(

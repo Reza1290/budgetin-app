@@ -43,6 +43,8 @@ class _StatisticPageState extends State<StatisticPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: null,
         leading: Container(),
         scrolledUnderElevation: 0,
         centerTitle: true,

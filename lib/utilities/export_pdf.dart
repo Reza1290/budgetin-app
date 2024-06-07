@@ -41,7 +41,7 @@ class PdfService {
                     '${transaction.transaction.name}',
                     '${transaction.transaction.description}',
                     '${transaction.category.name}',
-                    '${transaction.transaction.amount}',
+                    '${TextCurrencyFormat.format(transaction.transaction.amount.toString())}',
                   ],
               ],
             ),
@@ -62,7 +62,7 @@ class PdfService {
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
               pw.Text(
-                'Total Transaksi: Rp. ${TextCurrencyFormat.format(totalAmount)}',
+                'Total Transaksi: Rp. ${TextCurrencyFormat.format(totalAmount.toString())}',
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
             ],

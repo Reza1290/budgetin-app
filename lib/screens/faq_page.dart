@@ -38,7 +38,10 @@ class FaqPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: BudgetinColors.hitamPutih10,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: null,
         leading: InkWell(
+          borderRadius: BorderRadius.circular(100),
           onTap: () {
             Navigator.of(context).pop();
           },

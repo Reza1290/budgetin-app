@@ -50,7 +50,9 @@ class _DetailKategoriPageState extends State<DetailKategoriPage> {
     return Scaffold(
       backgroundColor: BudgetinColors.hitamPutih10,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
+      appBar: AppBar( 
+        backgroundColor: Colors.white,
+        surfaceTintColor: null,
         leading: Container(
           child: IconButton(
             onPressed: () => Navigator.pop(context),

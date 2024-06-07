@@ -60,6 +60,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
       backgroundColor: BudgetinColors.hitamPutih10,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: null,
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: const TextStyle(
